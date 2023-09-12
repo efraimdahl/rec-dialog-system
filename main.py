@@ -29,6 +29,7 @@ def load_data(filename):
     print(test)
     return(train,test,df["Label"].unique())
 
+
 filename = "dialog_acts.dat"
 train,test,targets = load_data(filename)
 X_train,y_train,X_test,y_test = train["Vector"],train["Label"],test["Vector"],test["Label"]
