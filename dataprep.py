@@ -34,6 +34,9 @@ def load_data(filename,mode):
         stop_words="english"
     )
     X_train = vectorizer.fit_transform(train["Text"])
+    # Save vectorizer for later use
+    outfile = open("models/"+mode+"/vectorizer.pkl",'wb')
+    pickle.dump(vectorizer, outfile)
 
     # Extracting features from the test data using the same vectorizer
     X_test = vectorizer.transform(test["Text"])
@@ -92,3 +95,4 @@ for mode in ["complete","dedupl"]:
         data = comps.get(name)
         file = open("data/"+mode+"/"+name+".pickle", 'wb')
         pickle.dump(data, file)
+        
