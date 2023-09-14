@@ -53,6 +53,8 @@ class KeywordClassifier():
         for text in X:
             for key in self.keywords.keys():
                 if key in text:
+                    print(key)
+                    print(self.keywords[key])
                     labels.append(self.keywords[key])
                     break
         return labels

@@ -30,15 +30,20 @@ for mode in ["complete","dedupl"]:
     file2 = open("data/"+mode+"/y_test.pickle", 'rb')
     file3 = open("data/"+"complete"+"/target_names.pickle", 'rb')
     file4 = open("models/"+mode+"/vectorizer.pkl",'rb')
+    file5 = open("data/"+mode+"/X_test_raw.pickle", 'rb')
+    
     X_test=pickle.load(file1)
     y_test=pickle.load(file2)
     target_names=pickle.load(file3)
     vectorizer = pickle.load(file4)
+    X_test_raw=pickle.load(file5)
     
     
-    for model in ["Ridge","KNN", "DecisionTree"]:
+    for model in ["Ridge", "KNN", "DecisionTree", "most_frequent", "keyword"]:
         modelfile = open("models/"+mode+"/"+model+".pkl",'rb')
         pickled_model = pickle.load(modelfile)
+        if model == "keyword":
+            pred = pickled_model.predict(X_test_raw)
         pred = pickled_model.predict(X_test)
         fig, ax = plt.subplots(figsize=(10,10))
         ConfusionMatrixDisplay.from_predictions(y_test, pred, ax=ax,labels=target_names)

@@ -11,7 +11,7 @@ for mode in ["complete","dedupl"]:
     file2 = open("data/"+mode+"/y_train.pickle", 'rb')
     X_train=pickle.load(file1)
     y_train=pickle.load(file2)
-    for model in ["Ridge","Linear","KNN","DecisionTree","MLP"]:
+    for model in ["Ridge","Linear","KNN","DecisionTree","MLP", "most_frequent", "keyword"]:
         if(model == "Ridge"):
             clf = RidgeClassifier(tol=1e-2, solver="sparse_cg")
             clf.fit(X_train, y_train)

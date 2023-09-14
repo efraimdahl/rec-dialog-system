@@ -29,6 +29,10 @@ def load_data(filename,mode):
         df=df.drop_duplicates(subset=['Label','Text'])
 
     train, test = sklearn.model_selection.train_test_split(df, test_size=0.2)
+    
+    file = open(f"data/{mode}/X_test_raw.pickle", 'wb')
+    pickle.dump(test["Text"], file)
+    
     print(mode,"Splitting into training set of size ", len(train), "and test set of size ", len(test))
     vectorizer = CountVectorizer(
         stop_words="english"
@@ -88,7 +92,7 @@ def cntvectorizer(train,test):
 filename = "dialog_acts.dat"
 
 
-for mode in ["complete","dedupl"]:
+for mode in ["complete", "dedupl"]:
     X_train, X_test, y_train, y_test, feature_names, target_names = load_data(filename, mode)
     comps = {"X_train":X_train,"X_test":X_test,"y_train":y_train,"y_test":y_test,"feature_names":feature_names,"target_names":target_names}
     for name in comps.keys():
