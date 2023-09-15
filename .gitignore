@@ -1,12 +1,4 @@
-# Directories to be skipped
-/models/*
-/data/*
-/results/*
 
-# But allow nested directories within 'data'
-!/models/*/
-!/data/*/
-!/results/*/
 
 
 

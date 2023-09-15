@@ -1,0 +1,28 @@
+Classification report for model keyword trained on complete
+              precision    recall  f1-score   support
+
+      inform       0.00      0.50      0.01         6
+     confirm       0.98      0.90      0.94       231
+      affirm       0.07      0.72      0.12        53
+     request       0.35      0.71      0.47        34
+    thankyou       0.01      0.60      0.02         5
+        null       0.08      1.00      0.15        19
+         bye       0.97      0.14      0.24      2032
+     reqalts       0.00      0.00      0.00        87
+      negate       0.09      0.65      0.16       322
+       hello       1.00      0.57      0.73         7
+      repeat       0.96      0.37      0.53       350
+         ack       0.20      1.00      0.33         1
+     restart       0.97      0.09      0.16      1299
+        deny       1.00      1.00      1.00         3
+     reqmore       1.00      0.15      0.26       652
+
+    accuracy                           0.22      5101
+   macro avg       0.51      0.56      0.34      5101
+weighted avg       0.88      0.22      0.26      5101
+Predicting difficult instances for model keyword trained on complete
+Sentence: Not really what im looking for, what about korean food	Predicted label: ['deny']
+Sentence: no id rather find a moderately priced restaurant	Predicted label: ['deny']
+Sentence: amazing thank you very much goodbye	Predicted label: ['thankyou']
+Sentence: goodbye thank you for your help	Predicted label: ['thankyou']
+Sentence: I am looking for an Italian restoration	Predicted label: ['null']

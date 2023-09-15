@@ -1,0 +1,28 @@
+Classification report for model KNN trained on complete
+              precision    recall  f1-score   support
+
+      inform       0.29      0.33      0.31         6
+     confirm       1.00      0.89      0.94       231
+      affirm       0.98      0.91      0.94        53
+     request       0.43      0.29      0.35        34
+    thankyou       1.00      0.80      0.89         5
+        null       0.93      0.68      0.79        19
+         bye       0.85      0.87      0.86      2032
+     reqalts       0.33      0.01      0.02        87
+      negate       0.90      0.83      0.86       322
+       hello       1.00      0.57      0.73         7
+      repeat       0.38      0.50      0.43       350
+         ack       0.00      0.00      0.00         1
+     restart       0.95      0.95      0.95      1299
+        deny       1.00      1.00      1.00         3
+     reqmore       0.99      1.00      0.99       652
+
+    accuracy                           0.86      5101
+   macro avg       0.74      0.64      0.67      5101
+weighted avg       0.86      0.86      0.86      5101
+Predicting difficult instances for model KNN trained on complete
+Sentence: Not really what im looking for, what about korean food	Predicted label: ['inform']
+Sentence: no id rather find a moderately priced restaurant	Predicted label: ['inform']
+Sentence: amazing thank you very much goodbye	Predicted label: ['thankyou']
+Sentence: goodbye thank you for your help	Predicted label: ['thankyou']
+Sentence: I am looking for an Italian restoration	Predicted label: ['inform']
