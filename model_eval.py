@@ -8,7 +8,7 @@ from sklearn.metrics import ConfusionMatrixDisplay, classification_report
 import matplotlib.pyplot as plt
 from sklearn.base import BaseEstimator
 
-def predict_difficult_instance(model, vectorizer):
+def predict_difficult_instance(model, vectorizer, print_string=True) -> str:
     difficult_instances = [
         "Not really what im looking for, what about korean food", # Might be classified as negate, should be reqalt
         "no id rather find a moderately priced restaurant",  # Might be classified negate, should be reqalt
@@ -16,12 +16,21 @@ def predict_difficult_instance(model, vectorizer):
         "goodbye thank you for your help",          # can represent two labels
         "I am looking for an Italian restoration",  # restoration instead of restaurant
     ]
+    
+    sentences = [
+        "no i dont want vietnamese food i want italian food",
+        "fuck the missing shoe",
+        "thank you and bye",
+        "street",
+        "greec"
+    ]
 
-    for inst in difficult_instances:
+    results = ""
+    for inst in sentences:
         inst_tf = vectorizer.transform([inst]) if repr(model) != "KeywordClassifier()" else [inst]
-        print(f"Sentence: {inst}\tPredicted label: {model.predict(inst_tf)}")
-        
-    return
+        results += f"Sentence: {inst}\tPredicted label: {model.predict(inst_tf)}\n"
+    print(results if print_string else "")
+    return results
 
 
 for mode in ["complete","dedupl"]:
@@ -55,14 +64,20 @@ for mode in ["complete","dedupl"]:
         
         # Print classification report
         print(f"\n\nClassification report for model {model} trained on {mode}")
-        print(y_test, target_names)
         print(classification_report(y_test, pred, target_names=target_names, zero_division=0))
         
+        # Save classification report to log file
+        with open("results/"+model+"_"+mode+".txt", "w") as f:
+            f.write(f"Classification report for model {model} trained on {mode}\n")
+            f.write(classification_report(y_test, pred, target_names=target_names, zero_division=0))
         
-        
+        # Print difficult instances
         print(f"\nPredicting difficult instances for model {model} trained on {mode}")
-        predict_difficult_instance(pickled_model, vectorizer)
+        difficult_instances = predict_difficult_instance(pickled_model, vectorizer)
         
-        
+        # Save difficult instances to log file
+        with open("results/"+model+"_"+mode+".txt", "a") as f:
+            f.write(f"Predicting difficult instances for model {model} trained on {mode}\n")
+            f.write(difficult_instances)
 
 
