@@ -8,7 +8,7 @@ from sklearn.linear_model import RidgeClassifier
 import matplotlib.pyplot as plt
 from sklearn.metrics import ConfusionMatrixDisplay
 from sklearn.feature_extraction.text import CountVectorizer
-import pickle
+import pickle as pkl
 
 def load_data(filename,mode):
     with open(filename) as f:
@@ -30,8 +30,8 @@ def load_data(filename,mode):
 
     train, test = sklearn.model_selection.train_test_split(df, test_size=0.2)
     
-    file = open(f"data/{mode}/X_test_raw.pickle", 'wb')
-    pickle.dump(test["Text"], file)
+    file = open(f"data/{mode}/X_test_raw.pkl", 'wb')
+    pkl.dump(test["Text"], file)
     
     print(mode,"Splitting into training set of size ", len(train), "and test set of size ", len(test))
     vectorizer = CountVectorizer(
@@ -40,7 +40,7 @@ def load_data(filename,mode):
     X_train = vectorizer.fit_transform(train["Text"])
     # Save vectorizer for later use
     outfile = open("models/"+mode+"/vectorizer.pkl",'wb')
-    pickle.dump(vectorizer, outfile)
+    pkl.dump(vectorizer, outfile)
 
     # Extracting features from the test data using the same vectorizer
     X_test = vectorizer.transform(test["Text"])
@@ -97,6 +97,6 @@ for mode in ["complete", "dedupl"]:
     comps = {"X_train":X_train,"X_test":X_test,"y_train":y_train,"y_test":y_test,"feature_names":feature_names,"target_names":target_names}
     for name in comps.keys():
         data = comps.get(name)
-        file = open("data/"+mode+"/"+name+".pickle", 'wb')
-        pickle.dump(data, file)
+        file = open("data/"+mode+"/"+name+".pkl", 'wb')
+        pkl.dump(data, file)
         
