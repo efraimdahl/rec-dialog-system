@@ -18,8 +18,8 @@ def predict_difficult_instance(model, vectorizer):
     ]
 
     for inst in difficult_instances:
-        inst = vectorizer.transform([inst]) if repr(model) != "KeywordClassifier()" else inst
-        print(f"Sentence: {inst}\tPredicted label: {model.classify(inst)}")
+        inst_tf = vectorizer.transform([inst]) if repr(model) != "KeywordClassifier()" else [inst]
+        print(f"Sentence: {inst}\tPredicted label: {model.predict(inst_tf)}")
         
     return
 
@@ -38,7 +38,7 @@ for mode in ["complete","dedupl"]:
     X_test_raw=pkl.load(file5)
     
     
-    for model in ["keyword"]: #["Ridge", "KNN", "DecisionTree", "most_frequent", "keyword"]:
+    for model in ["Ridge", "KNN", "DecisionTree", "most_frequent", "keyword"]:
         modelfile = open("models/"+mode+"/"+model+".pkl",'rb')
         pickled_model = pkl.load(modelfile)
         if model == "keyword":

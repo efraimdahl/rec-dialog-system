@@ -23,12 +23,14 @@ def load_data(filename,mode):
         labels.append(label)
         limit+=1
     
+    df= pd.DataFrame(list(zip(labels,messages)), columns = ['Label',"Text"])
+    
 
-    df= pd.DataFrame(list(zip(labels,messages)),columns =['Label',"Text"])
+    train, test = sklearn.model_selection.train_test_split(df, test_size=0.2, stratify=df["Label"])
+    
     if mode=="dedupl":
-        df=df.drop_duplicates(subset=['Label','Text'])
-
-    train, test = sklearn.model_selection.train_test_split(df, test_size=0.2)
+        train=train.drop_duplicates(subset=['Label','Text'])
+        test=test.drop_duplicates(subset=['Label','Text'])
     
     file = open(f"data/{mode}/X_test_raw.pkl", 'wb')
     pkl.dump(test["Text"], file)
