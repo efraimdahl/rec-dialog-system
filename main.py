@@ -1,6 +1,6 @@
-from data_prep import prepare_data
-from model_training import train_models
-from model_eval import evaluate_models
+from preprocessing import prepare_data
+from training import train_models
+from evaluation import evaluate_models
 
 
 def main():
