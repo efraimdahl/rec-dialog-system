@@ -54,18 +54,18 @@ keywordmodel = baseline_model.KeywordClassifier()
 pred_keyword = keywordmodel.predict(test["Text"])
 print(keywordmodel.score(test["Text"],y_test))
 
-# # Ridge classifier
-# clf = RidgeClassifier(tol=1e-2, solver="sparse_cg")
-# clf.fit(X_train, y_train)
-# pred = clf.predict(X_test)
+# Ridge classifier
+clf = RidgeClassifier(tol=1e-2, solver="sparse_cg")
+clf.fit(X_train, y_train)
+pred = clf.predict(X_test)
 
 
-# fig, ax = plt.subplots(figsize=(10,10))
-# ConfusionMatrixDisplay.from_predictions(y_test, pred_freq, ax=ax,labels=target_names)
-# _ = ax.set_title(
-#     f"Confusion Matrix using Most Frequent model"
-# )
-# fig.savefig("Most frequent model Confusion Matrix.png")
+fig, ax = plt.subplots(figsize=(10,10))
+ConfusionMatrixDisplay.from_predictions(y_test, pred_freq, ax=ax,labels=target_names)
+_ = ax.set_title(
+    f"Confusion Matrix using Most Frequent model"
+)
+fig.savefig("Most frequent model Confusion Matrix.png")
 
 fig, ax = plt.subplots(figsize=(10,10))
 ConfusionMatrixDisplay.from_predictions(y_test, pred_keyword, ax=ax,labels=target_names)
@@ -74,9 +74,9 @@ _ = ax.set_title(
 )
 fig.savefig("Keyword model Confusion Matrix.png")
 
-# fig, ax = plt.subplots(figsize=(10,10))
-# ConfusionMatrixDisplay.from_predictions(y_test, pred, ax=ax,labels=target_names)
-# _ = ax.set_title(
-#     f"Confusion Matrix using Ridge classifier"
-# )
-# fig.savefig("Ridge model Confusion Matrix.png")
+fig, ax = plt.subplots(figsize=(10,10))
+ConfusionMatrixDisplay.from_predictions(y_test, pred, ax=ax,labels=target_names)
+_ = ax.set_title(
+    f"Confusion Matrix using Ridge classifier"
+)
+fig.savefig("Ridge model Confusion Matrix.png")
