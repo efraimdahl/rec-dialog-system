@@ -10,7 +10,7 @@ def load_data(filename:str, mode:str) -> tuple:
 
     Args:
         filename (str): Filename as a string.
-        mode (str): Mode of data, either "complete" or "dedupl".
+        mode (str): Mode of data, either "complete" or "deduplicated".
 
     Returns:
         tuple: Tuple containing the training and test data.
@@ -32,8 +32,8 @@ def load_data(filename:str, mode:str) -> tuple:
     df = pd.DataFrame(list(zip(labels,messages)), columns = ['Label',"Text"])
     train, test = sklearn.model_selection.train_test_split(df, test_size=0.2, stratify=df["Label"])
     
-    # Remove duplicates for dedupl mode
-    if mode == "dedupl":
+    # Remove duplicates for deduplicated mode
+    if mode == "deduplicated":
         train=train.drop_duplicates(subset=['Label','Text'])
         test=test.drop_duplicates(subset=['Label','Text'])
     
@@ -63,7 +63,7 @@ def load_data(filename:str, mode:str) -> tuple:
 
 def prepare_data():
     filename = "dialog_acts.dat"
-    for mode in ["complete", "dedupl"]:
+    for mode in ["complete", "deduplicated"]:
         X_train, X_test, y_train, y_test, feature_names, target_names = load_data(filename, mode)
         comps = {"X_train":X_train,"X_test":X_test,"y_train":y_train,"y_test":y_test,"feature_names":feature_names,"target_names":target_names}
         for name in comps.keys():

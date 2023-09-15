@@ -19,7 +19,7 @@ def predict_difficult_instance(model, vectorizer, print_string=True) -> str:
     return results
 
 def evaluate_models():
-    for mode in ["complete","dedupl"]:
+    for mode in ["complete","deduplicated"]:
         # Load all pickle files
         X_test_file = open(f"data/{mode}/X_test.pkl", 'rb')
         y_test_file = open(f"data/{mode}/y_test.pkl", 'rb')
@@ -47,7 +47,7 @@ def evaluate_models():
             fig, ax = plt.subplots(figsize=(10,10))
             ConfusionMatrixDisplay.from_predictions(y_test, pred, ax=ax,labels=target_names)
             _ = ax.set_title(
-                f"Confusion Matrix for Restaurant Dialog Classifier model=${model}/data=${mode}"
+                f"Confusion Matrix for Restaurant Dialog Classifier model={model}/data={mode}"
             )
             fig.savefig(f"results/{model}_{mode}.png")
             

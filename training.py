@@ -6,7 +6,7 @@ from sklearn.dummy import DummyClassifier
 from keyword_classifier import KeywordClassifier
 
 def train_models():
-    for mode in ["complete","dedupl"]:
+    for mode in ["complete","deduplicated"]:
         file1 = open("data/"+mode+"/X_train.pkl", 'rb')
         file2 = open("data/"+mode+"/y_train.pkl", 'rb')
         X_train=pkl.load(file1)
