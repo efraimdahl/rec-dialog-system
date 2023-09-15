@@ -1,7 +1,3 @@
-from collections import Counter
-import pandas as pd
-import numpy as np
-
 class KeywordClassifier:
     """Classifies sentences based on keyword matching."""
     
