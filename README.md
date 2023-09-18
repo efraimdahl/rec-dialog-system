@@ -1,2 +1,2 @@
 # rec-dialog-system
-Task 1a of the restaurant dialog system.
+Task 1b of the restaurant dialog system.
