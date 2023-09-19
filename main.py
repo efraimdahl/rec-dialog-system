@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 import sklearn
 import numpy as np
 import pandas as pd
@@ -27,6 +28,10 @@ def load_data(filename):
 
 filename = "dialog_acts.dat"
 df = load_data(filename)
+=======
+def main():
+    pass
+>>>>>>> Stashed changes
 
 train, test = sklearn.model_selection.train_test_split(df, test_size=0.2)
 vectorizer = TfidfVectorizer(
