@@ -6,7 +6,21 @@
 
 from statemachine import StateMachine, State
 import pandas as pd
+import pickle as pkl
 
+#The textParser receives a trained classifier as input, and will return packets such as 
+# 
+#inform(type=restaurant,pricerange=moderate,task=find)
+class TextParser():
+    def __init__(self,classifier_file, restaurant_file):
+        self.restaurant_data = pd.read_csv(restaurant_file)
+        self.classifier = pkl.load(open(classifier_file,'rb'))
+        self.possible_food_type = list(self.restaurant_data['food'].unique())
+        self.possible_area = list(self.all_restaurants["area"].unique())
+        self.possible_pricerange = list(self.all_restaurants["pricerange"].unique())
+    def parseText(self,sentence):
+        cls = self.classifier.predict(sentence)
+        print(cls)
 
 
 class RestaurantAgent(StateMachine):
@@ -52,13 +66,19 @@ class RestaurantAgent(StateMachine):
         count = self.count_restaurants()
         print(f"There are {count} restaurant in the {self.area}-area of town")
 
-filename = "restaurant_info.csv"
-sm = RestaurantAgent(filename)
+restaurant_file = "restaurant_info.csv"
+classifier_file = ".ass_1a/models/complete/DecisionTree.pkl"
+
+parser = TextParser(classifier_file,restaurant_file)
+parser.parseText("I am looking for a cheap chineese restaurant in the south of town")
+
+"""
+sm = RestaurantAgent(restaurant_file)
 print(sm.current_state)
 sm.send("start_processing")
 print(sm.current_state)
 sm.send("receive_area",area="southeast")
 print(sm.current_state)
-
+"""
 
 
