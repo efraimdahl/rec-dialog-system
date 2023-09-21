@@ -1,14 +1,9 @@
-
-
-
-
 #Basic State machine that returns the number of restaurants in an area of town given the keyword south, west, east, north and center.
 
 from statemachine import StateMachine, State
 import pandas as pd
 import pickle as pkl
-
-
+from textParser import TextParser
 class RestaurantAgent(StateMachine):
     #states
     hello = State(initial=True)
