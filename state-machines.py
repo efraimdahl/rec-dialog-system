@@ -9,7 +9,6 @@ warnings.filterwarnings("ignore")
 #Basic State machine that returns the number of restaurants in an area of town given the keyword south, west, east, north and center.
 class RestaurantAgent(StateMachine):
     
-    suggestedlist = [] # used to keep track of suggested restaurants to suggest alternatives
 
     # STATES
     hello = State(initial=True)
