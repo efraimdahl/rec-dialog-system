@@ -4,6 +4,8 @@ from statemachine import StateMachine, State
 import pandas as pd
 import pickle as pkl
 from textParser import TextParser
+
+
 class RestaurantAgent(StateMachine):
     #states
     hello = State(initial=True)
@@ -19,11 +21,12 @@ class RestaurantAgent(StateMachine):
     complete_process = return_count.to(completed)
     
 
-    def __init__(self,filename):
+    def __init__(self,restaurant_file,classifier_file,vectorizer_file):
         self.tmpArea = "" #area input variable is stored here
         self.area = "" #if area is valid, area is stored here
-        self.all_restaurants = pd.read_csv(filename)
+        self.all_restaurants = pd.read_csv(restaurant_file)
         self.possible_areas = list(self.all_restaurants["area"].unique())
+        self.parser = TextParser(classifier_file,restaurant_file,vectorizer_file)
         super(RestaurantAgent, self).__init__()
     
     def count_restaurants(self):
@@ -47,6 +50,9 @@ class RestaurantAgent(StateMachine):
         count = self.count_restaurants()
         print(f"There are {count} restaurant in the {self.area}-area of town")
 
+restaurant_file = "restaurant_info.csv"
+classifier_file = "./ass_1a/models/complete/Ridge.pkl"
+vectorizer_file = "./ass_1a/models/complete/vectorizer.pkl"
 
 restaurant_file = "restaurant_info.csv"
 sm = RestaurantAgent(restaurant_file)

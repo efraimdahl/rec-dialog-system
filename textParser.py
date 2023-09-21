@@ -1,9 +1,9 @@
 import pandas as pd
 import pickle as pkl
 
-#The textParser receives a trained classifier as input, and will return packets such as 
+#The textParser receives a trained classifier as input, and perform keyword matching to extract information of a sentence based on its classification.
 # 
-#inform(type=restaurant,pricerange=moderate,task=find)
+#example: "I am looking for a cheap thai place in the south of town" -> inform=>[(pricerange=cheap),(food=thai),(area=south)]
 class TextParser():
     def __init__(self,classifier_file, restaurant_file,vectorizer_file):
         self.restaurant_data = pd.read_csv(restaurant_file)
@@ -27,6 +27,7 @@ class TextParser():
             "restaurantname":["name","called"],
             "area":["area","part","locat"]
         }
+    #Keyword-matching based on possible outcomes for area,types and priceranges
     def keywordMatcher(self,sentence):
         foodType = ""
         priceRange = ""
@@ -41,7 +42,7 @@ class TextParser():
             if(word in self.possible_pricerange):
                 priceRange = word
         return foodType,priceRange,area
-    
+    #Detects "i don't care" instances both in a generic setting, or in relation to a pricerange,area or food-type.
     def anyDetector(self,sentence,context):
         phrases = self.dontCarePhrases.get(context)
         found = False
@@ -50,6 +51,7 @@ class TextParser():
                 found = True
                 break
         return found
+    #For requests, where the user is not providing information, find the keywords that indicate what the user is looking for.
     def requestMatching(self,sentence):
         ret = []
         for column in self.restaurant_data.columns:
@@ -59,12 +61,15 @@ class TextParser():
                     ret.append(column)
                     break
         return ret
-
-    def parseText(self,sentence,context=None,requestPossible=True): #the context variable is used to understand short answers such as any to the question "Where do you want to eat"
+    # Text Parsing function takes the sentence as input, classifies it, and retrieves information, if its classified as containing information.
+    #The context variable is passed  to understand short answers such as "any" to the system-prompt "Where do you want to eat"
+    #Request possible is passed because in practice many inform instances are classified as requests, which are only possible after a restaurant is suggested.
+    #we are trying to circumvent this missclassification to improve usability.
+    def parseText(self,sentence,context=None,requestPossible=True): 
         #First get the classification of the utterance
         vec = self.vectorizer.transform([sentence])
         cls = self.classifier.predict(vec)
-        #information classified as request, inform, confirm, negate, and reqalts can be overloaded with information from the sentence
+        #information classified as inform, confirm, negate, and reqalts can be overloaded with information from the user-sentence
         foodType,priceRange,area="","",""
         if(cls[0] in ["inform","reqalts","confirm","negate"] or (cls[0]=="request" and not requestPossible)):
             if(context==None):
@@ -91,6 +96,7 @@ class TextParser():
                 if i != "":
                     retlist.append((names[i],vars[i]))
             return (cls[0],retlist)
+        #What fields are users requesting?
         elif(cls[0] in ["request"]):
             requVars = self.requestMatching(sentence)
             return (cls[0],requVars)
