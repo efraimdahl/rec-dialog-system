@@ -5,10 +5,10 @@ import pickle as pkl
 # 
 #example: "I am looking for a cheap thai place in the south of town" -> inform=>[(pricerange=cheap),(food=thai),(area=south)]
 class TextParser():
-    def __init__(self,classifier_file, restaurant_file,vectorizer_file):
+    def __init__(self,classifier,restaurant_file,vectorizer):
         self.restaurant_data = pd.read_csv(restaurant_file)
-        self.classifier = pkl.load(open(classifier_file,'rb'))
-        self.vectorizer = pkl.load(open(vectorizer_file,'rb'))
+        self.classifier = classifier
+        self.vectorizer = vectorizer 
         self.possible_food_type = list(self.restaurant_data['food'].unique())
         self.possible_area = list(self.restaurant_data["area"].unique())
         self.possible_pricerange = list(self.restaurant_data["pricerange"].unique())
@@ -70,6 +70,7 @@ class TextParser():
         sentence = sentence.lower()
         vec = self.vectorizer.transform([sentence])
         cls = self.classifier.predict(vec)
+        print(cls[0])
         #information classified as inform, confirm, negate, and reqalts can be overloaded with information from the user-sentence
         foodType,priceRange,area="","",""
         if(cls[0] in ["inform","reqalts","confirm","negate"] or (cls[0]=="request" and not requestPossible)):
@@ -108,9 +109,13 @@ class TextParser():
 
 def main():
     restaurant_file = "restaurant_info.csv"
-    classifier_file = "./ass_1a/models/complete/Ridge.pkl"
-    vectorizer_file = "./ass_1a/models/complete/vectorizer.pkl"
-    parser = TextParser(classifier_file,restaurant_file,vectorizer_file)
+    classifier = pkl.load(open("./ass_1a/models/complete/DecisionTree.pkl",'rb'))
+    vectorizer = pkl.load(open("./ass_1a/models/complete/vectorizer.pkl",'rb'))
+    parser = TextParser(classifier,restaurant_file,vectorizer)
+    print(parser.parseText("Hello"))
+    print(parser.parseText("how about a cheap asian oriental restaurant"))
+    print(parser.parseText("how about french food"))
+    print(parser.parseText("any more"))
     print(parser.parseText("I am looking for a moderate priced thai place located in the city centre"))
     print(parser.parseText("Whats the price?"))
     print(parser.parseText("I am looking for a moderate priced thai place located in any part of town"))

@@ -3,14 +3,14 @@ import pandas as pd
 import pickle as pkl
 from textParser import TextParser
 from statemachine.contrib.diagram import DotGraphMachine
-import graphviz
-import pydot
 import warnings
 warnings.filterwarnings("ignore")
 
 #Basic State machine that returns the number of restaurants in an area of town given the keyword south, west, east, north and center.
 class RestaurantAgent(StateMachine):
     
+    suggestedlist = [] # used to keep track of suggested restaurants to suggest alternatives
+
     # STATES
     hello = State(initial=True)
     waiting_for_input = State()
@@ -33,11 +33,14 @@ class RestaurantAgent(StateMachine):
     provide_information = (
         return_restaurant.to(completed, cond="exit_conversation")
         | return_restaurant.to(give_information, unless="exit_conversation")
-        
     )
     
     complete_process = (give_information.to(completed, cond="exit_conversation")
                         | give_information.to(return_restaurant, unless="exit_conversation")
+    )
+
+    request_alternative = (return_restaurant.to(return_restaurant)
+                        | give_information.to(return_restaurant)
     )
 
     
@@ -71,7 +74,7 @@ class RestaurantAgent(StateMachine):
             df = df[df["area"]==self.area]
         if(self.priceRange!="dontcare"):
             df=df[df["pricerange"]==self.priceRange]
-        if(self.foodType!=["dontcare"]):
+        if(self.foodType!="dontcare"):
             df=df[df["food"]==self.foodType]
         return df
        
@@ -87,14 +90,18 @@ class RestaurantAgent(StateMachine):
     def exit_conversation(self, input):
         return self.parser.parseText(input)[0]=="bye"
     
+    def preference_change(self,input):
+        #print(input)
+        return (len(self.parser.parseText(input)[1]) != 0)
+    
     #ENTRY & EXIT FUNCTIONS
     def on_exit_waiting_for_input(self,input):
         classAnswer = self.parser.parseText(input,context=self.context,requestPossible=False)
-        print(input,classAnswer,self.context)
+        #print(input,classAnswer,self.context)
         if len(classAnswer)==2: 
             if(classAnswer[0] in ["inform","reqalts","confirm","negate","request"]):
                 self.processVariableDict(classAnswer[1])
-    
+
     def on_enter_waiting_for_input(self):
         if(self.counter>0):
             if(self.area==""):
@@ -118,17 +125,24 @@ class RestaurantAgent(StateMachine):
         
     def on_enter_provide_information(self, input):
         request_type = self.parser.parseText(input,context=self.context,requestPossible=True)
-        print(input, request_type)
+        #print(input, request_type)
     
     def on_enter_return_restaurant(self):
-        print(self.filteredRestaurants)
-        if(self.filteredRestaurants == None):
+        #print(self.filteredRestaurants)
+        if(self.filteredRestaurants is None):
             self.filteredRestaurants = self.search_restaurant()
+            if (len(self.filteredRestaurants) == 0):
+                print(f"I'm sorry but there is no restaurant serving {self.foodType} food")
+                # this is placeholder (it breaks)
+                return
             row = self.filteredRestaurants.iloc[0]
             self.current_suggestion = row
             self.tries=1
         else:
-            row = self.filteredRestaurants.iloc[i]
+            if(len(self.filteredRestaurants) <= self.tries + 1):
+                print(f"I'm sorry but there is no restaurant serving {self.foodType} food")
+                return
+            row = self.filteredRestaurants.iloc[self.tries]
             self.current_suggestion = row
             self.tries+=1
         print(f"{row['restaurantname']} is a nice place in the {row['area']} part of town serving {row['food']} food and the prices are {row['pricerange']}")
@@ -153,33 +167,49 @@ class RestaurantAgent(StateMachine):
                 value = self.current_suggestion[key]
                 response += f"the {attribute} of {self.current_suggestion['restaurantname']} is {value}, " if not response else f"their {attribute} is {value}, "
         
-        if response:
-            print(response.capitalize()[:-2] + ".")
+       # if response:
+       #    print(response.capitalize()[:-2] + ".")
             
     def on_enter_complete_process(self):
         print("Thank you for using the Cambridge restaurant system. Goodbye!")
 
+    def on_request_alternative(self,input):
+        if (self.preference_change(input)):
+            preferences = self.parser.parseText(input)[1]
+            self.processVariableDict(preferences)
+            self.filteredRestaurants = None
+            self.tries = 0
+
     # INPUT HANDLING
     def input_step(self, user_input: str) -> str:
-        
-        print(f"Before state: {self.current_state}")
+        input = self.parser.parseText(user_input)
+        #print(f"Before state: {self.current_state}")
         print(f"User message: {user_input}")
-        print(self.parser.parseText(user_input))
+        print(input)
+        # ["inform","reqalts","confirm","negate","request"]
         if self.current_state.id == "waiting_for_input":
             self.send("receive_input", input=user_input)
             self.send("evaluate_input")
         elif self.current_state.id == "return_restaurant":
-            self.send("provide_information", input=user_input)
+            if (input[0] in ["inform","reqalts"]):
+                self.send("request_alternative", input=user_input)
+            else:
+                self.send("provide_information", input=user_input)
         elif self.current_state.id == "give_information":
-            self.send("complete_process", input=user_input)
+            if (input[0] in ["inform","reqalts"]):
+                self.send("request_alternative", input=user_input)
+            else:
+                self.send("complete_process", input=user_input)
         
         
-        print(f"After state: {self.current_state}")
+        #print(f"After state: {self.current_state}")
+        print(f"--- Price: {self.priceRange}, Area: {self.area}, Food: {self.foodType}")
+        
         
     
     def graph(self,filename=""):
         """
-        Save a graph of the state machine with the current state highlighted to a file
+        Save a graph of the state machine with the current state highlighted to specified file
         """
         graph = DotGraphMachine(self)
         if (filename != ""):
@@ -189,26 +219,25 @@ class RestaurantAgent(StateMachine):
 
 def main():
     restaurant_file = "restaurant_info.csv"
-    classifier_file = "./ass_1a/models/complete/Ridge.pkl"
-    vectorizer_file = "./ass_1a/models/complete/vectorizer.pkl"
-
+    classifier = pkl.load(open("./ass_1a/models/complete/DecisionTree.pkl",'rb'))
+    vectorizer = pkl.load(open("./ass_1a/models/complete/vectorizer.pkl",'rb'))
     restaurant_file = "restaurant_info.csv"
-    sm = RestaurantAgent(restaurant_file,classifier_file,vectorizer_file)
+    sm = RestaurantAgent(restaurant_file,classifier,vectorizer)
     sm.graph("initial.png")
     
-    print(sm.current_state)
+    #print(sm.current_state)
     sm.send("start_processing")
 
     # Test inputs
-    sm.input_step("I am looking for an italian restaurant in the centre of town")
-    sm.input_step("expensive")
-    sm.input_step("What is their phone number and address?")
     
+    sm.input_step("im looking for an expensive restaurant that serves european food")
+    sm.input_step("any")
+    sm.input_step("anything else")
+    sm.input_step("whats the address")
+    sm.input_step("what area is it in")
+    sm.input_step("how about italian food")
     sm.input_step("Goodbye")
-    # TODO When you change the last msg to another dialogue act,
-    # The program should request whether preferences have changed. If so, go back to getting the preferences.
-    # If not, return the next restaurant in the dataframe. If there is none, tell the user that.
-    
+
     # User input loop
     #while True:
     #    user_input = input("Type your response: ")
