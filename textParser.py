@@ -67,6 +67,7 @@ class TextParser():
     #we are trying to circumvent this missclassification to improve usability.
     def parseText(self,sentence,context=None,requestPossible=True): 
         #First get the classification of the utterance
+        sentence = sentence.lower()
         vec = self.vectorizer.transform([sentence])
         cls = self.classifier.predict(vec)
         #information classified as inform, confirm, negate, and reqalts can be overloaded with information from the user-sentence
@@ -85,30 +86,38 @@ class TextParser():
                 if(doesntCare):
                     if(context=="area"):
                         area="dontcare"
-                    if(context=="food"):
+                    if(context=="foodType"):
                         foodType="dontcare"
-                    if(context=="price"):
-                        priceRange=="dontcare"
-            retlist = []
+                    if(context=="priceRange"):
+                        priceRange="dontcare"
+            retlist = {}
             names = ["foodType","priceRange","area"]
             vars = [foodType,priceRange,area]
             for i in range(0,len(vars)):
-                if i != "":
-                    retlist.append((names[i],vars[i]))
+                if vars[i] != "":
+                    retlist.update({names[i]:vars[i]})
             return (cls[0],retlist)
         #What fields are users requesting?
         elif(cls[0] in ["request"]):
             requVars = self.requestMatching(sentence)
-            return (cls[0],requVars)
+            return ([cls[0],requVars])
         else:
-            return(cls[0])
+            return([cls[0]])
 
-restaurant_file = "restaurant_info.csv"
-classifier_file = "./ass_1a/models/complete/Ridge.pkl"
-vectorizer_file = "./ass_1a/models/complete/vectorizer.pkl"
-parser = TextParser(classifier_file,restaurant_file,vectorizer_file)
-print(parser.parseText("I am looking for a moderate priced thai place located in the city centre"))
-print(parser.parseText("Whats the price?"))
-print(parser.parseText("I am looking for a moderate priced thai place located in any part of town"))
-print(parser.parseText("I am looking for a place that serves any type of food in any part of town in any price range",requestPossible=False))
-print(parser.parseText("I dont care",context="area",requestPossible=False))
+def main():
+    restaurant_file = "restaurant_info.csv"
+    classifier_file = "./ass_1a/models/complete/Ridge.pkl"
+    vectorizer_file = "./ass_1a/models/complete/vectorizer.pkl"
+    parser = TextParser(classifier_file,restaurant_file,vectorizer_file)
+    print(parser.parseText("I am looking for a moderate priced thai place located in the city centre"))
+    print(parser.parseText("Whats the price?"))
+    print(parser.parseText("I am looking for a moderate priced thai place located in any part of town"))
+    print(parser.parseText("I am looking for a place that serves any type of food in any part of town in any price range",requestPossible=False))
+    print(parser.parseText("I dont care",context="area",requestPossible=False))
+    print(parser.parseText("I dont care",context="foodType",requestPossible=False))
+    print(parser.parseText("I dont care",context="priceRange",requestPossible=False))
+
+
+
+if __name__ == '__main__':
+    main()
