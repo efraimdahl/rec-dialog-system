@@ -54,7 +54,7 @@ class RestaurantAgent(StateMachine):
         if(self.area!="dontcare"):
             df = df[df["area"]==self.area]
         if(self.priceRange!="dontcare"):
-            df=df[df["pricerange"]==self.pricerange]
+            df=df[df["pricerange"]==self.priceRange]
         if(self.foodType!=["dontcare"]):
             df=df[df["food"]==self.foodType]
         return df
@@ -121,7 +121,7 @@ def main():
     print(sm.current_state)
     sm.send("evaluate_input")
     print(sm.current_state)
-    sm.send("receive_input",input="any price")
+    sm.send("receive_input",input="cheap")
     print(sm.current_state)
     sm.send("evaluate_input")
     print(sm.current_state)

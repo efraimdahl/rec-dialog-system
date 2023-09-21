@@ -82,6 +82,7 @@ class TextParser():
                 if(priceRange=="" and self.anyDetector(sentence,"price")):
                     priceRange = "dontcare"
             else:
+                foodType,priceRange,area = self.keywordMatcher(sentence)
                 doesntCare = self.anyDetector(sentence,"generic")
                 if(doesntCare):
                     if(context=="area"):
@@ -90,6 +91,7 @@ class TextParser():
                         foodType="dontcare"
                     if(context=="priceRange"):
                         priceRange="dontcare"
+
             retlist = {}
             names = ["foodType","priceRange","area"]
             vars = [foodType,priceRange,area]
