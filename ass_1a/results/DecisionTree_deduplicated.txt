@@ -1,0 +1,28 @@
+Classification report for model DecisionTree trained on deduplicated
+              precision    recall  f1-score   support
+
+      inform       0.20      0.25      0.22         4
+     confirm       1.00      0.94      0.97        47
+      affirm       0.67      0.75      0.71        16
+     request       0.47      0.27      0.34        30
+    thankyou       0.67      1.00      0.80         2
+        null       0.93      0.93      0.93        15
+         bye       0.87      0.89      0.88       860
+     reqalts       0.09      0.03      0.05        31
+      negate       0.58      0.84      0.68        86
+       hello       0.75      0.60      0.67         5
+      repeat       0.44      0.29      0.35       140
+         ack       0.00      0.00      0.00         1
+     restart       0.91      0.98      0.94       297
+        deny       1.00      1.00      1.00         3
+     reqmore       0.86      0.83      0.85        30
+
+    accuracy                           0.82      1567
+   macro avg       0.63      0.64      0.63      1567
+weighted avg       0.80      0.82      0.80      1567
+Predicting difficult instances for model DecisionTree trained on deduplicated
+Sentence: Not really what im looking for, what about korean food	Predicted label: ['inform']
+Sentence: no id rather find a moderately priced restaurant	Predicted label: ['inform']
+Sentence: amazing thank you very much goodbye	Predicted label: ['thankyou']
+Sentence: goodbye thank you for your help	Predicted label: ['thankyou']
+Sentence: I am looking for an Italian restoration	Predicted label: ['inform']
