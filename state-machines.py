@@ -2,6 +2,9 @@ from statemachine import StateMachine, State
 import pandas as pd
 import pickle as pkl
 from textParser import TextParser
+from statemachine.contrib.diagram import DotGraphMachine
+import graphviz
+import pydot
 
 #Basic State machine that returns the number of restaurants in an area of town given the keyword south, west, east, north and center.
 class RestaurantAgent(StateMachine):
@@ -31,7 +34,7 @@ class RestaurantAgent(StateMachine):
         self.foodType = ""
         self.priceRange = ""
         self.context = None
-        self.tries = 0 #keep track of how many restaurants of the same variable combination where returned
+        self.tries = 0 #keep track of how many restaurants of the same variable combination were returned
         self.all_restaurants = pd.read_csv(restaurant_file)
         self.filteredRestaurants = None
         self.parser = TextParser(classifier_file,restaurant_file,vectorizer_file)
@@ -106,6 +109,12 @@ class RestaurantAgent(StateMachine):
             self.tries+=1
         print(f"{row['restaurantname']} is a nice place in the {row['area']} part of town serving {row['food']} food and the prices are {row['pricerange']}")
 
+    def graph(self,filename=""):
+        graph = DotGraphMachine(self)
+        if (filename != ""):
+            graph().write_png(filename)
+        return graph
+
 
 def main():
     restaurant_file = "restaurant_info.csv"
@@ -114,6 +123,8 @@ def main():
 
     restaurant_file = "restaurant_info.csv"
     sm = RestaurantAgent(restaurant_file,classifier_file,vectorizer_file)
+    sm.graph("initial.png")
+    
     print(sm.current_state)
     sm.send("start_processing")
     print(sm.current_state)
@@ -129,5 +140,7 @@ def main():
 
 if __name__ == '__main__':
     main()
+    
+    
 
 
