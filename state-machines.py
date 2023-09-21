@@ -110,6 +110,9 @@ class RestaurantAgent(StateMachine):
         print(f"{row['restaurantname']} is a nice place in the {row['area']} part of town serving {row['food']} food and the prices are {row['pricerange']}")
 
     def graph(self,filename=""):
+        """
+        Save a graph of the state machine with the current state highlighted to a file
+        """
         graph = DotGraphMachine(self)
         if (filename != ""):
             graph().write_png(filename)
