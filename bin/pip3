@@ -1,4 +1,4 @@
-#!/Users/matthewscheeres/Developer/rec-dialog-system/bin/python3
+#!/Users/matthewscheeres/Developer/rec-dialog-system/bin/python
 # -*- coding: utf-8 -*-
 import re
 import sys
