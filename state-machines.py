@@ -59,12 +59,11 @@ class RestaurantAgent(StateMachine):
     #Helper function to assign variables:
     def processVariableDict(self,variables):
         for key,val in variables.items():
-            match key:
-                case "foodType":
+            if key == "foodType":
                     self.foodType=val
-                case "priceRange":
+            elif key == "priceRange":
                     self.priceRange=val
-                case "area":
+            elif key == "area":
                     self.area=val
     
     def search_restaurant(self):
@@ -94,9 +93,8 @@ class RestaurantAgent(StateMachine):
         return (len(self.parser.parseText(input)[1]) != 0)
     
     #ENTRY & EXIT FUNCTIONS
-    def on_exit_waiting_for_input(self,input):
+    def on_exit_waiting_for_input(self, input):
         classAnswer = self.parser.parseText(input,context=self.context,requestPossible=False)
-        #print(input,classAnswer,self.context)
         if len(classAnswer)==2: 
             if(classAnswer[0] in ["inform","reqalts","confirm","negate","request"]):
                 self.processVariableDict(classAnswer[1])
@@ -235,12 +233,15 @@ def main():
     sm.input_step("whats the address")
     sm.input_step("what area is it in")
     sm.input_step("how about italian food")
-    sm.input_step("Goodbye")
+    print(sm.completed.is_active)
+    #sm.input_step("Goodbye")
+
+    print(sm.completed.is_active)
 
     # User input loop
-    #while True:
-    #    user_input = input("Type your response: ")
-    #    sm.input_step(user_input)
+    while not sm.completed.is_active:
+        user_input = input("Type your response: ")
+        sm.input_step(user_input)
         
 
 
