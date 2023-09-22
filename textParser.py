@@ -1,6 +1,8 @@
 import pandas as pd
 import pickle as pkl
-
+import math
+import random
+import Levenshtein
 #The textParser receives a trained classifier as input, and perform keyword matching to extract information of a sentence based on its classification.
 # 
 #example: "I am looking for a cheap thai place in the south of town" -> inform=>[(pricerange=cheap),(food=thai),(area=south)]
@@ -33,8 +35,21 @@ class TextParser():
         priceRange = ""
         area = ""
         words = sentence.split(" ")
+        threshold = 1   #Used for calculate the Levenstein distance
+        all_keywords = self.possible_food_type + self.possible_area + self.possible_pricerange
+        all_keywords = [x for x in all_keywords if isinstance(x, str)] #Delete None value
         for word in words:
-            #TODO Levenstein distance here
+            similar_keywords = []
+            for keyword in all_keywords:
+                distance = Levenshtein.distance(word, keyword)
+                if distance == threshold:
+                    similar_keywords.append(keyword)
+                elif distance == 0:
+                    similar_keywords = [word]
+                    break
+            if len(similar_keywords) == 0:
+                similar_keywords.append(word)
+            word = random.choice(similar_keywords)
             if(word in self.possible_food_type):
                 foodType = word
             if(word in self.possible_area):
