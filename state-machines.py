@@ -139,6 +139,7 @@ class RestaurantAgent(StateMachine):
         #print(input, request_type)
     
     def on_enter_return_restaurant(self):
+        #print("returning restaurants")
         #print(self.filteredRestaurants)
         if(self.filteredRestaurants is None):
             self.filteredRestaurants = self.search_restaurant()
@@ -171,7 +172,7 @@ class RestaurantAgent(StateMachine):
     def on_enter_give_information(self, input):
         requestPossible = self.current_suggestion_set #Only enable information requests if a restaurant is loaded
         request_type = self.parser.parseText(input, context=self.context, requestPossible=requestPossible)
-        print(request_type,self.current_suggestion)
+        #print(request_type,self.current_suggestion)
         if(self.current_suggestion_set):
             response_dict = {
                 "phone": "phone number",
@@ -203,7 +204,7 @@ class RestaurantAgent(StateMachine):
         print("Thank you for using the UU restaurant system. Goodbye!")
 
     def on_request_alternative(self,input):
-        print("updated preferences", input)
+        #print("updated preferences", input)
         if (self.preference_change(input)):
             preferences = self.parser.parseText(input,requestPossible=False)[1]
             self.processVariableDict(preferences)
@@ -212,11 +213,11 @@ class RestaurantAgent(StateMachine):
 
     # INPUT HANDLING
     def input_step(self, user_input: str) -> str:
-        print(self.current_state)
+        #print(self.current_state)
         input = self.parser.parseText(user_input)
         #print(f"Before state: {self.current_state}")
-        print(f"User message: {user_input}")
-        print(input)
+        #print(f"User message: {user_input}")
+        print("Classifier output",input,"from: ",user_input)
         # ["inform","reqalts","confirm","negate","request"]
         if self.current_state.id == "waiting_for_input":
             self.send("receive_input", input=user_input)
@@ -236,7 +237,7 @@ class RestaurantAgent(StateMachine):
         
         
         #print(f"After state: {self.current_state}")
-        print(f"--- Price: {self.priceRange}, Area: {self.area}, Food: {self.foodType}")
+        #print(f"--- Price: {self.priceRange}, Area: {self.area}, Food: {self.foodType}")
         
         
     

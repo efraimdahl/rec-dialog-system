@@ -85,7 +85,7 @@ class TextParser():
         sentence = sentence.lower()
         vec = self.vectorizer.transform([sentence])
         cls = self.classifier.predict(vec)
-        print(cls[0])
+        #print(cls[0])
         #information classified as inform, confirm, negate, and reqalts can be overloaded with information from the user-sentence
         foodType,priceRange,area="","",""
         if(cls[0] in ["inform","reqalts","confirm","negate"] or (cls[0]=="request" and not requestPossible)):
