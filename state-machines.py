@@ -245,7 +245,6 @@ class RestaurantAgent(StateMachine):
         """
         Save a graph of the state machine with the current state highlighted to specified file
         """
-        return ""
         graph = DotGraphMachine(self)
         if (filename != ""):
             graph().write_png(filename)
