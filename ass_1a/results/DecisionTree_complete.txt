@@ -1,24 +1,24 @@
 Classification report for model DecisionTree trained on complete
               precision    recall  f1-score   support
 
-      inform       0.25      0.33      0.29         6
-     confirm       1.00      1.00      1.00       231
-      affirm       0.98      0.91      0.94        53
-     request       0.56      0.15      0.23        34
+      inform       0.43      0.50      0.46         6
+     confirm       1.00      0.99      0.99       231
+      affirm       0.96      0.81      0.88        53
+     request       0.67      0.29      0.41        34
     thankyou       1.00      1.00      1.00         5
-        null       0.90      0.95      0.92        19
-         bye       0.89      0.90      0.89      2032
+        null       1.00      1.00      1.00        19
+         bye       0.88      0.89      0.89      2032
      reqalts       0.00      0.00      0.00        87
-      negate       0.89      0.85      0.87       322
+      negate       0.91      0.81      0.86       322
        hello       1.00      0.57      0.73         7
-      repeat       0.40      0.44      0.42       350
+      repeat       0.38      0.44      0.41       350
          ack       0.00      0.00      0.00         1
-     restart       0.94      0.99      0.97      1299
+     restart       0.95      0.99      0.97      1299
         deny       1.00      1.00      1.00         3
-     reqmore       0.99      1.00      0.99       652
+     reqmore       0.98      1.00      0.99       652
 
     accuracy                           0.88      5101
-   macro avg       0.72      0.67      0.68      5101
+   macro avg       0.74      0.69      0.70      5101
 weighted avg       0.87      0.88      0.87      5101
 Predicting difficult instances for model DecisionTree trained on complete
 Sentence: Not really what im looking for, what about korean food	Predicted label: ['inform']

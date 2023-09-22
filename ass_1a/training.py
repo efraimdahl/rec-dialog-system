@@ -34,6 +34,7 @@ def train_models():
 
             outfile = open("models/"+mode+"/"+model+".pkl",'wb')
             pkl.dump(clf,outfile)
+    print("Completed training models")
 
 if __name__ == "__main__":
     train_models()

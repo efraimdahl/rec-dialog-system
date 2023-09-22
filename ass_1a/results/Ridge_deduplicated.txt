@@ -1,25 +1,25 @@
 Classification report for model Ridge trained on deduplicated
               precision    recall  f1-score   support
 
-      inform       0.00      0.00      0.00         4
-     confirm       1.00      0.98      0.99        47
-      affirm       1.00      0.56      0.72        16
-     request       0.73      0.27      0.39        30
-    thankyou       0.00      0.00      0.00         2
-        null       0.88      0.93      0.90        15
-         bye       0.77      0.98      0.86       860
-     reqalts       0.00      0.00      0.00        31
-      negate       1.00      0.19      0.31        86
-       hello       0.75      0.60      0.67         5
-      repeat       0.62      0.06      0.10       140
+      inform       1.00      0.17      0.29         6
+     confirm       0.98      0.96      0.97        45
+      affirm       0.92      0.73      0.81        15
+     request       0.62      0.26      0.36        31
+    thankyou       0.33      0.20      0.25         5
+        null       1.00      1.00      1.00        13
+         bye       0.76      0.97      0.85       900
+     reqalts       0.00      0.00      0.00        34
+      negate       0.86      0.15      0.26        78
+       hello       1.00      0.43      0.60         7
+      repeat       0.33      0.03      0.05       139
          ack       0.00      0.00      0.00         1
-     restart       0.91      0.95      0.93       297
-        deny       1.00      1.00      1.00         3
-     reqmore       0.78      0.97      0.87        30
+     restart       0.92      0.89      0.90       334
+        deny       1.00      1.00      1.00         2
+     reqmore       0.79      0.96      0.87        27
 
-    accuracy                           0.80      1567
-   macro avg       0.63      0.50      0.52      1567
-weighted avg       0.78      0.80      0.75      1567
+    accuracy                           0.79      1637
+   macro avg       0.70      0.52      0.55      1637
+weighted avg       0.75      0.79      0.74      1637
 Predicting difficult instances for model Ridge trained on deduplicated
 Sentence: Not really what im looking for, what about korean food	Predicted label: ['inform']
 Sentence: no id rather find a moderately priced restaurant	Predicted label: ['inform']

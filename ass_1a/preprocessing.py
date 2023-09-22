@@ -62,6 +62,7 @@ def load_data(filename:str, mode:str) -> tuple:
     return (X_train, X_test, y_train, y_test, feature_names, target_names)
 
 def prepare_data():
+    print("Preparing Data ")
     filename = "dialog_acts.dat"
     for mode in ["complete", "deduplicated"]:
         X_train, X_test, y_train, y_test, feature_names, target_names = load_data(filename, mode)
