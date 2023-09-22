@@ -199,8 +199,8 @@ class RestaurantAgent(StateMachine):
                 return
             print("Sorry, can you try changing the area, price or foodtype?")
             
-    def on_enter_complete_process(self):
-        print("Thank you for using the Cambridge restaurant system. Goodbye!")
+    def on_enter_completed(self):
+        print("Thank you for using the UU restaurant system. Goodbye!")
 
     def on_request_alternative(self,input):
         print("updated preferences", input)
