@@ -4,7 +4,7 @@ import numpy as np
 
 class KeywordClassifier():
     """
-    Predicts the label using a rule-based system based on keyword matching
+    Predicts the label of a sentence using a rule-based system based on keyword matching
     """
     def __init__(self):
         # There is no learning, we just initialize the keyword matching dictionary
@@ -42,9 +42,23 @@ class KeywordClassifier():
         }
     
     def fit(self,X,y):
+        """
+        Does nothing, just here for completeness.
+        """
         pass
         
     def predict(self,X):
+        """
+        Predict the labels for a list of sentences using keyword matching.
+
+        Parameters
+        ----------
+        X : List of sentences as strings.
+
+        Returns
+        -------
+        labels : list of predicted labels
+        """
         # Note that X should not be vectorised
         labels = []
         for text in X:
@@ -55,6 +69,9 @@ class KeywordClassifier():
         return labels
     
     def score(self,X,y):
+        """
+        Compares the predicted labels to the true labels and returns the accuracy
+        """
         # Simple accuracy score
         return sum(self.predict(X) == y)/len(y)
         

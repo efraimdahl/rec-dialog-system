@@ -4,6 +4,9 @@ from evaluation import evaluate_models
 
 
 def main():
+    """
+    Does everything for assignment 1a: loading the data, training the models and evaluating the models
+    """
     filename = "data/dialog_acts.dat"
     data = prepare_data(filename)
     models = train_models(data)

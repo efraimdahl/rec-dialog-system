@@ -62,6 +62,18 @@ def load_data(filename:str, mode:str) -> tuple:
     return result
 
 def prepare_data(filename):
+    """
+    Loads and prepares all the data for training, split by complete and deduplicated modes.
+
+    Parameters
+    ----------
+    filename : file to be loaded
+
+    Returns
+    -------
+    data : dictionary containing all the data
+
+    """
     print("Preparing Data")
     data = {}
     for mode in ["complete", "deduplicated"]:

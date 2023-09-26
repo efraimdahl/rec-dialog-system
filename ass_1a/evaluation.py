@@ -3,6 +3,22 @@ import matplotlib.pyplot as plt
 from keyword_model import KeywordClassifier
 
 def predict_difficult_instance(model, vectorizer, print_string=True) -> str:
+    """
+    A couple difficult sentences were selected to test each model's performance on, see report.
+
+    Parameters
+    ----------
+    model : the model used to predict labels
+    vectorizer : vectorizer used to vectorize inputs
+    print_string : bool, whether to print the ouptut on top of returning it.
+
+    Returns
+    -------
+    str
+        A string describing the labels assigned to each sentence by the model
+
+    """
+    
     difficult_instances = [
         "Not really what im looking for, what about korean food", # Might be classified as negate, should be reqalt
         "no id rather find a moderately priced restaurant",  # Might be classified negate, should be reqalt
@@ -19,6 +35,19 @@ def predict_difficult_instance(model, vectorizer, print_string=True) -> str:
     return results
 
 def evaluate_models(models,data):
+    """
+    Evaluates model performance and generates confusion matrices, classification reports and logs difficult isntances.
+
+    Parameters
+    ----------
+    models : a dictionary containing the models to be evaluated (key: name, val: trained model).
+    data : a dictionary containing the data (key: mode, val: data for that mode)
+
+    Returns
+    -------
+    None.
+
+    """
     for mode in ["complete","deduplicated"]:    
         for model_name,model in models[mode].items():
            

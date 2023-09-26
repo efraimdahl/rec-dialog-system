@@ -5,6 +5,18 @@ from sklearn.dummy import DummyClassifier
 from keyword_model import KeywordClassifier
 
 def train_models(data):
+    """
+    A list of different models is trained on the training data 
+
+    Parameters
+    ----------
+    data : dictionary which contains the training data for each mode (complete,deduplicated).
+    
+    Returns
+    -------
+    models : a dictionary containing the trained models (key: name, val: trained model object).
+
+    """
     modes = ["complete","deduplicated"]
     models = {modes[0] : {},modes[1] : {}}
     for mode in modes:
