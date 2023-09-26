@@ -3,25 +3,25 @@
 Classification report for model Ridge trained on complete
               precision    recall  f1-score   support
 
-         ack       1.00      0.17      0.29         6
-      affirm       1.00      1.00      1.00       231
-         bye       0.98      0.81      0.89        53
-     confirm       0.86      0.18      0.29        34
-        deny       1.00      0.80      0.89         5
-       hello       0.90      1.00      0.95        19
-      inform       0.79      0.96      0.87      2032
+         ack       0.00      0.00      0.00         6
+      affirm       0.99      0.98      0.99       231
+         bye       1.00      0.75      0.86        53
+     confirm       0.91      0.29      0.44        34
+        deny       1.00      0.40      0.57         5
+       hello       1.00      1.00      1.00        19
+      inform       0.78      0.95      0.86      2032
       negate       0.00      0.00      0.00        87
-        null       0.91      0.74      0.81       322
-      repeat       0.71      0.71      0.71         7
-     reqalts       0.45      0.01      0.03       350
+        null       0.89      0.76      0.82       322
+      repeat       1.00      0.57      0.73         7
+     reqalts       0.24      0.01      0.02       350
      require       0.00      0.00      0.00         1
-     request       0.94      0.99      0.96      1299
+     request       0.93      0.99      0.96      1299
      restart       1.00      1.00      1.00         3
     thankyou       0.98      1.00      0.99       652
 
     accuracy                           0.87      5101
-   macro avg       0.77      0.62      0.65      5101
-weighted avg       0.84      0.87      0.83      5101
+   macro avg       0.71      0.58      0.62      5101
+weighted avg       0.82      0.87      0.83      5101
 Predicting difficult instances for model Ridge trained on complete
 Sentence: Not really what im looking for, what about korean food	Predicted label: ['inform']
 Sentence: no id rather find a moderately priced restaurant	Predicted label: ['inform']

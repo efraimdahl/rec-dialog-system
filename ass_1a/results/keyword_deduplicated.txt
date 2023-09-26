@@ -3,25 +3,25 @@
 Classification report for model keyword trained on deduplicated
               precision    recall  f1-score   support
 
-         ack       0.29      0.67      0.40         6
-      affirm       0.86      0.50      0.63        36
-         bye       1.00      0.36      0.53        14
-     confirm       0.64      0.64      0.64        25
-        deny       1.00      0.20      0.33         5
-       hello       0.19      0.47      0.27        15
-      inform       0.82      0.81      0.82       871
-      negate       0.27      0.81      0.40        31
-        null       0.08      0.01      0.02        78
-      repeat       1.00      0.33      0.50         6
-     reqalts       0.86      0.65      0.74       153
+         ack       0.19      0.50      0.27         6
+      affirm       1.00      0.51      0.68        41
+         bye       1.00      0.33      0.50        15
+     confirm       0.69      0.58      0.63        31
+        deny       1.00      0.50      0.67         2
+       hello       0.13      0.33      0.19        15
+      inform       0.81      0.82      0.81       874
+      negate       0.25      0.64      0.36        33
+        null       0.11      0.01      0.02        73
+      repeat       1.00      0.40      0.57         5
+     reqalts       0.83      0.64      0.72       143
      require       0.50      1.00      0.67         1
-     request       0.71      0.81      0.76       326
-     restart       1.00      1.00      1.00         2
-    thankyou       0.69      1.00      0.81        24
+     request       0.72      0.80      0.76       328
+     restart       1.00      0.33      0.50         3
+    thankyou       0.76      1.00      0.86        32
 
-    accuracy                           0.74      1593
-   macro avg       0.66      0.62      0.57      1593
-weighted avg       0.75      0.74      0.73      1593
+    accuracy                           0.74      1602
+   macro avg       0.67      0.56      0.55      1602
+weighted avg       0.75      0.74      0.73      1602
 Predicting difficult instances for model keyword trained on deduplicated
 Sentence: Not really what im looking for, what about korean food	Predicted label: ['inform']
 Sentence: no id rather find a moderately priced restaurant	Predicted label: ['negate']

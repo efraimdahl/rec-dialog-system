@@ -4,24 +4,24 @@ Classification report for model Ridge trained on deduplicated
               precision    recall  f1-score   support
 
          ack       0.00      0.00      0.00         6
-      affirm       1.00      0.92      0.96        36
-         bye       1.00      0.57      0.73        14
-     confirm       0.67      0.32      0.43        25
-        deny       0.00      0.00      0.00         5
-       hello       0.88      1.00      0.94        15
-      inform       0.75      0.98      0.85       871
-      negate       0.00      0.00      0.00        31
-        null       0.74      0.22      0.34        78
-      repeat       0.80      0.67      0.73         6
-     reqalts       0.50      0.02      0.04       153
+      affirm       1.00      0.95      0.97        41
+         bye       0.90      0.60      0.72        15
+     confirm       0.82      0.29      0.43        31
+        deny       0.00      0.00      0.00         2
+       hello       0.94      1.00      0.97        15
+      inform       0.76      0.98      0.85       874
+      negate       0.00      0.00      0.00        33
+        null       0.86      0.25      0.38        73
+      repeat       1.00      0.60      0.75         5
+     reqalts       0.60      0.06      0.11       143
      require       0.00      0.00      0.00         1
-     request       0.93      0.89      0.91       326
-     restart       1.00      1.00      1.00         2
-    thankyou       0.73      1.00      0.84        24
+     request       0.94      0.89      0.91       328
+     restart       1.00      1.00      1.00         3
+    thankyou       0.78      0.97      0.86        32
 
-    accuracy                           0.79      1593
-   macro avg       0.60      0.51      0.52      1593
-weighted avg       0.75      0.79      0.73      1593
+    accuracy                           0.80      1602
+   macro avg       0.64      0.51      0.53      1602
+weighted avg       0.78      0.80      0.75      1602
 Predicting difficult instances for model Ridge trained on deduplicated
 Sentence: Not really what im looking for, what about korean food	Predicted label: ['inform']
 Sentence: no id rather find a moderately priced restaurant	Predicted label: ['inform']
