@@ -4,9 +4,12 @@ from evaluation import evaluate_models
 
 
 def main():
-    prepare_data()
-    train_models()
-    evaluate_models()
+    filename = "data/dialog_acts.dat"
+    data = prepare_data(filename)
+    models = train_models(data)
+    print(models.keys())
+    evaluate_models(models,data)
+    # Evaluation of models is saved in the models map.
 
 if __name__ == "__main__":
     main()

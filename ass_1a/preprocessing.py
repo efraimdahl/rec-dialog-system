@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 import sklearn.model_selection
 from sklearn.feature_extraction.text import CountVectorizer
-import pickle as pkl
+from collections import defaultdict
 
 def load_data(filename:str, mode:str) -> tuple:
     """Load data from file and split into training and test set.
@@ -18,6 +18,7 @@ def load_data(filename:str, mode:str) -> tuple:
     with open(filename) as f:
         data = [line.rstrip("\n") for line in f.readlines()]
     
+    result = {}
     # Process the dataset
     labels, messages = [], []
     limit = 0
@@ -37,40 +38,61 @@ def load_data(filename:str, mode:str) -> tuple:
         train=train.drop_duplicates(subset=['Label','Text'])
         test=test.drop_duplicates(subset=['Label','Text'])
     
+<<<<<<< Updated upstream
     # Save raw test data for keyword classifier
     file = open(f"data/{mode}/X_test_raw.pkl", 'wb')
     pkl.dump(test["Text"], file)
+=======
+    # Save raw train/test data for keyword classifier
+    result["X_train_raw"] = train["Text"]
+    result["X_test_raw"] = test["Text"]
+>>>>>>> Stashed changes
     
     print(mode,"Splitting into training set of size ", len(train), "and test set of size ", len(test))
     
     vectorizer = CountVectorizer(
         stop_words="english"
     )
-    X_train = vectorizer.fit_transform(train["Text"])
+    result["X_train"] = vectorizer.fit_transform(train["Text"])
     
     # Save vectorizer for later use
+<<<<<<< Updated upstream
     outfile = open("models/"+mode+"/vectorizer.pkl",'wb')
     pkl.dump(vectorizer, outfile)
+=======
+    result["vectorizer"] = vectorizer
+>>>>>>> Stashed changes
 
     # Extracting features from the test data using the same vectorizer
-    X_test = vectorizer.transform(test["Text"])
+    result["X_test"] = vectorizer.transform(test["Text"])
 
-    y_train = train["Label"]
-    y_test = test["Label"]
-    feature_names = vectorizer.get_feature_names_out()
-    target_names = df['Label'].unique()
-    return (X_train, X_test, y_train, y_test, feature_names, target_names)
+    result["y_train"] = train["Label"]
+    result["y_test"] = test["Label"]
+    result["feature_names"] = vectorizer.get_feature_names_out()
+    result["target_names"] = df['Label'].unique()
+    return result
 
-def prepare_data():
-    print("Preparing Data ")
-    filename = "data/dialog_acts.dat"
+def prepare_data(filename):
+    print("Preparing Data")
+    data = {}
     for mode in ["complete", "deduplicated"]:
+<<<<<<< Updated upstream
         X_train, X_test, y_train, y_test, feature_names, target_names = load_data(filename, mode)
         comps = {"X_train":X_train,"X_test":X_test,"y_train":y_train,"y_test":y_test,"feature_names":feature_names,"target_names":target_names}
         for name in comps.keys():
             data = comps.get(name)
             file = open("data/"+mode+"/"+name+".pkl", 'wb')
             pkl.dump(data, file)
+=======
+        res = load_data(filename, mode)
+        data[mode] = res
+    return data
+>>>>>>> Stashed changes
 
 if __name__ == "__main__":
-    prepare_data()
+    filename = "data/dialog_acts.dat"
+    data = prepare_data(filename)
+    print(data["complete"]["X_train"].shape)
+    print(data["complete"]["X_test"].shape)
+    print(data["complete"]["y_train"].shape)
+    print(data["complete"]["y_test"].shape)

@@ -1,6 +1,9 @@
+
+
 Classification report for model most_frequent trained on deduplicated
               precision    recall  f1-score   support
 
+<<<<<<< Updated upstream
          ack       0.00      0.00      0.00         5
       affirm       0.00      0.00      0.00        42
          bye       0.00      0.00      0.00        12
@@ -20,6 +23,27 @@ Classification report for model most_frequent trained on deduplicated
     accuracy                           0.55      1575
    macro avg       0.04      0.07      0.05      1575
 weighted avg       0.30      0.55      0.39      1575
+=======
+      inform       0.00      0.00      0.00         5
+     confirm       0.00      0.00      0.00        43
+      affirm       0.00      0.00      0.00        13
+     request       0.00      0.00      0.00        28
+    thankyou       0.00      0.00      0.00         3
+        null       0.00      0.00      0.00        15
+         bye       0.56      1.00      0.72       858
+     reqalts       0.00      0.00      0.00        36
+      negate       0.00      0.00      0.00        75
+       hello       0.00      0.00      0.00         5
+      repeat       0.00      0.00      0.00       116
+         ack       0.00      0.00      0.00         1
+     restart       0.00      0.00      0.00       312
+        deny       0.00      0.00      0.00         3
+     reqmore       0.00      0.00      0.00        28
+
+    accuracy                           0.56      1541
+   macro avg       0.04      0.07      0.05      1541
+weighted avg       0.31      0.56      0.40      1541
+>>>>>>> Stashed changes
 Predicting difficult instances for model most_frequent trained on deduplicated
 Sentence: Not really what im looking for, what about korean food	Predicted label: ['inform']
 Sentence: no id rather find a moderately priced restaurant	Predicted label: ['inform']

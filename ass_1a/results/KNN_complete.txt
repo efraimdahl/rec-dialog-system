@@ -1,6 +1,9 @@
+
+
 Classification report for model KNN trained on complete
               precision    recall  f1-score   support
 
+<<<<<<< Updated upstream
          ack       0.43      0.50      0.46         6
       affirm       1.00      0.90      0.94       231
          bye       0.91      0.94      0.93        53
@@ -20,6 +23,27 @@ Classification report for model KNN trained on complete
     accuracy                           0.85      5101
    macro avg       0.73      0.61      0.64      5101
 weighted avg       0.86      0.85      0.85      5101
+=======
+      inform       0.33      0.33      0.33         6
+     confirm       0.99      0.89      0.94       231
+      affirm       1.00      0.89      0.94        53
+     request       0.92      0.32      0.48        34
+    thankyou       0.60      0.60      0.60         5
+        null       0.93      0.68      0.79        19
+         bye       0.86      0.88      0.87      2032
+     reqalts       0.00      0.00      0.00        87
+      negate       0.89      0.87      0.88       322
+       hello       0.00      0.00      0.00         7
+      repeat       0.40      0.54      0.46       350
+         ack       0.00      0.00      0.00         1
+     restart       0.98      0.96      0.97      1299
+        deny       1.00      1.00      1.00         3
+     reqmore       0.99      1.00      0.99       652
+
+    accuracy                           0.87      5101
+   macro avg       0.66      0.60      0.62      5101
+weighted avg       0.87      0.87      0.87      5101
+>>>>>>> Stashed changes
 Predicting difficult instances for model KNN trained on complete
 Sentence: Not really what im looking for, what about korean food	Predicted label: ['inform']
 Sentence: no id rather find a moderately priced restaurant	Predicted label: ['inform']

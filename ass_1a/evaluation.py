@@ -1,6 +1,6 @@
-import pickle as pkl
 from sklearn.metrics import ConfusionMatrixDisplay, classification_report
 import matplotlib.pyplot as plt
+from keyword_model import KeywordClassifier
 
 def predict_difficult_instance(model, vectorizer, print_string=True) -> str:
     difficult_instances = [
@@ -13,42 +13,27 @@ def predict_difficult_instance(model, vectorizer, print_string=True) -> str:
 
     results = ""
     for inst in difficult_instances:
-        inst_tf = vectorizer.transform([inst]) if repr(model) != "KeywordClassifier()" else [inst]
+        inst_tf = vectorizer.transform([inst]) if not isinstance(model,KeywordClassifier) else [inst]
         results += f"Sentence: {inst}\tPredicted label: {model.predict(inst_tf)}\n"
     print(results if print_string else "")
     return results
 
-def evaluate_models():
-    for mode in ["complete","deduplicated"]:
-        # Load all pickle files
-        X_test_file = open(f"data/{mode}/X_test.pkl", 'rb')
-        y_test_file = open(f"data/{mode}/y_test.pkl", 'rb')
-        labels_file = open(f"data/complete/target_names.pkl", 'rb')
-        vectorizer_file = open(f"models/{mode}/vectorizer.pkl",'rb')
-        X_test_raw_file = open(f"data/{mode}/X_test_raw.pkl", 'rb')
-        
-        X_test=pkl.load(X_test_file)
-        y_test=pkl.load(y_test_file)
-        target_names=pkl.load(labels_file)
-        vectorizer = pkl.load(vectorizer_file)
-        X_test_raw=pkl.load(X_test_raw_file)
-        
-        
-        for model in ["Ridge", "KNN", "DecisionTree", "most_frequent", "keyword"]:
-            modelfile = open(f"models/{mode}/{model}.pkl",'rb')
-            clf = pkl.load(modelfile)
-            
-            if model == "keyword":
-                pred = clf.predict(X_test_raw)
+def evaluate_models(models,data):
+    for mode in ["complete","deduplicated"]:    
+        for model_name,model in models[mode].items():
+           
+            if model_name == "keyword":
+                pred = model.predict(data[mode]["X_test_raw"])
             else:
-                pred = clf.predict(X_test)
+                pred = model.predict(data[mode]["X_test"])
                 
             # Plot and save confusion matrix
             fig, ax = plt.subplots(figsize=(10,10))
-            ConfusionMatrixDisplay.from_predictions(y_test, pred, ax=ax,labels=target_names)
+            ConfusionMatrixDisplay.from_predictions(data[mode]["y_test"], pred, ax=ax,labels=data[mode]["target_names"])
             _ = ax.set_title(
-                f"Confusion Matrix for Restaurant Dialog Classifier model={model}/data={mode}"
+                f"Confusion Matrix for Restaurant Dialog Classifier model={model_name}/data={mode}"
             )
+<<<<<<< Updated upstream
             fig.savefig(f"results/{model}_{mode}.png")
             
             # Print classification report
@@ -60,14 +45,22 @@ def evaluate_models():
             with open(f"results/{model}_{mode}.txt", "w") as f:
                 f.write(f"Classification report for model {model} trained on {mode}\n")
                 f.write(classification_report(y_test, pred, target_names=ordered_labels, zero_division=0))
+=======
+            fig.savefig(f"ass_1a/results/{model_name}_{mode}.png")
+            
+            # Save classification report to log file
+            with open(f"ass_1a/results/{model_name}_{mode}.txt", "w") as f:
+                f.write(f"\n\nClassification report for model {model_name} trained on {mode}\n")
+                f.write(classification_report(data[mode]["y_test"], pred, target_names=data[mode]["target_names"], zero_division=0))
+>>>>>>> Stashed changes
             
             # Print difficult instances
-            print(f"\nPredicting difficult instances for model {model} trained on {mode}")
-            difficult_instances = predict_difficult_instance(clf, vectorizer)
+            print(f"\nPredicting difficult instances for model {model_name} trained on {mode}")
+            difficult_instances = predict_difficult_instance(model, data[mode]["vectorizer"])
             
             # Save difficult instances to log file
-            with open(f"results/{model}_{mode}.txt", "a") as f:
-                f.write(f"Predicting difficult instances for model {model} trained on {mode}\n")
+            with open(f"ass_1a/results/{model_name}_{mode}.txt", "a") as f:
+                f.write(f"Predicting difficult instances for model {model_name} trained on {mode}\n")
                 f.write(difficult_instances)
 
 

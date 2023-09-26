@@ -1,6 +1,9 @@
+
+
 Classification report for model Ridge trained on deduplicated
               precision    recall  f1-score   support
 
+<<<<<<< Updated upstream
          ack       0.50      0.20      0.29         5
       affirm       1.00      0.93      0.96        42
          bye       0.90      0.75      0.82        12
@@ -20,6 +23,27 @@ Classification report for model Ridge trained on deduplicated
     accuracy                           0.80      1575
    macro avg       0.67      0.52      0.55      1575
 weighted avg       0.77      0.80      0.75      1575
+=======
+      inform       0.00      0.00      0.00         5
+     confirm       1.00      0.93      0.96        43
+      affirm       0.89      0.62      0.73        13
+     request       0.93      0.46      0.62        28
+    thankyou       0.00      0.00      0.00         3
+        null       0.93      0.93      0.93        15
+         bye       0.78      0.98      0.87       858
+     reqalts       0.00      0.00      0.00        36
+      negate       0.83      0.13      0.23        75
+       hello       0.75      0.60      0.67         5
+      repeat       0.33      0.03      0.06       116
+         ack       0.00      0.00      0.00         1
+     restart       0.93      0.92      0.92       312
+        deny       1.00      1.00      1.00         3
+     reqmore       0.77      0.96      0.86        28
+
+    accuracy                           0.81      1541
+   macro avg       0.61      0.51      0.52      1541
+weighted avg       0.76      0.81      0.76      1541
+>>>>>>> Stashed changes
 Predicting difficult instances for model Ridge trained on deduplicated
 Sentence: Not really what im looking for, what about korean food	Predicted label: ['inform']
 Sentence: no id rather find a moderately priced restaurant	Predicted label: ['inform']

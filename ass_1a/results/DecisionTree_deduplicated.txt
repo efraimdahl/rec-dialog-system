@@ -1,6 +1,9 @@
+
+
 Classification report for model DecisionTree trained on deduplicated
               precision    recall  f1-score   support
 
+<<<<<<< Updated upstream
          ack       0.50      0.60      0.55         5
       affirm       1.00      0.93      0.96        42
          bye       0.53      0.83      0.65        12
@@ -20,6 +23,27 @@ Classification report for model DecisionTree trained on deduplicated
     accuracy                           0.81      1575
    macro avg       0.68      0.65      0.65      1575
 weighted avg       0.79      0.81      0.80      1575
+=======
+      inform       0.38      0.60      0.46         5
+     confirm       1.00      0.88      0.94        43
+      affirm       0.77      0.77      0.77        13
+     request       0.31      0.14      0.20        28
+    thankyou       0.75      1.00      0.86         3
+        null       0.93      0.93      0.93        15
+         bye       0.87      0.90      0.88       858
+     reqalts       0.00      0.00      0.00        36
+      negate       0.61      0.83      0.70        75
+       hello       0.75      0.60      0.67         5
+      repeat       0.40      0.31      0.35       116
+         ack       0.00      0.00      0.00         1
+     restart       0.91      0.97      0.94       312
+        deny       1.00      1.00      1.00         3
+     reqmore       0.87      0.93      0.90        28
+
+    accuracy                           0.83      1541
+   macro avg       0.64      0.66      0.64      1541
+weighted avg       0.80      0.83      0.81      1541
+>>>>>>> Stashed changes
 Predicting difficult instances for model DecisionTree trained on deduplicated
 Sentence: Not really what im looking for, what about korean food	Predicted label: ['inform']
 Sentence: no id rather find a moderately priced restaurant	Predicted label: ['inform']
