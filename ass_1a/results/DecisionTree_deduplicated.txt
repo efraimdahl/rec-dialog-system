@@ -1,28 +1,28 @@
 Classification report for model DecisionTree trained on deduplicated
               precision    recall  f1-score   support
 
-      inform       0.33      0.33      0.33         6
-     confirm       0.95      0.91      0.93        45
-      affirm       0.55      0.80      0.65        15
-     request       0.43      0.29      0.35        31
-    thankyou       0.60      0.60      0.60         5
-        null       1.00      1.00      1.00        13
-         bye       0.86      0.89      0.88       900
-     reqalts       0.07      0.03      0.04        34
-      negate       0.55      0.85      0.67        78
-       hello       1.00      0.43      0.60         7
-      repeat       0.45      0.27      0.34       139
-         ack       0.00      0.00      0.00         1
-     restart       0.93      0.97      0.95       334
-        deny       1.00      1.00      1.00         2
-     reqmore       0.84      0.78      0.81        27
+         ack       0.50      0.60      0.55         5
+      affirm       1.00      0.93      0.96        42
+         bye       0.53      0.83      0.65        12
+     confirm       0.43      0.21      0.29        28
+        deny       1.00      1.00      1.00         4
+       hello       1.00      1.00      1.00        16
+      inform       0.86      0.89      0.87       868
+      negate       0.14      0.03      0.05        35
+        null       0.52      0.87      0.65        71
+      repeat       1.00      0.50      0.67         6
+     reqalts       0.46      0.29      0.36       150
+     require       0.00      0.00      0.00         1
+     request       0.89      0.98      0.94       306
+     restart       1.00      1.00      1.00         2
+    thankyou       0.82      0.62      0.71        29
 
-    accuracy                           0.82      1637
-   macro avg       0.64      0.61      0.61      1637
-weighted avg       0.80      0.82      0.80      1637
+    accuracy                           0.81      1575
+   macro avg       0.68      0.65      0.65      1575
+weighted avg       0.79      0.81      0.80      1575
 Predicting difficult instances for model DecisionTree trained on deduplicated
 Sentence: Not really what im looking for, what about korean food	Predicted label: ['inform']
 Sentence: no id rather find a moderately priced restaurant	Predicted label: ['inform']
-Sentence: amazing thank you very much goodbye	Predicted label: ['thankyou']
-Sentence: goodbye thank you for your help	Predicted label: ['thankyou']
+Sentence: amazing thank you very much goodbye	Predicted label: ['negate']
+Sentence: goodbye thank you for your help	Predicted label: ['negate']
 Sentence: I am looking for an Italian restoration	Predicted label: ['inform']

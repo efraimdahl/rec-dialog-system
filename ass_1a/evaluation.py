@@ -52,13 +52,14 @@ def evaluate_models():
             fig.savefig(f"results/{model}_{mode}.png")
             
             # Print classification report
+            ordered_labels = ["ack", "affirm", "bye", "confirm", "deny", "hello", "inform", "negate", "null", "repeat", "reqalts", "require", "request", "restart", "thankyou"]
             print(f"\n\nClassification report for model {model} trained on {mode}")
-            print(classification_report(y_test, pred, target_names=target_names, zero_division=0))
+            print(classification_report(y_test, pred, target_names=ordered_labels, zero_division=0))
             
             # Save classification report to log file
             with open(f"results/{model}_{mode}.txt", "w") as f:
                 f.write(f"Classification report for model {model} trained on {mode}\n")
-                f.write(classification_report(y_test, pred, target_names=target_names, zero_division=0))
+                f.write(classification_report(y_test, pred, target_names=ordered_labels, zero_division=0))
             
             # Print difficult instances
             print(f"\nPredicting difficult instances for model {model} trained on {mode}")

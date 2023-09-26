@@ -1,21 +1,21 @@
 Classification report for model most_frequent trained on complete
               precision    recall  f1-score   support
 
-      inform       0.00      0.00      0.00         6
-     confirm       0.00      0.00      0.00       231
-      affirm       0.00      0.00      0.00        53
-     request       0.00      0.00      0.00        34
-    thankyou       0.00      0.00      0.00         5
-        null       0.00      0.00      0.00        19
-         bye       0.40      1.00      0.57      2032
-     reqalts       0.00      0.00      0.00        87
-      negate       0.00      0.00      0.00       322
-       hello       0.00      0.00      0.00         7
-      repeat       0.00      0.00      0.00       350
-         ack       0.00      0.00      0.00         1
-     restart       0.00      0.00      0.00      1299
-        deny       0.00      0.00      0.00         3
-     reqmore       0.00      0.00      0.00       652
+         ack       0.00      0.00      0.00         6
+      affirm       0.00      0.00      0.00       231
+         bye       0.00      0.00      0.00        53
+     confirm       0.00      0.00      0.00        34
+        deny       0.00      0.00      0.00         5
+       hello       0.00      0.00      0.00        19
+      inform       0.40      1.00      0.57      2032
+      negate       0.00      0.00      0.00        87
+        null       0.00      0.00      0.00       322
+      repeat       0.00      0.00      0.00         7
+     reqalts       0.00      0.00      0.00       350
+     require       0.00      0.00      0.00         1
+     request       0.00      0.00      0.00      1299
+     restart       0.00      0.00      0.00         3
+    thankyou       0.00      0.00      0.00       652
 
     accuracy                           0.40      5101
    macro avg       0.03      0.07      0.04      5101

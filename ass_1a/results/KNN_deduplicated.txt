@@ -1,25 +1,25 @@
 Classification report for model KNN trained on deduplicated
               precision    recall  f1-score   support
 
-      inform       0.67      0.33      0.44         6
-     confirm       0.95      0.40      0.56        45
-      affirm       0.73      0.73      0.73        15
-     request       0.25      0.29      0.27        31
-    thankyou       0.50      0.20      0.29         5
-        null       1.00      0.38      0.56        13
-         bye       0.81      0.89      0.85       900
-     reqalts       0.00      0.00      0.00        34
-      negate       0.48      0.27      0.34        78
-       hello       1.00      0.43      0.60         7
-      repeat       0.41      0.38      0.39       139
-         ack       0.00      0.00      0.00         1
-     restart       0.93      0.96      0.95       334
-        deny       1.00      1.00      1.00         2
-     reqmore       0.83      0.89      0.86        27
+         ack       1.00      0.40      0.57         5
+      affirm       1.00      0.43      0.60        42
+         bye       0.59      0.83      0.69        12
+     confirm       0.26      0.25      0.25        28
+        deny       1.00      0.75      0.86         4
+       hello       1.00      0.31      0.48        16
+      inform       0.78      0.89      0.83       868
+      negate       0.50      0.03      0.05        35
+        null       0.43      0.21      0.28        71
+      repeat       1.00      0.33      0.50         6
+     reqalts       0.41      0.29      0.34       150
+     require       0.00      0.00      0.00         1
+     request       0.89      0.97      0.93       306
+     restart       1.00      1.00      1.00         2
+    thankyou       0.81      0.76      0.79        29
 
-    accuracy                           0.78      1637
-   macro avg       0.64      0.48      0.52      1637
-weighted avg       0.76      0.78      0.76      1637
+    accuracy                           0.76      1575
+   macro avg       0.71      0.50      0.54      1575
+weighted avg       0.74      0.76      0.74      1575
 Predicting difficult instances for model KNN trained on deduplicated
 Sentence: Not really what im looking for, what about korean food	Predicted label: ['inform']
 Sentence: no id rather find a moderately priced restaurant	Predicted label: ['inform']

@@ -1,25 +1,25 @@
 Classification report for model most_frequent trained on deduplicated
               precision    recall  f1-score   support
 
-      inform       0.00      0.00      0.00         6
-     confirm       0.00      0.00      0.00        45
-      affirm       0.00      0.00      0.00        15
-     request       0.00      0.00      0.00        31
-    thankyou       0.00      0.00      0.00         5
-        null       0.00      0.00      0.00        13
-         bye       0.55      1.00      0.71       900
-     reqalts       0.00      0.00      0.00        34
-      negate       0.00      0.00      0.00        78
-       hello       0.00      0.00      0.00         7
-      repeat       0.00      0.00      0.00       139
-         ack       0.00      0.00      0.00         1
-     restart       0.00      0.00      0.00       334
-        deny       0.00      0.00      0.00         2
-     reqmore       0.00      0.00      0.00        27
+         ack       0.00      0.00      0.00         5
+      affirm       0.00      0.00      0.00        42
+         bye       0.00      0.00      0.00        12
+     confirm       0.00      0.00      0.00        28
+        deny       0.00      0.00      0.00         4
+       hello       0.00      0.00      0.00        16
+      inform       0.55      1.00      0.71       868
+      negate       0.00      0.00      0.00        35
+        null       0.00      0.00      0.00        71
+      repeat       0.00      0.00      0.00         6
+     reqalts       0.00      0.00      0.00       150
+     require       0.00      0.00      0.00         1
+     request       0.00      0.00      0.00       306
+     restart       0.00      0.00      0.00         2
+    thankyou       0.00      0.00      0.00        29
 
-    accuracy                           0.55      1637
-   macro avg       0.04      0.07      0.05      1637
-weighted avg       0.30      0.55      0.39      1637
+    accuracy                           0.55      1575
+   macro avg       0.04      0.07      0.05      1575
+weighted avg       0.30      0.55      0.39      1575
 Predicting difficult instances for model most_frequent trained on deduplicated
 Sentence: Not really what im looking for, what about korean food	Predicted label: ['inform']
 Sentence: no id rather find a moderately priced restaurant	Predicted label: ['inform']
