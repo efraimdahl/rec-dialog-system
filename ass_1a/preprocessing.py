@@ -38,15 +38,9 @@ def load_data(filename:str, mode:str) -> tuple:
         train=train.drop_duplicates(subset=['Label','Text'])
         test=test.drop_duplicates(subset=['Label','Text'])
     
-<<<<<<< Updated upstream
-    # Save raw test data for keyword classifier
-    file = open(f"data/{mode}/X_test_raw.pkl", 'wb')
-    pkl.dump(test["Text"], file)
-=======
     # Save raw train/test data for keyword classifier
     result["X_train_raw"] = train["Text"]
     result["X_test_raw"] = test["Text"]
->>>>>>> Stashed changes
     
     print(mode,"Splitting into training set of size ", len(train), "and test set of size ", len(test))
     
@@ -56,12 +50,7 @@ def load_data(filename:str, mode:str) -> tuple:
     result["X_train"] = vectorizer.fit_transform(train["Text"])
     
     # Save vectorizer for later use
-<<<<<<< Updated upstream
-    outfile = open("models/"+mode+"/vectorizer.pkl",'wb')
-    pkl.dump(vectorizer, outfile)
-=======
     result["vectorizer"] = vectorizer
->>>>>>> Stashed changes
 
     # Extracting features from the test data using the same vectorizer
     result["X_test"] = vectorizer.transform(test["Text"])
@@ -76,18 +65,9 @@ def prepare_data(filename):
     print("Preparing Data")
     data = {}
     for mode in ["complete", "deduplicated"]:
-<<<<<<< Updated upstream
-        X_train, X_test, y_train, y_test, feature_names, target_names = load_data(filename, mode)
-        comps = {"X_train":X_train,"X_test":X_test,"y_train":y_train,"y_test":y_test,"feature_names":feature_names,"target_names":target_names}
-        for name in comps.keys():
-            data = comps.get(name)
-            file = open("data/"+mode+"/"+name+".pkl", 'wb')
-            pkl.dump(data, file)
-=======
         res = load_data(filename, mode)
         data[mode] = res
     return data
->>>>>>> Stashed changes
 
 if __name__ == "__main__":
     filename = "data/dialog_acts.dat"

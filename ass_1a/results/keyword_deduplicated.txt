@@ -3,47 +3,25 @@
 Classification report for model keyword trained on deduplicated
               precision    recall  f1-score   support
 
-<<<<<<< Updated upstream
-         ack       0.01      0.60      0.03         5
-      affirm       0.88      0.69      0.77        42
-         bye       0.42      0.42      0.42        12
-     confirm       0.57      0.75      0.65        28
-        deny       0.02      0.75      0.04         4
-       hello       0.21      0.88      0.33        16
-      inform       0.97      0.26      0.41       868
-      negate       0.00      0.00      0.00        35
-        null       0.07      0.75      0.13        71
+         ack       0.29      0.67      0.40         6
+      affirm       0.86      0.50      0.63        36
+         bye       1.00      0.36      0.53        14
+     confirm       0.64      0.64      0.64        25
+        deny       1.00      0.20      0.33         5
+       hello       0.19      0.47      0.27        15
+      inform       0.82      0.81      0.82       871
+      negate       0.27      0.81      0.40        31
+        null       0.08      0.01      0.02        78
       repeat       1.00      0.33      0.50         6
-     reqalts       0.97      0.38      0.55       150
-     require       0.33      1.00      0.50         1
-     request       0.85      0.06      0.10       306
+     reqalts       0.86      0.65      0.74       153
+     require       0.50      1.00      0.67         1
+     request       0.71      0.81      0.76       326
      restart       1.00      1.00      1.00         2
-    thankyou       1.00      0.28      0.43        29
+    thankyou       0.69      1.00      0.81        24
 
-    accuracy                           0.28      1575
-   macro avg       0.55      0.54      0.39      1575
-weighted avg       0.86      0.28      0.36      1575
-=======
-      inform       0.18      0.60      0.27         5
-     confirm       0.96      0.56      0.71        43
-      affirm       1.00      0.31      0.47        13
-     request       0.65      0.61      0.63        28
-    thankyou       1.00      0.33      0.50         3
-        null       0.14      0.33      0.20        15
-         bye       0.83      0.81      0.82       858
-     reqalts       0.32      0.67      0.44        36
-      negate       0.22      0.03      0.05        75
-       hello       1.00      0.40      0.57         5
-      repeat       0.80      0.71      0.75       116
-         ack       1.00      1.00      1.00         1
-     restart       0.71      0.82      0.76       312
-        deny       1.00      0.67      0.80         3
-     reqmore       0.74      1.00      0.85        28
-
-    accuracy                           0.75      1541
-   macro avg       0.70      0.59      0.59      1541
-weighted avg       0.75      0.75      0.74      1541
->>>>>>> Stashed changes
+    accuracy                           0.74      1593
+   macro avg       0.66      0.62      0.57      1593
+weighted avg       0.75      0.74      0.73      1593
 Predicting difficult instances for model keyword trained on deduplicated
 Sentence: Not really what im looking for, what about korean food	Predicted label: ['inform']
 Sentence: no id rather find a moderately priced restaurant	Predicted label: ['negate']

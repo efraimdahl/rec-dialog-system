@@ -3,47 +3,25 @@
 Classification report for model most_frequent trained on deduplicated
               precision    recall  f1-score   support
 
-<<<<<<< Updated upstream
-         ack       0.00      0.00      0.00         5
-      affirm       0.00      0.00      0.00        42
-         bye       0.00      0.00      0.00        12
-     confirm       0.00      0.00      0.00        28
-        deny       0.00      0.00      0.00         4
-       hello       0.00      0.00      0.00        16
-      inform       0.55      1.00      0.71       868
-      negate       0.00      0.00      0.00        35
-        null       0.00      0.00      0.00        71
+         ack       0.00      0.00      0.00         6
+      affirm       0.00      0.00      0.00        36
+         bye       0.00      0.00      0.00        14
+     confirm       0.00      0.00      0.00        25
+        deny       0.00      0.00      0.00         5
+       hello       0.00      0.00      0.00        15
+      inform       0.55      1.00      0.71       871
+      negate       0.00      0.00      0.00        31
+        null       0.00      0.00      0.00        78
       repeat       0.00      0.00      0.00         6
-     reqalts       0.00      0.00      0.00       150
+     reqalts       0.00      0.00      0.00       153
      require       0.00      0.00      0.00         1
-     request       0.00      0.00      0.00       306
+     request       0.00      0.00      0.00       326
      restart       0.00      0.00      0.00         2
-    thankyou       0.00      0.00      0.00        29
+    thankyou       0.00      0.00      0.00        24
 
-    accuracy                           0.55      1575
-   macro avg       0.04      0.07      0.05      1575
-weighted avg       0.30      0.55      0.39      1575
-=======
-      inform       0.00      0.00      0.00         5
-     confirm       0.00      0.00      0.00        43
-      affirm       0.00      0.00      0.00        13
-     request       0.00      0.00      0.00        28
-    thankyou       0.00      0.00      0.00         3
-        null       0.00      0.00      0.00        15
-         bye       0.56      1.00      0.72       858
-     reqalts       0.00      0.00      0.00        36
-      negate       0.00      0.00      0.00        75
-       hello       0.00      0.00      0.00         5
-      repeat       0.00      0.00      0.00       116
-         ack       0.00      0.00      0.00         1
-     restart       0.00      0.00      0.00       312
-        deny       0.00      0.00      0.00         3
-     reqmore       0.00      0.00      0.00        28
-
-    accuracy                           0.56      1541
-   macro avg       0.04      0.07      0.05      1541
-weighted avg       0.31      0.56      0.40      1541
->>>>>>> Stashed changes
+    accuracy                           0.55      1593
+   macro avg       0.04      0.07      0.05      1593
+weighted avg       0.30      0.55      0.39      1593
 Predicting difficult instances for model most_frequent trained on deduplicated
 Sentence: Not really what im looking for, what about korean food	Predicted label: ['inform']
 Sentence: no id rather find a moderately priced restaurant	Predicted label: ['inform']

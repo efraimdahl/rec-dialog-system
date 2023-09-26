@@ -3,50 +3,28 @@
 Classification report for model DecisionTree trained on deduplicated
               precision    recall  f1-score   support
 
-<<<<<<< Updated upstream
-         ack       0.50      0.60      0.55         5
-      affirm       1.00      0.93      0.96        42
-         bye       0.53      0.83      0.65        12
-     confirm       0.43      0.21      0.29        28
-        deny       1.00      1.00      1.00         4
-       hello       1.00      1.00      1.00        16
-      inform       0.86      0.89      0.87       868
-      negate       0.14      0.03      0.05        35
-        null       0.52      0.87      0.65        71
-      repeat       1.00      0.50      0.67         6
-     reqalts       0.46      0.29      0.36       150
+         ack       0.40      0.33      0.36         6
+      affirm       1.00      0.83      0.91        36
+         bye       1.00      0.71      0.83        14
+     confirm       0.50      0.36      0.42        25
+        deny       0.60      0.60      0.60         5
+       hello       0.88      1.00      0.94        15
+      inform       0.85      0.90      0.87       871
+      negate       0.25      0.06      0.10        31
+        null       0.50      0.86      0.64        78
+      repeat       0.80      0.67      0.73         6
+     reqalts       0.40      0.21      0.27       153
      require       0.00      0.00      0.00         1
-     request       0.89      0.98      0.94       306
+     request       0.92      0.95      0.93       326
      restart       1.00      1.00      1.00         2
-    thankyou       0.82      0.62      0.71        29
+    thankyou       0.80      1.00      0.89        24
 
-    accuracy                           0.81      1575
-   macro avg       0.68      0.65      0.65      1575
-weighted avg       0.79      0.81      0.80      1575
-=======
-      inform       0.38      0.60      0.46         5
-     confirm       1.00      0.88      0.94        43
-      affirm       0.77      0.77      0.77        13
-     request       0.31      0.14      0.20        28
-    thankyou       0.75      1.00      0.86         3
-        null       0.93      0.93      0.93        15
-         bye       0.87      0.90      0.88       858
-     reqalts       0.00      0.00      0.00        36
-      negate       0.61      0.83      0.70        75
-       hello       0.75      0.60      0.67         5
-      repeat       0.40      0.31      0.35       116
-         ack       0.00      0.00      0.00         1
-     restart       0.91      0.97      0.94       312
-        deny       1.00      1.00      1.00         3
-     reqmore       0.87      0.93      0.90        28
-
-    accuracy                           0.83      1541
-   macro avg       0.64      0.66      0.64      1541
-weighted avg       0.80      0.83      0.81      1541
->>>>>>> Stashed changes
+    accuracy                           0.81      1593
+   macro avg       0.66      0.63      0.63      1593
+weighted avg       0.79      0.81      0.79      1593
 Predicting difficult instances for model DecisionTree trained on deduplicated
 Sentence: Not really what im looking for, what about korean food	Predicted label: ['inform']
 Sentence: no id rather find a moderately priced restaurant	Predicted label: ['inform']
-Sentence: amazing thank you very much goodbye	Predicted label: ['negate']
-Sentence: goodbye thank you for your help	Predicted label: ['negate']
+Sentence: amazing thank you very much goodbye	Predicted label: ['thankyou']
+Sentence: goodbye thank you for your help	Predicted label: ['thankyou']
 Sentence: I am looking for an Italian restoration	Predicted label: ['inform']

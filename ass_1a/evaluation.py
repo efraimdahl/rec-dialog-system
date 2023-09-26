@@ -33,26 +33,13 @@ def evaluate_models(models,data):
             _ = ax.set_title(
                 f"Confusion Matrix for Restaurant Dialog Classifier model={model_name}/data={mode}"
             )
-<<<<<<< Updated upstream
-            fig.savefig(f"results/{model}_{mode}.png")
-            
-            # Print classification report
-            ordered_labels = ["ack", "affirm", "bye", "confirm", "deny", "hello", "inform", "negate", "null", "repeat", "reqalts", "require", "request", "restart", "thankyou"]
-            print(f"\n\nClassification report for model {model} trained on {mode}")
-            print(classification_report(y_test, pred, target_names=ordered_labels, zero_division=0))
-            
-            # Save classification report to log file
-            with open(f"results/{model}_{mode}.txt", "w") as f:
-                f.write(f"Classification report for model {model} trained on {mode}\n")
-                f.write(classification_report(y_test, pred, target_names=ordered_labels, zero_division=0))
-=======
             fig.savefig(f"ass_1a/results/{model_name}_{mode}.png")
             
             # Save classification report to log file
+            ordered_labels = ["ack", "affirm", "bye", "confirm", "deny", "hello", "inform", "negate", "null", "repeat", "reqalts", "require", "request", "restart", "thankyou"]
             with open(f"ass_1a/results/{model_name}_{mode}.txt", "w") as f:
                 f.write(f"\n\nClassification report for model {model_name} trained on {mode}\n")
-                f.write(classification_report(data[mode]["y_test"], pred, target_names=data[mode]["target_names"], zero_division=0))
->>>>>>> Stashed changes
+                f.write(classification_report(data[mode]["y_test"], pred, target_names=ordered_labels, zero_division=0))
             
             # Print difficult instances
             print(f"\nPredicting difficult instances for model {model_name} trained on {mode}")
