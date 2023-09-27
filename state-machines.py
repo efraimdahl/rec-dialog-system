@@ -32,19 +32,19 @@ class RestaurantAgent(StateMachine):
         | ask_foodType.to(process_preferences, cond= "input_received")
         | state_preferences.to(completed, cond="exit_conversation")
         | state_preferences.to(state_preferences, unless="input_received")
-        
-        | return_restaurant.to(process_alternative, cond="preference_change")
+                
         | return_restaurant.to(give_information, cond="valid_request")
+        | return_restaurant.to(process_alternative, cond="preference_change")
         | return_restaurant.to(completed, cond="exit_conversation")
-        | return_restaurant.to(return_restaurant, unless="valid_request")
+        | return_restaurant.to(return_restaurant)
 
-        | give_information.to(process_alternative, cond="preference_change")
-        | give_information.to(give_information, cond="valid_request")
         | give_information.to(completed, cond="exit_conversation")
-
-        | no_restaurant_found.to(process_alternative,cond="preference_change")
+        | give_information.to(give_information, cond="valid_request")
+        | give_information.to(process_alternative, cond="preference_change")
+        
         | no_restaurant_found.to(completed, cond="exit_conversation")
-        | no_restaurant_found.to(no_restaurant_found, unless=["preference_change","exit_conversation"])
+        | no_restaurant_found.to(process_alternative,cond="preference_change")
+        | no_restaurant_found.to(no_restaurant_found)
 
     )
 
@@ -54,12 +54,14 @@ class RestaurantAgent(StateMachine):
         | process_preferences.to(ask_foodType, unless = "foodType_known")
         | process_preferences.to(ask_priceRange, unless = "priceRange_known")
         | process_preferences.to(state_preferences)
-        | process_alternative.to(return_restaurant, cond="variables_known")
-        | process_alternative.to(state_preferences)
     )
 
     no_restaurant_trans=(
         return_restaurant.to(no_restaurant_found)
+    )
+
+    request_alternative=(
+        process_alternative.to(return_restaurant)
     )
 
 
@@ -67,7 +69,7 @@ class RestaurantAgent(StateMachine):
         self.area = ""
         self.foodType = ""
         self.priceRange = ""
-        self.context = None
+        self.context = None #Gets passed to the classifier to help understand otherwise ambiguous answers
         self.tries = 0 #keep track of how many restaurants of the same variable combination were returned
         self.current_input = None #parsed current input so parsing only runs once per input
         self.all_restaurants = pd.read_csv(restaurant_file)
@@ -75,6 +77,7 @@ class RestaurantAgent(StateMachine):
         self.parser = TextParser(classifier_file,restaurant_file,vectorizer_file)
         self.current_suggestion = None
         self.current_suggestion_set = False
+        self.no_res_passes = 0 #Changes the error message to be more helpful on repeated state entry.
         super(RestaurantAgent, self).__init__(rtc=False)
     
     # HELPER FUNCTIONS
@@ -135,9 +138,11 @@ class RestaurantAgent(StateMachine):
         return exit_input=="bye" or exit_input=="thankyou"
     
     def preference_change(self,input):
-        print("preferences changed", input,self.current_input)
-        return (len(self.current_input[1]) > 0)
-    
+        print("preferences changed?", input,self.current_input)
+        if(len(self.current_input)>1):
+            return (type(self.current_input[1])==dict and len(self.current_input[1]) > 0)
+        else:
+            return False
     #EXIT FUNCTIONS
     def on_exit_state_preferences(self, input):
         self.processVariableDict(input)
@@ -166,8 +171,12 @@ class RestaurantAgent(StateMachine):
         self.send("start_processing")
     
     def on_enter_no_restaurant_found(self):
-        resp = self.no_response_formater(other=(self.tries>0))
-        print(resp)
+        if(self.no_res_passes>0):
+            print("Sorry, but there are no such restaurants, maybe try changing the location, area or foodtype?")
+        else:
+            resp = self.no_response_formater(other=(self.tries>0))
+            print(resp)
+        self.no_res_passes+=1
         self.current_suggestion = None
         self.filteredRestaurants=None
         self.current_suggestion_set = False
@@ -182,7 +191,8 @@ class RestaurantAgent(StateMachine):
             self.current_suggestion = row
             self.current_suggestion_set = True
             self.tries+=1
-        print(f"{row['restaurantname']} is a nice place in the {row['area']} part of town serving {row['food']} food and the prices are {row['pricerange']}")
+            self.no_res_passes=0
+            print(f"{row['restaurantname']} is a nice place in the {row['area']} part of town serving {row['food']} food and the prices are {row['pricerange']}")
         
     #There are three possibilities, the user can request an alternative updatin
     def on_enter_give_information(self, input):
@@ -219,12 +229,15 @@ class RestaurantAgent(StateMachine):
         print("Thank you for using the UU restaurant system. Goodbye!")
     
     #STATE FUNCTIONS
-    def on_process_alternative(self,input):
-        self.processVariableDict(input,requestPossible=False)
+    def on_enter_process_alternative(self,input):
+        self.processVariableDict(input)
         self.filteredRestaurants = None
         self.current_suggestion = None
         self.current_suggestion_set = False
         self.tries = 0
+        self.no_res_passes = 0
+        print("requesting with updated variables")
+        self.send("request_alternative") #Auto transition to return restaurant.
     
     def on_enter_process_preferences(self,input):
         print("Entering process preferences")
@@ -233,7 +246,7 @@ class RestaurantAgent(StateMachine):
     # INPUT HANDLING
     def input_step(self, user_input: str) -> str:
         print(self.current_state)
-        input = self.parser.parseText(user_input)
+        input = self.parser.parseText(user_input,requestPossible=False)
         self.current_input = input
         print("Classifier output",input,"from: ",user_input)
         self.send("receive_input", input=user_input)
