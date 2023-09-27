@@ -1,6 +1,7 @@
 import pandas as pd
 import random
 from config import *
+from time import sleep
 
 def add_database_column(file_name: str, col_name: str, options: list[str]) -> None:
     """Adds a column to a database file if it does not exist yet, 
@@ -24,6 +25,11 @@ def chatbot_print(message: str) -> None:
         message (str): The message to be printed.
     """
     message = message.upper() if ALL_CAPS_RESPONSE else message
+    
+    if RESPONSE_DELAY > 0:
+        print("Thinking...")
+        sleep(RESPONSE_DELAY)
+        print("\033[A                             \033[A")
     print("Chatbot: " + message)
     
 def main():
