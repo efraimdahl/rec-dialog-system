@@ -14,6 +14,7 @@ class TextParser():
         self.possible_food_type = list(self.restaurant_data['food'].unique())
         self.possible_area = list(self.restaurant_data["area"].unique())
         self.possible_pricerange = list(self.restaurant_data["pricerange"].unique())
+        self.used_levenshtein = False
         self.dontCarePhrases={
             "area":["anywhere", "any where", "any part", "any area", "other area", "other part", "rest of town","any address","any locat"],
             "price":["any range","any price","dont care about the price","dont care about price","not care about the price","not care about price","dont care what price","price does not matter"],
@@ -35,17 +36,19 @@ class TextParser():
         priceRange = ""
         area = ""
         words = sentence.split(" ")
-        threshold = 1   #Used for calculate the Levenstein distance
+        threshold = 3   #Used for calculate the Levenstein distance
         all_keywords = self.possible_food_type + self.possible_area + self.possible_pricerange
         all_keywords = [x for x in all_keywords if isinstance(x, str)] #Delete None value
         for word in words:
             similar_keywords = []
             for keyword in all_keywords:
                 distance = Levenshtein.distance(word, keyword)
-                if distance == threshold:
+                if distance <= threshold:
                     similar_keywords.append(keyword)
+                    self.used_levenshtein = True
                 elif distance == 0:
-                    similar_keywords = [word]
+                    similar_keywords = [word] #Fonund the identical word and break, override the keywords
+                    self.used_levenshtein = False
                     break
             if len(similar_keywords) == 0:
                 similar_keywords.append(word)
@@ -114,13 +117,13 @@ class TextParser():
             for i in range(0,len(vars)):
                 if vars[i] != "":
                     retlist.update({names[i]:vars[i]})
-            return (cls[0],retlist)
+            return (cls[0],retlist), self.used_levenshtein
         #What fields are users requesting?
         elif(cls[0] in ["request"]):
             requVars = self.requestMatching(sentence)
-            return ([cls[0],requVars])
+            return ([cls[0],requVars]), self.used_levenshtein
         else:
-            return([cls[0]])
+            return([cls[0]]), self.used_levenshtein
 
 def main():
     restaurant_file = "restaurant_info.csv"

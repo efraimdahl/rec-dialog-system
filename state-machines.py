@@ -16,6 +16,7 @@ class RestaurantAgent(StateMachine):
     hello = State(initial=True)
     state_preferences = State()
     process_preferences = State()
+    #ask_levenshtein = State()
     ask_area = State()
     ask_priceRange = State()
     ask_foodType = State()
@@ -131,6 +132,7 @@ class RestaurantAgent(StateMachine):
     
     def variables_known(self) -> bool:
         return self.area != "" and self.foodType!="" and self.priceRange != ""
+
     
     def area_known(self):return self.area!=""
     def priceRange_known(self):return self.priceRange!=""
@@ -256,7 +258,7 @@ class RestaurantAgent(StateMachine):
     # INPUT HANDLING
     def input_step(self, user_input: str) -> str:
         print(self.current_state)
-        input = self.parser.parseText(user_input,requestPossible=False)
+        input,_ = self.parser.parseText(user_input,requestPossible=False)
         self.current_input = input
         print("Classifier output",input,"from: ",user_input)
         self.send("receive_input", input=user_input)
