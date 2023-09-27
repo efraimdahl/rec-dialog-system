@@ -22,7 +22,7 @@ class RestaurantAgent(StateMachine):
     give_information = State()
     completed = State(final=True)
     
-    # 
+    # TRANSITIONS
     start_processing = hello.to(state_preferences)
     
     receive_input = (
@@ -64,7 +64,7 @@ class RestaurantAgent(StateMachine):
         process_alternative.to(return_restaurant)
     )
 
-
+    # INITIATION
     def __init__(self,restaurant_file,classifier_file,vectorizer_file):
         self.area = ""
         self.foodType = ""
@@ -94,7 +94,7 @@ class RestaurantAgent(StateMachine):
                             self.priceRange=val
                     elif key == "area":
                             self.area=val
-    
+    #searches restaurants
     def search_restaurant(self):
         df = self.all_restaurants
         if(self.area!="dontcare"):
@@ -143,6 +143,7 @@ class RestaurantAgent(StateMachine):
             return (type(self.current_input[1])==dict and len(self.current_input[1]) > 0)
         else:
             return False
+    
     #EXIT FUNCTIONS
     def on_exit_state_preferences(self, input):
         self.processVariableDict(input)
@@ -228,7 +229,6 @@ class RestaurantAgent(StateMachine):
     def on_enter_completed(self):
         print("Thank you for using the UU restaurant system. Goodbye!")
     
-    #STATE FUNCTIONS
     def on_enter_process_alternative(self,input):
         self.processVariableDict(input)
         self.filteredRestaurants = None
