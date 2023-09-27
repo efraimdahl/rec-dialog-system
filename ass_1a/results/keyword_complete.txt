@@ -1,28 +1,30 @@
+
+
 Classification report for model keyword trained on complete
               precision    recall  f1-score   support
 
-      inform       0.01      0.67      0.01         6
-     confirm       0.98      0.90      0.94       231
-      affirm       0.05      0.58      0.10        53
-     request       0.39      0.74      0.51        34
-    thankyou       0.01      0.40      0.01         5
-        null       0.08      0.95      0.15        19
-         bye       0.98      0.15      0.25      2032
-     reqalts       0.00      0.00      0.00        87
-      negate       0.09      0.62      0.15       322
-       hello       1.00      0.57      0.73         7
-      repeat       0.95      0.38      0.55       350
-         ack       0.33      1.00      0.50         1
-     restart       0.95      0.09      0.17      1299
-        deny       1.00      1.00      1.00         3
-     reqmore       0.99      0.15      0.26       652
+         ack       0.10      0.50      0.16         6
+      affirm       0.99      0.82      0.90       231
+         bye       1.00      0.68      0.81        53
+     confirm       0.60      0.62      0.61        34
+        deny       1.00      0.40      0.57         5
+       hello       0.18      0.63      0.28        19
+      inform       0.81      0.87      0.84      2032
+      negate       0.43      0.87      0.58        87
+        null       0.86      0.24      0.37       322
+      repeat       1.00      0.29      0.44         7
+     reqalts       0.92      0.83      0.87       350
+     require       1.00      1.00      1.00         1
+     request       0.89      0.89      0.89      1299
+     restart       1.00      0.67      0.80         3
+    thankyou       0.98      1.00      0.99       652
 
-    accuracy                           0.22      5101
-   macro avg       0.52      0.55      0.35      5101
-weighted avg       0.88      0.22      0.27      5101
+    accuracy                           0.84      5101
+   macro avg       0.78      0.69      0.67      5101
+weighted avg       0.86      0.84      0.84      5101
 Predicting difficult instances for model keyword trained on complete
-Sentence: Not really what im looking for, what about korean food	Predicted label: ['deny']
-Sentence: no id rather find a moderately priced restaurant	Predicted label: ['deny']
+Sentence: Not really what im looking for, what about korean food	Predicted label: ['inform']
+Sentence: no id rather find a moderately priced restaurant	Predicted label: ['negate']
 Sentence: amazing thank you very much goodbye	Predicted label: ['thankyou']
 Sentence: goodbye thank you for your help	Predicted label: ['thankyou']
-Sentence: I am looking for an Italian restoration	Predicted label: ['null']
+Sentence: I am looking for an Italian restoration	Predicted label: ['inform']

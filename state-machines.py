@@ -6,6 +6,9 @@ from statemachine.contrib.diagram import DotGraphMachine
 import warnings
 warnings.filterwarnings("ignore")
 
+from ass_1a.training import train_model
+from ass_1a.preprocessing import prepare_data
+
 #Basic State machine that returns the number of restaurants in an area of town given the keyword south, west, east, north and center.
 class RestaurantAgent(StateMachine):
     
@@ -112,7 +115,8 @@ class RestaurantAgent(StateMachine):
         return df
 
     #This is to only mention specified information in the response.
-    def no_response_formater(self,other=False):
+    def no_response_formatter(self,other: bool=False) -> str:
+        """Generates a response when no restaurants are found"""
         foodpart = f'serving {self.foodType} food' if (self.foodType!="" and self.foodType!="dontcare") else ""
         areapart = f'in the {self.area}' if (self.area!="" and self.area!="dontcare") else ""
         pricepart = f'that has {self.priceRange} prices' if (self.priceRange!="" and self.priceRange!="dontcare") else ""
@@ -125,8 +129,7 @@ class RestaurantAgent(StateMachine):
         print("Received: ", input)
         return input!=None
     
-    def variables_known(self):
-        #print("checking for variables",self.area, self.priceRange, self.foodType)
+    def variables_known(self) -> bool:
         return self.area != "" and self.foodType!="" and self.priceRange != ""
     
     def area_known(self):return self.area!=""
@@ -173,7 +176,7 @@ class RestaurantAgent(StateMachine):
         print("What kind of food would you like?")
         self.context="foodType"
 
-    def on_enter_hello(self):
+    def on_enter_hello(self) -> None:
         print("Hello , welcome to the Cambridge restaurant system? You can ask for restaurants by area , price range or food type . How may I help you?")
         self.send("start_processing")
     
@@ -224,12 +227,15 @@ class RestaurantAgent(StateMachine):
                     value = self.current_suggestion[key]
                     response += f"the {attribute} of {self.current_suggestion['restaurantname']} is {value}, " if not response else f"their {attribute} is {value}, "
             
-            if response !="" : 
+            if response != "":
+                # Format and print the bot answer
                 print(response.capitalize()[:-2] + ".")
                 return
             print("Can you provide specific information you are looking for such as phone number, area or address?")
             
-    def on_enter_completed(self):
+            
+    def on_enter_completed(self) -> None:
+        """Runs when the user exits the system"""
         print("Thank you for using the UU restaurant system. Goodbye!")
     
     def on_enter_process_alternative(self,input):
@@ -246,6 +252,7 @@ class RestaurantAgent(StateMachine):
         print("Entering process preferences")
         self.send("evaluate_input")
 
+
     # INPUT HANDLING
     def input_step(self, user_input: str) -> str:
         print(self.current_state)
@@ -257,7 +264,7 @@ class RestaurantAgent(StateMachine):
         
         
     
-    def graph(self,filename=""):
+    def graph(self, filename: str="") -> DotGraphMachine:
         """
         Save a graph of the state machine with the current state highlighted to specified file
         """
@@ -268,10 +275,13 @@ class RestaurantAgent(StateMachine):
         return diagram_graph
 
 
-def main():
-    restaurant_file = "restaurant_info.csv"
-    classifier = pkl.load(open("./ass_1a/models/complete/DecisionTree.pkl",'rb'))
-    vectorizer = pkl.load(open("./ass_1a/models/complete/vectorizer.pkl",'rb'))
+def main() -> None:
+    # Set up state machine
+    clf_data = "data/dialog_acts.dat"
+    data = prepare_data(clf_data)
+    classifier = train_model(data["complete"], "DecisionTree")
+    vectorizer = data["complete"]["vectorizer"]
+    
     restaurant_file = "restaurant_info.csv"
     sm = RestaurantAgent(restaurant_file,classifier,vectorizer)
     testing = True
@@ -312,11 +322,7 @@ def main():
             sm.input_step(user_input)
             cont=False
         
-
+        
 
 if __name__ == '__main__':
     main()
-    
-    
-
-
