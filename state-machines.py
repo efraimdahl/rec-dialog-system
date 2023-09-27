@@ -187,7 +187,7 @@ class RestaurantAgent(StateMachine):
         if(self.no_res_passes>0):
             print("Sorry, but there are no such restaurants, maybe try changing the location, area or foodtype?")
         else:
-            resp = self.no_response_formater(other=(self.tries>0))
+            resp = self.no_response_formatter(other=(self.tries>0))
             print(resp)
         self.no_res_passes+=1
         self.current_suggestion = None
