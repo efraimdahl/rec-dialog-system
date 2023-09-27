@@ -148,8 +148,8 @@ class RestaurantAgent(StateMachine):
         foodpart = f'serving {self.foodType} food' if (self.foodType!="" and self.foodType!="dontcare") else ""
         areapart = f'in the {self.area}' if (self.area!="" and self.area!="dontcare") else ""
         pricepart = f'that has {self.priceRange} prices' if (self.priceRange!="" and self.priceRange!="dontcare") else ""
-        otherp = 'other' if(other) else '' 
-        resp = f"I'm sorry but there is no {otherp} restaurant {foodpart} {areapart} {pricepart}"
+        otherp = 'other ' if(other) else '' 
+        resp = f"I'm sorry but there is no {otherp}restaurant {foodpart} {areapart} {pricepart}"
         return resp
         
     #CONDITIONAL TRANSITIONS
