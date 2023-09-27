@@ -3,11 +3,28 @@ import pickle as pkl
 import math
 import random
 import Levenshtein
-#The textParser receives a trained classifier as input, and perform keyword matching to extract information of a sentence based on its classification.
-# 
-#example: "I am looking for a cheap thai place in the south of town" -> inform=>[(pricerange=cheap),(food=thai),(area=south)]
+
+from typing import Union, Tuple
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.base import ClassifierMixin
+
+from ass_1a.keyword_model import KeywordClassifier
+
+
 class TextParser():
-    def __init__(self,classifier,restaurant_file,vectorizer):
+    """
+    The textParser receives a trained classifier as input, and performs keyword matching to extract information of a sentence based on its classification.
+
+    example: "I am looking for a cheap thai place in the south of town" -> inform=>[(pricerange=cheap),(food=thai),(area=south)]
+    """
+    def __init__(self, classifier: Union[ClassifierMixin, KeywordClassifier], restaurant_file: str, vectorizer: CountVectorizer) -> None:
+        """
+        Initializes a TextParser instance.
+        Args:
+            classifier (Union[ClassifierMixin, KeywordClassifier]): The classifier to be used by the parser
+            restaurant_file (str): A string pointing to the restaurant file
+            vectorizer (CountVectorizer): The trained CountVectorizer instance to be used.
+        """
         self.restaurant_data = pd.read_csv(restaurant_file)
         self.classifier = classifier
         self.vectorizer = vectorizer 
@@ -30,8 +47,17 @@ class TextParser():
             "restaurantname":["name","called"],
             "area":["area","part","locat"]
         }
-    #Keyword-matching based on possible outcomes for area,types and priceranges
-    def keywordMatcher(self,sentence):
+        
+        
+    def keywordMatcher(self, sentence: str) -> Tuple[str, str, str]:
+        """ Matches keywords in a sentence to the possible outcomes for area,types and priceranges
+
+        Args:
+            sentence (str): The sentence to be matched
+
+        Returns:
+            Tuple[str, str, str]: A tuple containing the matched area, type and pricerange
+        """
         foodType = ""
         priceRange = ""
         area = ""
@@ -59,18 +85,35 @@ class TextParser():
                 area = word
             if(word in self.possible_pricerange):
                 priceRange = word
-        return foodType,priceRange,area
-    #Detects "i don't care" instances both in a generic setting, or in relation to a pricerange,area or food-type.
-    def anyDetector(self,sentence,context):
+        return foodType, priceRange, area
+    
+
+    def anyDetector(self, sentence: str, context: str) -> bool:
+        """Detects "i don't care" instances both in a generic setting, or in relation to a pricerange, area or food-type.
+
+        Args:
+            sentence (str): The sentence to be matched
+            context (str): The context in which the sentence is used, can be "area", "priceRange", "foodType" or "generic"
+
+        Returns:
+            bool: True if the sentence contains "i don't care" or similar, False otherwise
+        """
         phrases = self.dontCarePhrases.get(context)
-        found = False
         for keyPhrase in phrases:
             if(keyPhrase in sentence):
-                found = True
-                break
-        return found
-    #For requests, where the user is not providing information, find the keywords that indicate what the user is looking for.
-    def requestMatching(self,sentence):
+                return True
+        return False
+    
+    
+    def requestMatching(self, sentence: str) -> list:
+        """For requests, where the user is not providing information, find the keywords that indicate what the user is looking for.
+
+        Args:
+            sentence (str): The sentence to be matched
+
+        Returns:
+            list: A list containing the matched requests
+        """
         ret = []
         for column in self.restaurant_data.columns:
             matcher = self.matchingRequestDict.get(column)
@@ -79,17 +122,29 @@ class TextParser():
                     ret.append(column)
                     break
         return ret
-    # Text Parsing function takes the sentence as input, classifies it, and retrieves information, if its classified as containing information.
-    #The context variable is passed  to understand short answers such as "any" to the system-prompt "Where do you want to eat"
-    #Request possible is passed because in practice many inform instances are classified as requests, which are only possible after a restaurant is suggested.
-    #we are trying to circumvent this missclassification to improve usability.
-    def parseText(self,sentence,context=None,requestPossible=True): 
-        #First get the classification of the utterance
+    
+    
+    
+    def parseText(self, sentence: str, context: Union[str, None]=None, requestPossible: bool=True) -> Tuple[str, dict]: 
+        """Text Parsing function takes the sentence as input, classifies it, and retrieves information, if its classified as containing information.
+        The context variable is passed  to understand short answers such as "any" to the system-prompt "Where do you want to eat"
+        Request possible is passed because in practice many inform instances are classified as requests, which are only possible after a restaurant is suggested.
+        we are trying to circumvent this missclassification to improve usability.
+
+        Args:
+            sentence (str): The sentence to be parsed
+            context (Union[str, None], optional): The context in which the sentence is used, can be "area", "priceRange", "foodType" or "generic". Defaults to None.
+            requestPossible (bool, optional): Whether requests are possible. Defaults to True.
+
+        Returns:
+            Tuple[str, dict]: A tuple containing the classification and the information extracted from the sentence
+        """
+        # First get the classification of the utterance
         sentence = sentence.lower()
         vec = self.vectorizer.transform([sentence])
         cls = self.classifier.predict(vec)
-        #print(cls[0])
-        #information classified as inform, confirm, negate, and reqalts can be overloaded with information from the user-sentence
+
+        # Information classified as inform, confirm, negate, and reqalts can be overloaded with information from the user-sentence
         foodType,priceRange,area="","",""
         if(cls[0] in ["inform","reqalts","confirm","negate"] or (cls[0]=="request" and not requestPossible)):
             if(context==None):

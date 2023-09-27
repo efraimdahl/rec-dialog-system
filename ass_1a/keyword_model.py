@@ -7,9 +7,10 @@ class KeywordClassifier():
     Predicts the label of a sentence using a rule-based system based on keyword matching
     """
     def __init__(self):
-        # There is no learning, we just initialize the keyword matching dictionary
-        # I have omitted most rules for assigning the "inform" label because it will be the base if nothing else matches
-        # The order of the rules matters because the first one is chosen.
+        """There is no learning, we just initialize the keyword matching dictionary
+        I have omitted most rules for assigning the "inform" label because it will be the base if nothing else matches
+        The order of the rules matters because the first one is chosen.
+        """
         self.keywords = {
             "thank" : "thankyou",
             "goodbye" : "bye",
@@ -41,13 +42,13 @@ class KeywordClassifier():
             "" : "inform" # Catchall for inform
         }
     
-    def fit(self,X,y):
+    def fit(self,X,y) -> None:
         """
         Does nothing, just here for completeness.
         """
         pass
         
-    def predict(self,X):
+    def predict(self, X: list) -> list:
         """
         Predict the labels for a list of sentences using keyword matching.
 
@@ -68,7 +69,7 @@ class KeywordClassifier():
                     break
         return labels
     
-    def score(self,X,y):
+    def score(self,X:list, y: list) -> float:
         """
         Compares the predicted labels to the true labels and returns the accuracy
         """
