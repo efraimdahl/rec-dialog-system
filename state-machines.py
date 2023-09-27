@@ -13,6 +13,7 @@ from sklearn.base import ClassifierMixin
 from ass_1a.keyword_model import KeywordClassifier
 from ass_1a.training import train_model
 from ass_1a.preprocessing import prepare_data
+from utils import chatbot_print
 
 
 class RestaurantAgent(StateMachine):
@@ -110,7 +111,7 @@ class RestaurantAgent(StateMachine):
         Args:
             input (dict): The parsed data from the classifier
         """
-        print("processing input variables",input, self.current_input)
+        print("processing input variables", input, self.current_input)
         classAnswer = self.current_input
         if len(classAnswer)==2: 
             if(classAnswer[0] in ["inform","reqalts","confirm","negate","request"]):
@@ -215,36 +216,36 @@ class RestaurantAgent(StateMachine):
     #ENTRY FUNCTIONS
     def on_enter_ask_area(self) -> None:
         """Runs when the user enters the ask_area state"""
-        print("What part of town do you have in mind?")
+        chatbot_print("What part of town do you have in mind?")
         self.context="area"    
 
     def on_enter_ask_priceRange(self) -> None:
         """Runs when the user enters the ask_priceRange state"""
-        print("Would you like something in the cheap , moderate , or expensive price range?")
+        chatbot_print("Would you like something in the cheap , moderate , or expensive price range?")
         self.context="priceRange"
     
     def on_enter_ask_foodType(self) -> None:
         """Runs when the user enters the ask_foodType state"""
-        print("What kind of food would you like?")
+        chatbot_print("What kind of food would you like?")
         self.context="foodType"
 
     def on_enter_hello(self) -> None:
         """Runs when the user enters the hello state"""
-        print("Hello , welcome to the Cambridge restaurant system? You can ask for restaurants by area , price range or food type . How may I help you?")
+        chatbot_print("Hello , welcome to the Cambridge restaurant system? You can ask for restaurants by area , price range or food type . How may I help you?")
         self.send("start_processing")
     
     def on_enter_cant_give_information(self) -> None:
         """Runs when the user enters the cant_give_information state"""
-        print("I'm sorry i did not understand your request")
+        chatbot_print("I'm sorry i did not understand your request")
         self.send("information_trans",input="")
         
     def on_enter_no_restaurant_found(self) -> None:
         """Runs when the user enters the no_restaurant_found state"""
         if(self.no_res_passes>0):
-            print("Sorry, but there are no such restaurants, maybe try changing the location, area or foodtype?")
+            chatbot_print("Sorry, but there are no such restaurants, maybe try changing the location, area or foodtype?")
         else:
             resp = self.no_response_formatter(other=(self.tries>0))
-            print(resp)
+            chatbot_print(resp)
         self.no_res_passes+=1
         self.current_suggestion = None
         self.filteredRestaurants=None
@@ -262,7 +263,7 @@ class RestaurantAgent(StateMachine):
             self.current_suggestion_set = True
             self.tries+=1
             self.no_res_passes=0
-            print(f"{row['restaurantname']} is a nice place in the {row['area']} part of town serving {row['food']} food and the prices are {row['pricerange']}")
+            chatbot_print(f"{row['restaurantname']} is a nice place in the {row['area']} part of town serving {row['food']} food and the prices are {row['pricerange']}")
         
     
     def on_enter_give_information(self, input: str) -> None:
@@ -291,14 +292,14 @@ class RestaurantAgent(StateMachine):
             
             if response != "":
                 # Format and print the bot answer
-                print(response.capitalize()[:-2] + ".")
+                chatbot_print(response.capitalize()[:-2] + ".")
                 return
-            print("Can you provide specific information you are looking for such as phone number, area or address?")
+            chatbot_print("Can you provide specific information you are looking for such as phone number, area or address?")
             
             
     def on_enter_completed(self) -> None:
         """Runs when the user exits the system"""
-        print("Thank you for using the UU restaurant system. Goodbye!")
+        chatbot_print("Thank you for using the UU restaurant system. Goodbye!")
     
     def on_enter_process_alternative(self, input: str) -> None:
         """Processes the input and updates the variables accordingly"""

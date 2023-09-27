@@ -1,5 +1,6 @@
 import pandas as pd
 import random
+from config import *
 
 def add_database_column(file_name: str, col_name: str, options: list[str]) -> None:
     """Adds a column to a database file if it does not exist yet, 
@@ -14,6 +15,16 @@ def add_database_column(file_name: str, col_name: str, options: list[str]) -> No
     if col_name not in df.columns:
         df[col_name] = [random.choice(options) for _ in range(len(df))]
         df.to_csv(file_name, index=False)
+        
+def chatbot_print(message: str) -> None:
+    """Helper function to make chatbot messages stand out from debugging messages.
+    Also integrates configurability relating to response style. 
+
+    Args:
+        message (str): The message to be printed.
+    """
+    message = message.upper() if ALL_CAPS_RESPONSE else message
+    print("Chatbot: " + message)
     
 def main():
     filename = "restaurant_info.csv"
