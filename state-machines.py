@@ -6,6 +6,9 @@ from statemachine.contrib.diagram import DotGraphMachine
 import warnings
 warnings.filterwarnings("ignore")
 
+from ass_1a.training import train_model
+from ass_1a.preprocessing import prepare_data
+
 #Basic State machine that returns the number of restaurants in an area of town given the keyword south, west, east, north and center.
 class RestaurantAgent(StateMachine):
     # STATES
@@ -247,9 +250,12 @@ class RestaurantAgent(StateMachine):
 
 def main() -> None:
     # Set up state machine
+    clf_data = "data/dialog_acts.dat"
+    data = prepare_data(clf_data)
+    classifier = train_model(data["complete"], "DecisionTree")
+    vectorizer = data["complete"]["vectorizer"]
+    
     restaurant_file = "restaurant_info.csv"
-    classifier = pkl.load(open("./ass_1a/models/complete/DecisionTree.pkl",'rb'))
-    vectorizer = pkl.load(open("./ass_1a/models/complete/vectorizer.pkl",'rb'))
     sm = RestaurantAgent(restaurant_file,classifier,vectorizer)
 
     # User input loop

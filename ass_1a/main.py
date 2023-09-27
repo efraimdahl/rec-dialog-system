@@ -11,7 +11,7 @@ def main():
     data = prepare_data(filename)
     models = train_models(data)
     evaluate_models(models,data)
-    # Evaluation of models is saved in the models map.
+    # Evaluation of models is saved in the results map.
 
 if __name__ == "__main__":
     main()
