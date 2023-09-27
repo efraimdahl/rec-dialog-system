@@ -20,6 +20,7 @@ class RestaurantAgent(StateMachine):
     no_restaurant_found = State()
     process_alternative = State()
     give_information = State()
+    cant_give_information = State()
     completed = State(final=True)
     
     # TRANSITIONS
@@ -31,7 +32,7 @@ class RestaurantAgent(StateMachine):
         | ask_priceRange.to(process_preferences, cond= "input_received")
         | ask_foodType.to(process_preferences, cond= "input_received")
         | state_preferences.to(completed, cond="exit_conversation")
-        | state_preferences.to(state_preferences, unless="input_received")
+        | state_preferences.to(state_preferences)
                 
         | return_restaurant.to(give_information, cond="valid_request")
         | return_restaurant.to(process_alternative, cond="preference_change")
@@ -41,6 +42,7 @@ class RestaurantAgent(StateMachine):
         | give_information.to(completed, cond="exit_conversation")
         | give_information.to(give_information, cond="valid_request")
         | give_information.to(process_alternative, cond="preference_change")
+        | give_information.to(cant_give_information)
         
         | no_restaurant_found.to(completed, cond="exit_conversation")
         | no_restaurant_found.to(process_alternative,cond="preference_change")
@@ -62,6 +64,10 @@ class RestaurantAgent(StateMachine):
 
     request_alternative=(
         process_alternative.to(return_restaurant)
+    )
+
+    information_trans=(
+        cant_give_information.to(give_information)
     )
 
     # INITIATION
@@ -171,6 +177,9 @@ class RestaurantAgent(StateMachine):
         print("Hello , welcome to the Cambridge restaurant system? You can ask for restaurants by area , price range or food type . How may I help you?")
         self.send("start_processing")
     
+    def on_enter_cant_give_information(self):
+        print("I'm sorry i did not understand your request")
+        self.send("information_trans",input="")
     def on_enter_no_restaurant_found(self):
         if(self.no_res_passes>0):
             print("Sorry, but there are no such restaurants, maybe try changing the location, area or foodtype?")
@@ -199,10 +208,6 @@ class RestaurantAgent(StateMachine):
     def on_enter_give_information(self, input):
         if(self.current_suggestion_set):
             request_type = self.parser.parseText(input, context=self.context, requestPossible=True)
-        else:
-            request_type = self.current_input
-        #print(request_type,self.current_suggestion)
-        if(self.current_suggestion_set):
             response_dict = {
                 "phone": "phone number",
                 "postcode": "postcode",
@@ -223,8 +228,6 @@ class RestaurantAgent(StateMachine):
                 print(response.capitalize()[:-2] + ".")
                 return
             print("Can you provide specific information you are looking for such as phone number, area or address?")
-        else:
-            print("Sorry, can you try changing the area, price or foodtype?")
             
     def on_enter_completed(self):
         print("Thank you for using the UU restaurant system. Goodbye!")
