@@ -292,14 +292,22 @@ def main():
     print(sm.completed.is_active)
     """
     testfile = open("test.txt","rb")
-    while not sm.completed.is_active:
+    cont=False #continues for one round after the loop stops to allow for restart through the testfile.
+    while not sm.completed.is_active or (cont):
         nxtline = testfile.readline().decode().strip()
         if(testing and nxtline!=""):
-            print("Auto Input: ",nxtline)
-            sm.input_step(nxtline)
+            if(nxtline=="#"):
+                print("resetting testing agent")
+                sm = RestaurantAgent(restaurant_file,classifier,vectorizer)
+                cont=True
+            else:
+                print("Auto Input: ",nxtline)
+                sm.input_step(nxtline)
+                cont=True
         else:
             user_input = input("Type your response: ")
             sm.input_step(user_input)
+            cont=False
         
 
 
