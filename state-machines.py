@@ -258,6 +258,7 @@ def main():
     vectorizer = pkl.load(open("./ass_1a/models/complete/vectorizer.pkl",'rb'))
     restaurant_file = "restaurant_info.csv"
     sm = RestaurantAgent(restaurant_file,classifier,vectorizer)
+    testing = True
     """
     sm.graph("initial.png")
     
@@ -277,10 +278,15 @@ def main():
 
     print(sm.completed.is_active)
     """
-    # User input loop
+    testfile = open("test.txt","rb")
     while not sm.completed.is_active:
-        user_input = input("Type your response: ")
-        sm.input_step(user_input)
+        nxtline = testfile.readline().decode().strip()
+        if(testing and nxtline!=""):
+            print("Auto Input: ",nxtline)
+            sm.input_step(nxtline)
+        else:
+            user_input = input("Type your response: ")
+            sm.input_step(user_input)
         
 
 
