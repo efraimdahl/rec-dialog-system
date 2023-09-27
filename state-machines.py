@@ -284,9 +284,9 @@ def main() -> None:
     restaurant_file = "restaurant_info.csv"
     sm = RestaurantAgent(restaurant_file,classifier,vectorizer)
     testing = True
-    """
-    sm.graph("initial.png")
     
+    sm.graph("initial.png")
+    """
     #print(sm.current_state)
     sm.send("start_processing")
 
