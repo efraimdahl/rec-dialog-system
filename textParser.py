@@ -3,10 +3,13 @@ import pickle as pkl
 import math
 import random
 import Levenshtein
+import nltk
 
 from typing import Union, Tuple
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.base import ClassifierMixin
+from nltk.corpus import stopwords
+nltk.download('stopwords')
 
 from ass_1a.keyword_model import KeywordClassifier
 
@@ -48,7 +51,9 @@ class TextParser():
             "area":["area","part","locat"]
         }
         
-        
+        self.stopwords = {
+
+        }
     def keywordMatcher(self, sentence: str) -> Tuple[str, str, str]:
         """ Matches keywords in a sentence to the possible outcomes for area,types and priceranges
 
@@ -62,29 +67,32 @@ class TextParser():
         priceRange = ""
         area = ""
         words = sentence.split(" ")
-        threshold = 3   #Used for calculate the Levenstein distance
+        threshold = 2   #Used for calculate the Levenstein distance
         all_keywords = self.possible_food_type + self.possible_area + self.possible_pricerange
         all_keywords = [x for x in all_keywords if isinstance(x, str)] #Delete None value
         for word in words:
             similar_keywords = []
-            for keyword in all_keywords:
-                distance = Levenshtein.distance(word, keyword)
-                if distance <= threshold:
-                    similar_keywords.append(keyword)
-                    self.used_levenshtein = True
-                elif distance == 0:
-                    similar_keywords = [word] #Fonund the identical word and break, override the keywords
-                    self.used_levenshtein = False
-                    break
-            if len(similar_keywords) == 0:
-                similar_keywords.append(word)
-            word = random.choice(similar_keywords)
-            if(word in self.possible_food_type):
-                foodType = word
-            if(word in self.possible_area):
-                area = word
-            if(word in self.possible_pricerange):
-                priceRange = word
+            #Stopwords usually have no meaning, so neglect them
+            word = word.lower()
+            if word not in stopwords.words('english'):
+                for keyword in all_keywords:
+                    distance = Levenshtein.distance(word, keyword)
+                    if distance <= threshold:
+                        similar_keywords.append(keyword)
+                        self.used_levenshtein = True
+                    elif distance == 0:
+                        similar_keywords = [word] #Fonund the identical word and break, override the keywords
+                        self.used_levenshtein = False
+                        break
+                if len(similar_keywords) == 0:
+                    similar_keywords.append(word)
+                word = random.choice(similar_keywords)
+                if(word in self.possible_food_type):
+                    foodType = word
+                if(word in self.possible_area):
+                    area = word
+                if(word in self.possible_pricerange):
+                    priceRange = word
         return foodType, priceRange, area
     
 
@@ -117,10 +125,14 @@ class TextParser():
         ret = []
         for column in self.restaurant_data.columns:
             matcher = self.matchingRequestDict.get(column)
-            for keyPhrase in matcher:
-                if(keyPhrase in sentence):
-                    ret.append(column)
-                    break
+            if matcher != None:
+                matcher = [x for x in matcher if x is not None]
+                print(matcher)
+                for keyPhrase in matcher:
+                    if(keyPhrase in sentence):
+                        ret.append(column)
+                        break
+        print(ret)
         return ret
     
     

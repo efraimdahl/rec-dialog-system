@@ -1,5 +1,7 @@
 french restaurant
-in the south, the price should be cheap
+yes
+in the centre, the price should be expensive
+yes
 whats the phone number
 any area is fine
 any price is fine
@@ -8,6 +10,7 @@ whats their address and postal code
 thank you bye
 #
 cheap italian place in the centre
+yes
 another
 any price is fine
 maybe moderate prices
