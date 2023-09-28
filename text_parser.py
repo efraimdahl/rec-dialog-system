@@ -4,7 +4,8 @@ import math
 import random
 import Levenshtein
 import nltk
-
+from ass_1a.training import train_model
+from ass_1a.preprocessing import prepare_data
 from typing import Union, Tuple
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.base import ClassifierMixin
@@ -34,6 +35,7 @@ class TextParser():
         self.possible_food_type = list(self.restaurant_data['food'].unique())
         self.possible_area = list(self.restaurant_data["area"].unique())
         self.possible_pricerange = list(self.restaurant_data["pricerange"].unique())
+        self.possible_qualifiers = ["romantic","touristic","assigned","children"]
         self.used_levenshtein = False
         self.dontCarePhrases={
             "area":["anywhere", "any where", "any part", "any area", "other area", "other part", "rest of town","any address","any locat"],
@@ -66,9 +68,10 @@ class TextParser():
         foodType = ""
         priceRange = ""
         area = ""
+        qualifier = ""
         words = sentence.split(" ")
         threshold = 2   #Used for calculate the Levenstein distance
-        all_keywords = self.possible_food_type + self.possible_area + self.possible_pricerange
+        all_keywords = self.possible_food_type + self.possible_area + self.possible_pricerange + self.possible_qualifiers
         all_keywords = [x for x in all_keywords if isinstance(x, str)] #Delete None value
         for word in words:
             similar_keywords = []
@@ -93,7 +96,9 @@ class TextParser():
                     area = word
                 if(word in self.possible_pricerange):
                     priceRange = word
-        return foodType, priceRange, area
+                if(word in self.possible_qualifiers):
+                    qualifier = word
+        return foodType, priceRange, area, qualifier
     
 
     def anyDetector(self, sentence: str, context: str) -> bool:
@@ -157,10 +162,10 @@ class TextParser():
         cls = self.classifier.predict(vec)
 
         # Information classified as inform, confirm, negate, and reqalts can be overloaded with information from the user-sentence
-        foodType,priceRange,area="","",""
-        if(cls[0] in ["inform","reqalts","confirm","negate"] or (cls[0]=="request" and not requestPossible)):
+        foodType,priceRange,area,qualifier="","","",""
+        if(cls[0] in ["inform","reqalts","confirm","negate",'null'] or (cls[0]=="request" and not requestPossible)):
             if(context==None):
-                foodType,priceRange,area = self.keywordMatcher(sentence)
+                foodType,priceRange,area,qualifier = self.keywordMatcher(sentence)
                 if(area=="" and self.anyDetector(sentence,"area")):
                     area = "dontcare"
                 if(foodType=="" and self.anyDetector(sentence,"food")):
@@ -168,7 +173,7 @@ class TextParser():
                 if(priceRange=="" and self.anyDetector(sentence,"price")):
                     priceRange = "dontcare"
             else:
-                foodType,priceRange,area = self.keywordMatcher(sentence)
+                foodType,priceRange,area,qualifier = self.keywordMatcher(sentence)
                 doesntCare = self.anyDetector(sentence,"generic")
                 if(doesntCare):
                     if(context=="area"):
@@ -177,10 +182,12 @@ class TextParser():
                         foodType="dontcare"
                     if(context=="priceRange"):
                         priceRange="dontcare"
+                    if(context=="qualifier"):
+                        qualifier="dontcare"
 
             retlist = {}
-            names = ["priceRange","foodType","area"]
-            vars = [priceRange,foodType,area]
+            names = ["priceRange","foodType","area","qualifier"]
+            vars = [priceRange,foodType,area,qualifier]
             for i in range(0,len(vars)):
                 if vars[i] != "":
                     retlist.update({names[i]:vars[i]})
@@ -193,9 +200,11 @@ class TextParser():
             return([cls[0]]), self.used_levenshtein
 
 def main():
+    clf_data = "data/dialog_acts.dat"
+    data = prepare_data(clf_data)
+    classifier = train_model(data["complete"], "DecisionTree")
+    vectorizer = data["complete"]["vectorizer"]
     restaurant_file = "data/restaurant_info.csv"
-    classifier = pkl.load(open("./ass_1a/models/complete/DecisionTree.pkl",'rb'))
-    vectorizer = pkl.load(open("./ass_1a/models/complete/vectorizer.pkl",'rb'))
     parser = TextParser(classifier,restaurant_file,vectorizer)
     print(parser.parseText("Hello"))
     print(parser.parseText("how about a cheap asian oriental restaurant"))
@@ -208,6 +217,15 @@ def main():
     print(parser.parseText("I dont care",context="area",requestPossible=False))
     print(parser.parseText("I dont care",context="foodType",requestPossible=False))
     print(parser.parseText("I dont care",context="priceRange",requestPossible=False))
+    print(parser.parseText("I want a restaurant that is romantic",requestPossible=False))
+    print(parser.parseText("Give me a restaurant with assigned seats",requestPossible=False))
+    print(parser.parseText("I want to bring my children",requestPossible=False))
+    print(parser.parseText("Can I bring my children",requestPossible=False))
+    print(parser.parseText("I want the restaurant to be touristic spot",requestPossible=False))
+
+
+
+
 
 
 
