@@ -23,7 +23,7 @@ class RestaurantAgent(StateMachine):
     hello = State(initial=True)
     state_preferences = State()
     process_preferences = State()
-    #ask_levenshtein = State()
+    ask_levenshtein = State()
     ask_area = State()
     ask_priceRange = State()
     ask_foodType = State()
@@ -39,9 +39,13 @@ class RestaurantAgent(StateMachine):
     
     receive_input = (
         state_preferences.to(process_preferences, cond="input_received")
+        | ask_levenshtein.to(process_preferences, cond="input_received")
         | ask_area.to(process_preferences, cond= "input_received")
+        | ask_levenshtein.to(process_preferences, cond="input_received")
         | ask_priceRange.to(process_preferences, cond= "input_received")
+        | ask_levenshtein.to(process_preferences, cond="input_received")
         | ask_foodType.to(process_preferences, cond= "input_received")
+        | ask_levenshtein.to(process_preferences, cond="input_received")
         | state_preferences.to(completed, cond="exit_conversation")
         | state_preferences.to(state_preferences)
                 
@@ -63,9 +67,13 @@ class RestaurantAgent(StateMachine):
 
     evaluate_input = (
         process_preferences.to(return_restaurant, cond="variables_known")
+        | process_preferences.to(ask_levenshtein, unless="levenshtein_known")
         | process_preferences.to(ask_area, unless = "area_known")
+        | process_preferences.to(ask_levenshtein, unless="levenshtein_known")
         | process_preferences.to(ask_foodType, unless = "foodType_known")
+        | process_preferences.to(ask_levenshtein, unless="levenshtein_known")
         | process_preferences.to(ask_priceRange, unless = "priceRange_known")
+        | process_preferences.to(ask_levenshtein, unless="levenshtein_known")
         | process_preferences.to(state_preferences)
     )
 
@@ -93,6 +101,7 @@ class RestaurantAgent(StateMachine):
         self.area = ""
         self.foodType = ""
         self.priceRange = ""
+        self.levenshtein = False
         self.context = None #Gets passed to the classifier to help understand otherwise ambiguous answers
         self.tries = 0 #keep track of how many restaurants of the same variable combination were returned
         self.current_input = None #parsed current input so parsing only runs once per input
@@ -113,6 +122,8 @@ class RestaurantAgent(StateMachine):
         """
         print("processing input variables", input, self.current_input)
         classAnswer = self.current_input
+        if classAnswer[0] == "affirm":
+            self.levenshtein = False
         if len(classAnswer)==2: 
             if(classAnswer[0] in ["inform","reqalts","confirm","negate","request"]):
                 for key,val in classAnswer[1].items():
@@ -161,9 +172,12 @@ class RestaurantAgent(StateMachine):
     def variables_known(self) -> bool:
         """Checks whether all variables are known
         """
-        return self.area != "" and self.foodType!="" and self.priceRange != ""
+        return self.area != "" and self.foodType!="" and self.priceRange != "" and self.levenshtein != True
 
-    
+    def levenshtein_known(self) -> bool:
+
+        return not self.levenshtein
+
     def area_known(self) -> bool:
         """Returns a bool representing whether the area is known"""
         return self.area!=""
@@ -200,7 +214,10 @@ class RestaurantAgent(StateMachine):
     def on_exit_state_preferences(self, input: str) -> None:
         """Runs when the user exits the state_preferences state"""
         self.processVariableDict(input)
-        
+
+    def on_exit_ask_levenshtein(self, input: str) -> None:
+
+        self.processVariableDict(input)
     def on_exit_ask_area(self, input: str) -> None:
         """Runs when the user exits the ask_area state"""
         self.processVariableDict(input)
@@ -214,6 +231,22 @@ class RestaurantAgent(StateMachine):
         self.processVariableDict(input)
     
     #ENTRY FUNCTIONS
+    def on_enter_ask_levenshtein(self) -> None:
+        str = "There might be a mistake in what you said. Are you searching for the restaurants with "
+        if self.area != "":
+            str += f"the area of {self.area}"
+        else:
+            str += "no area"
+        if  self.priceRange != "":
+            str += f", the price range of {self.priceRange}"
+        else:
+            str += ", no price range"
+        if  self.foodType != "":
+            str += f" and the food type of {self.foodType}?"
+        else:
+            str += " and no food type?"
+        chatbot_print(str)
+
     def on_enter_ask_area(self) -> None:
         """Runs when the user enters the ask_area state"""
         chatbot_print("What part of town do you have in mind?")
@@ -273,7 +306,7 @@ class RestaurantAgent(StateMachine):
             or the user can ask for information about the current restaurant without specifying what they want to know.
         """
         if(self.current_suggestion_set):
-            request_type = self.parser.parseText(input, context=self.context, requestPossible=True)
+            request_type,_ = self.parser.parseText(input, context=self.context, requestPossible=True)
             response_dict = {
                 "phone": "phone number",
                 "postcode": "postcode",
@@ -322,7 +355,7 @@ class RestaurantAgent(StateMachine):
     def input_step(self, user_input: str) -> str:
         """Parses the input and sends it to the state machine"""
         print(self.current_state)
-        input,_ = self.parser.parseText(user_input,requestPossible=False)
+        input, self.levenshtein = self.parser.parseText(user_input,requestPossible=False)
         self.current_input = input
         print("Classifier output",input,"from: ",user_input)
         self.send("receive_input", input=user_input)

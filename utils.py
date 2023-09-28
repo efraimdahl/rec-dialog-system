@@ -3,7 +3,7 @@ import random
 from config import *
 from time import sleep
 
-def add_database_column(file_name: str, col_name: str, options: list[str]) -> None:
+def add_database_column(file_name: str, col_name: str, options: list) -> None:
     """Adds a column to a database file if it does not exist yet, 
     randomly fills it using the options provided and saves the file.
 
