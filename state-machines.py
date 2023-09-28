@@ -14,6 +14,7 @@ from ass_1a.keyword_model import KeywordClassifier
 from ass_1a.training import train_model
 from ass_1a.preprocessing import prepare_data
 from utils import chatbot_print, take_user_input
+from config import *
 
 
 class RestaurantAgent(StateMachine):
@@ -41,11 +42,8 @@ class RestaurantAgent(StateMachine):
         state_preferences.to(process_preferences, cond="input_received")
         | ask_levenshtein.to(process_preferences, cond="input_received")
         | ask_area.to(process_preferences, cond= "input_received")
-        | ask_levenshtein.to(process_preferences, cond="input_received")
         | ask_priceRange.to(process_preferences, cond= "input_received")
-        | ask_levenshtein.to(process_preferences, cond="input_received")
         | ask_foodType.to(process_preferences, cond= "input_received")
-        | ask_levenshtein.to(process_preferences, cond="input_received")
         | state_preferences.to(completed, cond="exit_conversation")
         | state_preferences.to(state_preferences)
                 
@@ -69,11 +67,8 @@ class RestaurantAgent(StateMachine):
         process_preferences.to(return_restaurant, cond="variables_known")
         | process_preferences.to(ask_levenshtein, unless="levenshtein_known")
         | process_preferences.to(ask_area, unless = "area_known")
-        | process_preferences.to(ask_levenshtein, unless="levenshtein_known")
         | process_preferences.to(ask_foodType, unless = "foodType_known")
-        | process_preferences.to(ask_levenshtein, unless="levenshtein_known")
         | process_preferences.to(ask_priceRange, unless = "priceRange_known")
-        | process_preferences.to(ask_levenshtein, unless="levenshtein_known")
         | process_preferences.to(state_preferences)
     )
 
@@ -171,12 +166,18 @@ class RestaurantAgent(StateMachine):
     def variables_known(self) -> bool:
         """Checks whether all variables are known
         """
-        return self.area != "" and self.foodType!="" and self.priceRange != "" and self.levenshtein != True
+        if(ASK_CONFIRMATION_LEVENSHTEIN):
+            return self.area != "" and self.foodType!="" and self.priceRange != "" and self.levenshtein != True
+        else:
+            return self.area != "" and self.foodType!="" and self.priceRange != ""
 
     def levenshtein_known(self) -> bool:
         """Returns a bool representing whether program use the levenshtein
         """
-        return not self.levenshtein
+        if(ASK_CONFIRMATION_LEVENSHTEIN):
+            return not self.levenshtein
+        else:
+            return True
 
     def area_known(self) -> bool:
         """Returns a bool representing whether the area is known"""
@@ -357,6 +358,7 @@ class RestaurantAgent(StateMachine):
         """Parses the input and sends it to the state machine"""
         print(self.current_state)
         input, self.levenshtein = self.parser.parseText(user_input,requestPossible=False)
+        print(input)
         self.current_input = input
         #print("Classifier output",input,"from: ",user_input)
         self.send("receive_input", input=user_input)
@@ -366,6 +368,7 @@ class RestaurantAgent(StateMachine):
     
     def graph(self, filename: str="") -> DotGraphMachine:
         """Save a graph of the state machine with the current state highlighted to specified file"""
+        return
         diagram_graph = DotGraphMachine(self)
         if (filename != ""):
             diagram_graph().write_png(filename)
@@ -381,7 +384,6 @@ def main() -> None:
     
     restaurant_file = "restaurant_info.csv"
     sm = RestaurantAgent(restaurant_file,classifier,vectorizer)
-    testing = False
     
     sm.graph("initial.png")
     """
@@ -405,7 +407,7 @@ def main() -> None:
     cont=False #continues for one round after the loop stops to allow for restart through the testfile.
     while not sm.completed.is_active or (cont):
         nxtline = testfile.readline().decode().strip()
-        if(testing and nxtline!=""):
+        if(DIALOG_TESTING and nxtline!=""):
             if(nxtline=="#"):
                 #print("resetting testing agent")
                 sm = RestaurantAgent(restaurant_file,classifier,vectorizer)
