@@ -18,7 +18,7 @@ from config import *
 
 
 class RestaurantAgent(StateMachine):
-    """State machine that returns the number of restaurants in an area of town given the keyword south, west, east, north and center.
+    """State machine that runs a restaurant recommondation dialog based on desired area, priceRange and cuisine.
     """
     # STATES
     hello = State(initial=True)
@@ -121,12 +121,12 @@ class RestaurantAgent(StateMachine):
         if len(classAnswer)==2: 
             if(classAnswer[0] in ["inform","reqalts","confirm","negate","request"]):
                 for key,val in classAnswer[1].items():
-                    if key == "foodType":
+                    if key=="area":
+                        self.area=val
+                    elif key == "foodType" and (RANDOMIZE_PREFERENCE_QUESTION_ORDER or self.area!=""):
                             self.foodType=val
-                    elif key == "priceRange":
+                    elif key == "priceRange" and (RANDOMIZE_PREFERENCE_QUESTION_ORDER or (self.foodType !="" and self.area!="")):
                             self.priceRange=val
-                    elif key == "area":
-                            self.area=val
 
     def search_restaurant(self) -> pd.DataFrame:
         """Searches the restaurant database for restaurants matching the current variables
