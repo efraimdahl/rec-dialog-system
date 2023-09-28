@@ -175,7 +175,8 @@ class RestaurantAgent(StateMachine):
         return self.area != "" and self.foodType!="" and self.priceRange != "" and self.levenshtein != True
 
     def levenshtein_known(self) -> bool:
-
+        """Returns a bool representing whether program use the levenshtein
+        """
         return not self.levenshtein
 
     def area_known(self) -> bool:
@@ -216,7 +217,7 @@ class RestaurantAgent(StateMachine):
         self.processVariableDict(input)
 
     def on_exit_ask_levenshtein(self, input: str) -> None:
-
+        """Runs when the user exits the ask_levenshtein state"""
         self.processVariableDict(input)
     def on_exit_ask_area(self, input: str) -> None:
         """Runs when the user exits the ask_area state"""
@@ -232,6 +233,7 @@ class RestaurantAgent(StateMachine):
     
     #ENTRY FUNCTIONS
     def on_enter_ask_levenshtein(self) -> None:
+        """Runs when the user enters the ask_levenshtein state"""
         str = "There might be a mistake in what you said. Are you searching for the restaurants with "
         if self.area != "":
             str += f"the area of {self.area}"
