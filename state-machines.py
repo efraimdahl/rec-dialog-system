@@ -123,10 +123,8 @@ class RestaurantAgent(StateMachine):
 
                 for key,val in classAnswer[1].items():
                     if key=="area":
-                        print("updating area")
                         self.area=val
                     elif key == "foodType" and (RANDOMIZE_PREFERENCE_QUESTION_ORDER or self.area!=""):
-                            print("updating foodType")
                             self.foodType=val
                     elif key == "priceRange" and (RANDOMIZE_PREFERENCE_QUESTION_ORDER or (self.foodType !="" and self.area!="")):
                             self.priceRange=val
