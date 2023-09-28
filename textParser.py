@@ -179,8 +179,8 @@ class TextParser():
                         priceRange="dontcare"
 
             retlist = {}
-            names = ["foodType","priceRange","area"]
-            vars = [foodType,priceRange,area]
+            names = ["priceRange","foodType","area"]
+            vars = [priceRange,foodType,area]
             for i in range(0,len(vars)):
                 if vars[i] != "":
                     retlist.update({names[i]:vars[i]})

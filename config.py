@@ -6,7 +6,7 @@ ALLOW_MULTIPLE_PREFERENCES_PER_UTTERANCE = True
 
 # Task: Allow preferences to be stated in random order or not. 
 # If False they can be stated in a single or multiple utterances, but have to appear in order. The order is are, foodType, priceRange
-RANDOMIZE_PREFERENCE_QUESTION_ORDER = True
+RANDOMIZE_PREFERENCE_QUESTION_ORDER = False
 
 # Task: Delay before responding (in seconds)
 RESPONSE_DELAY = 0
@@ -18,7 +18,7 @@ ALL_CAPS_RESPONSE = False
 TTS = False
 
 #Not a task, but triggers a small test-suite to run on program start.
-DIALOG_TESTING = True
+DIALOG_TESTING = False
 # Random other chatbot settings
 TYPING_SPEED_DELAY = 0#0.03
 COLORED_OUTPUT = True
