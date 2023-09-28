@@ -70,7 +70,7 @@ def chatbot_print(message: str) -> None:
         print(message)
     
 def main():
-    filename = "restaurant_info.csv"
+    filename = "data/restaurant_info.csv"
     add_database_column(filename, "food_quality", ["good", "bad", "average"])
     add_database_column(filename, "crowdedness" , ["crowded", "not crowded", "average"])
     add_database_column(filename, "length_of_stay", ["long", "short", "average"])

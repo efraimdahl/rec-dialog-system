@@ -193,7 +193,7 @@ class TextParser():
             return([cls[0]]), self.used_levenshtein
 
 def main():
-    restaurant_file = "restaurant_info.csv"
+    restaurant_file = "data/restaurant_info.csv"
     classifier = pkl.load(open("./ass_1a/models/complete/DecisionTree.pkl",'rb'))
     vectorizer = pkl.load(open("./ass_1a/models/complete/vectorizer.pkl",'rb'))
     parser = TextParser(classifier,restaurant_file,vectorizer)
