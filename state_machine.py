@@ -1,7 +1,7 @@
 from statemachine import StateMachine, State
 import pandas as pd
 import pickle as pkl
-from textParser import TextParser
+from text_parser import TextParser
 from statemachine.contrib.diagram import DotGraphMachine
 import warnings
 warnings.filterwarnings("ignore")
@@ -383,10 +383,10 @@ def main() -> None:
     classifier = train_model(data["complete"], "DecisionTree")
     vectorizer = data["complete"]["vectorizer"]
     
-    restaurant_file = "restaurant_info.csv"
+    restaurant_file = "data/restaurant_info.csv"
     sm = RestaurantAgent(restaurant_file,classifier,vectorizer)
     
-    sm.graph("initial.png")
+    #sm.graph("initial.png")
     """
     ##print(sm.current_state)
     sm.send("start_processing")

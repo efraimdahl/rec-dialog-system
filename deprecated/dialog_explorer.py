@@ -1,5 +1,5 @@
 
-f = open("all_dialogs.txt", "r")
+f = open("data/all_dialogs.txt", "r")
 l = f.readlines()
 
 #Look for any case of data where the data is missing. 
