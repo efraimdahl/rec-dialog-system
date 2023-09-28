@@ -1,7 +1,7 @@
 from statemachine import StateMachine, State
 import pandas as pd
 import pickle as pkl
-from textParser import TextParser
+from text_parser import TextParser
 from statemachine.contrib.diagram import DotGraphMachine
 import warnings
 warnings.filterwarnings("ignore")
@@ -14,10 +14,11 @@ from ass_1a.keyword_model import KeywordClassifier
 from ass_1a.training import train_model
 from ass_1a.preprocessing import prepare_data
 from utils import chatbot_print, take_user_input
+from config import *
 
 
 class RestaurantAgent(StateMachine):
-    """State machine that returns the number of restaurants in an area of town given the keyword south, west, east, north and center.
+    """State machine that runs a restaurant recommondation dialog based on desired area, priceRange and cuisine.
     """
     # STATES
     hello = State(initial=True)
@@ -115,13 +116,14 @@ class RestaurantAgent(StateMachine):
         classAnswer = self.current_input
         if len(classAnswer)==2: 
             if(classAnswer[0] in ["inform","reqalts","confirm","negate","request"]):
+
                 for key,val in classAnswer[1].items():
-                    if key == "foodType":
+                    if key=="area":
+                        self.area=val
+                    elif key == "foodType" and (RANDOMIZE_PREFERENCE_QUESTION_ORDER or self.area!=""):
                             self.foodType=val
-                    elif key == "priceRange":
+                    elif key == "priceRange" and (RANDOMIZE_PREFERENCE_QUESTION_ORDER or (self.foodType !="" and self.area!="")):
                             self.priceRange=val
-                    elif key == "area":
-                            self.area=val
 
     def search_restaurant(self) -> pd.DataFrame:
         """Searches the restaurant database for restaurants matching the current variables
@@ -161,7 +163,18 @@ class RestaurantAgent(StateMachine):
     def variables_known(self) -> bool:
         """Checks whether all variables are known
         """
-        return self.area != "" and self.foodType!="" and self.priceRange != ""
+        if(ASK_CONFIRMATION_LEVENSHTEIN):
+            return self.area != "" and self.foodType!="" and self.priceRange != "" and self.levenshtein != True
+        else:
+            return self.area != "" and self.foodType!="" and self.priceRange != ""
+
+    def levenshtein_known(self) -> bool:
+        """Returns a bool representing whether program use the levenshtein
+        """
+        if(ASK_CONFIRMATION_LEVENSHTEIN):
+            return not self.levenshtein
+        else:
+            return True
 
     
     def area_known(self) -> bool:
@@ -321,8 +334,9 @@ class RestaurantAgent(StateMachine):
     # INPUT HANDLING
     def input_step(self, user_input: str) -> str:
         """Parses the input and sends it to the state machine"""
-        #print(self.current_state)
-        input,_ = self.parser.parseText(user_input,requestPossible=False)
+        print(self.current_state)
+        input, self.levenshtein = self.parser.parseText(user_input,requestPossible=False)
+        print(input)
         self.current_input = input
         #print("Classifier output",input,"from: ",user_input)
         self.send("receive_input", input=user_input)
@@ -332,6 +346,7 @@ class RestaurantAgent(StateMachine):
     
     def graph(self, filename: str="") -> DotGraphMachine:
         """Save a graph of the state machine with the current state highlighted to specified file"""
+        return
         diagram_graph = DotGraphMachine(self)
         if (filename != ""):
             diagram_graph().write_png(filename)
@@ -345,11 +360,10 @@ def main() -> None:
     classifier = train_model(data["complete"], "DecisionTree")
     vectorizer = data["complete"]["vectorizer"]
     
-    restaurant_file = "restaurant_info.csv"
+    restaurant_file = "data/restaurant_info.csv"
     sm = RestaurantAgent(restaurant_file,classifier,vectorizer)
-    testing = False
     
-    sm.graph("initial.png")
+    #sm.graph("initial.png")
     """
     ##print(sm.current_state)
     sm.send("start_processing")
@@ -371,7 +385,7 @@ def main() -> None:
     cont=False #continues for one round after the loop stops to allow for restart through the testfile.
     while not sm.completed.is_active or (cont):
         nxtline = testfile.readline().decode().strip()
-        if(testing and nxtline!=""):
+        if(DIALOG_TESTING and nxtline!=""):
             if(nxtline=="#"):
                 #print("resetting testing agent")
                 sm = RestaurantAgent(restaurant_file,classifier,vectorizer)

@@ -14,3 +14,18 @@ Task 1b of the restaurant dialog system.
 3. If you want to train the classifier and create the models from scratch, do the following:
     1. cd ass_1a //This is important because otherwise the local filepath definitions in the python files won't work.
     1. run $python main.py
+
+## File structure and description
+- ass_1a/ - Contains files used to evaluate different classifiers during assignment 1a.
+- - results/ - Contains the results of the models' evaluation.
+- - evaluation.py - Contains functions that test the performance of different classfifiers.
+- - keyword_model.py - Contains the KeywordClassifier class
+- - **main.py** - Run this file to train and evaluate each model, and dump the results in ass_1a/results/.
+- - preprocessing.py - Contains code to preprocess the dataset.
+- - training.py - Contains functions to train each model.
+- data/ - Contains all files relating to data.
+- deprecated/ - Contains files that are not used anymore, but are still relevant to the project report.
+- config.py - Contains constants relating to the chatbot's configuration (as part of assignment 1c's configurability tasks).
+- **state_machine.py** - The main file of the chatbot. Run this file to enter the user input loop and activate the chatbot. Contains all functions relating to the state machine.
+- text_parser.py - Contains functions that are used to parse the text.
+- utils.py - Contains helper functions that fulfill small tasks which do not make sense to put in a specific file.
