@@ -1,7 +1,29 @@
 import pandas as pd
 import random
 from config import *
-from time import sleep
+
+import sys 
+import time
+
+def clear_line() -> None:
+    """Clears the current line in the console.
+    """
+    sys.stdout.write("\033[F")
+    sys.stdout.write("\033[K")
+    
+def take_user_input() -> str:
+    """Helper function to get user input and print it to the console.
+    Also integrates configurability relating to response style.
+    """
+    user_input = input("Type your response: ")
+    clear_line()
+    if COLORED_OUTPUT:
+        sentence = "\033[1;33;40mUser: \033[0m" + "\033[1;36;40m" + user_input + "\033[0m"
+    else:
+        sentence = "User: " + user_input
+    print(sentence)
+    return user_input
+    
 
 def add_database_column(file_name: str, col_name: str, options: list) -> None:
     """Adds a column to a database file if it does not exist yet, 
@@ -24,13 +46,28 @@ def chatbot_print(message: str) -> None:
     Args:
         message (str): The message to be printed.
     """
+    # Message preprocessing
     message = message.upper() if ALL_CAPS_RESPONSE else message
+    
+    if COLORED_OUTPUT:
+        message = "\033[1;32;40mChatbot: \033[0m" + "\033[1;36;40m" + message + "\033[0m"
+    else:
+        message = "Chatbot: " + message
+        
     
     if RESPONSE_DELAY > 0:
         print("Thinking...")
-        sleep(RESPONSE_DELAY)
-        print("\033[A                             \033[A")
-    print("Chatbot: " + message)
+        time.sleep(RESPONSE_DELAY)
+        clear_line()
+        
+    if TYPING_SPEED_DELAY > 0:
+        for word in (message).split():
+            sys.stdout.write(word + " ")
+            sys.stdout.flush()
+            time.sleep(TYPING_SPEED_DELAY)
+        sys.stdout.write("\n")
+    else:
+        print(message)
     
 def main():
     filename = "restaurant_info.csv"

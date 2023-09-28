@@ -13,7 +13,7 @@ from sklearn.base import ClassifierMixin
 from ass_1a.keyword_model import KeywordClassifier
 from ass_1a.training import train_model
 from ass_1a.preprocessing import prepare_data
-from utils import chatbot_print
+from utils import chatbot_print, take_user_input
 
 
 class RestaurantAgent(StateMachine):
@@ -101,7 +101,6 @@ class RestaurantAgent(StateMachine):
         self.area = ""
         self.foodType = ""
         self.priceRange = ""
-        self.levenshtein = False
         self.context = None #Gets passed to the classifier to help understand otherwise ambiguous answers
         self.tries = 0 #keep track of how many restaurants of the same variable combination were returned
         self.current_input = None #parsed current input so parsing only runs once per input
@@ -120,7 +119,7 @@ class RestaurantAgent(StateMachine):
         Args:
             input (dict): The parsed data from the classifier
         """
-        print("processing input variables", input, self.current_input)
+        #print("processing input variables", input, self.current_input)
         classAnswer = self.current_input
         if classAnswer[0] == "affirm":
             self.levenshtein = False
@@ -159,14 +158,14 @@ class RestaurantAgent(StateMachine):
         foodpart = f'serving {self.foodType} food' if (self.foodType!="" and self.foodType!="dontcare") else ""
         areapart = f'in the {self.area}' if (self.area!="" and self.area!="dontcare") else ""
         pricepart = f'that has {self.priceRange} prices' if (self.priceRange!="" and self.priceRange!="dontcare") else ""
-        otherp = 'other' if(other) else '' 
-        resp = f"I'm sorry but there is no {otherp} restaurant {foodpart} {areapart} {pricepart}"
+        otherp = 'other ' if(other) else '' 
+        resp = f"I'm sorry but there is no {otherp}restaurant {foodpart} {areapart} {pricepart}"
         return resp
         
     #CONDITIONAL TRANSITIONS
     def input_received(self, input: str) -> bool:
         """Checks whether the input is not None"""
-        print("Received: ", input)
+        #print("Received: ", input)
         return input!=None
     
     def variables_known(self) -> bool:
@@ -194,18 +193,18 @@ class RestaurantAgent(StateMachine):
     def valid_request(self,input: str) -> bool:
         """Checks whether the input is a valid request for information about the current restaurant"""
         input_type = self.current_input[0]
-        print("valid request", input,self.current_input)
+        #print("valid request", input,self.current_input)
         return input_type=="request" and self.current_suggestion_set and not self.preference_change(input)
     
     def exit_conversation(self, input: str) -> bool:
         """Checks whether the input is a valid exit"""
         exit_input = self.current_input[0]
-        print("valid exit", input,self.current_input)
+        #print("valid exit", input,self.current_input)
         return exit_input=="bye" or exit_input=="thankyou"
     
     def preference_change(self, input: str) -> bool:
         """Checks whether the input is a valid preference change"""
-        print("preferences changed?", input,self.current_input)
+        #print("preferences changed?", input,self.current_input)
         if(len(self.current_input)>1):
             return (type(self.current_input[1])==dict and len(self.current_input[1]) > 0)
         else:
@@ -326,7 +325,7 @@ class RestaurantAgent(StateMachine):
                     response += f"the {attribute} of {self.current_suggestion['restaurantname']} is {value}, " if not response else f"their {attribute} is {value}, "
             
             if response != "":
-                # Format and print the bot answer
+                # Format and #print the bot answer
                 chatbot_print(response.capitalize()[:-2] + ".")
                 return
             chatbot_print("Can you provide specific information you are looking for such as phone number, area or address?")
@@ -344,12 +343,12 @@ class RestaurantAgent(StateMachine):
         self.current_suggestion_set = False
         self.tries = 0
         self.no_res_passes = 0
-        print("requesting with updated variables")
+        #print("requesting with updated variables")
         self.send("request_alternative") #Auto transition to return restaurant.
     
     def on_enter_process_preferences(self, input:str) -> None:
         """Runs when the user enters the process_preferences state"""
-        print("Entering process preferences")
+        #print("Entering process preferences")
         self.send("evaluate_input")
 
 
@@ -359,9 +358,9 @@ class RestaurantAgent(StateMachine):
         print(self.current_state)
         input, self.levenshtein = self.parser.parseText(user_input,requestPossible=False)
         self.current_input = input
-        print("Classifier output",input,"from: ",user_input)
+        #print("Classifier output",input,"from: ",user_input)
         self.send("receive_input", input=user_input)
-        print(self.current_state)
+        #print(self.current_state)
         
         
     
@@ -382,11 +381,11 @@ def main() -> None:
     
     restaurant_file = "restaurant_info.csv"
     sm = RestaurantAgent(restaurant_file,classifier,vectorizer)
-    testing = True
+    testing = False
     
     sm.graph("initial.png")
     """
-    #print(sm.current_state)
+    ##print(sm.current_state)
     sm.send("start_processing")
 
     # Test inputs
@@ -397,10 +396,10 @@ def main() -> None:
     sm.input_step("whats the address")
     sm.input_step("what area is it in")
     sm.input_step("how about italian food")
-    print(sm.completed.is_active)
+    #print(sm.completed.is_active)
     #sm.input_step("Goodbye")
 
-    print(sm.completed.is_active)
+    #print(sm.completed.is_active)
     """
     testfile = open("test.txt","rb")
     cont=False #continues for one round after the loop stops to allow for restart through the testfile.
@@ -408,15 +407,16 @@ def main() -> None:
         nxtline = testfile.readline().decode().strip()
         if(testing and nxtline!=""):
             if(nxtline=="#"):
-                print("resetting testing agent")
+                #print("resetting testing agent")
                 sm = RestaurantAgent(restaurant_file,classifier,vectorizer)
                 cont=True
             else:
-                print("Auto Input: ",nxtline)
+                #print("Auto Input: ",nxtline)
                 sm.input_step(nxtline)
                 cont=True
         else:
-            user_input = input("Type your response: ")
+            user_input = take_user_input()
+            
             sm.input_step(user_input)
             cont=False
         
