@@ -80,13 +80,13 @@ class TextParser():
             if word not in stopwords.words('english'):
                 for keyword in all_keywords:
                     distance = Levenshtein.distance(word, keyword)
-                    if distance <= threshold:
-                        similar_keywords.append(keyword)
-                        self.used_levenshtein = True
-                    elif distance == 0:
-                        similar_keywords = [word] #Fonund the identical word and break, override the keywords
+                    if distance == 0:
+                        similar_keywords = [keyword] #Found the identical word and break, override the keywords
                         self.used_levenshtein = False
                         break
+                    elif distance <= threshold:
+                        similar_keywords.append(keyword)
+                        self.used_levenshtein = True
                 if len(similar_keywords) == 0:
                     similar_keywords.append(word)
                 word = random.choice(similar_keywords)
