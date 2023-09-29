@@ -53,9 +53,8 @@ class TextParser():
             "area":["area","part","locat"]
         }
         
-        self.stopwords = {
-
-        }
+        self.stopwords = stopwords.words('english')
+        self.stopwords.append("eat")
     def keywordMatcher(self, sentence: str) -> Tuple[str, str, str]:
         """ Matches keywords in a sentence to the possible outcomes for area,types and priceranges
 
@@ -77,7 +76,7 @@ class TextParser():
             similar_keywords = []
             #Stopwords usually have no meaning, so neglect them
             word = word.lower()
-            if word not in stopwords.words('english'):
+            if word not in self.stopwords:
                 for keyword in all_keywords:
                     distance = Levenshtein.distance(word, keyword)
                     if distance == 0:
