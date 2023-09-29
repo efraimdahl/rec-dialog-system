@@ -1,5 +1,5 @@
 # rec-dialog-system
-Task 1b of the restaurant dialog system.
+Task 1c of the restaurant dialog system.
 
 
 ## Installation instructions
