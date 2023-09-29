@@ -84,11 +84,12 @@ class RestaurantAgent(StateMachine):
     )
     many_restaurant_trans=(
         preference_reasoning.to(return_restaurant)
-        |process_alternative.to(ask_qualifier)
     )
 
     request_alternative=(
-        process_alternative.to(return_restaurant)
+        process_alternative.to(ask_qualifier,cond="restaurants_left",unless="qualifier_known")
+        | process_alternative.to(preference_reasoning,cond="qualifier_known")
+        | process_alternative.to(return_restaurant)
     )
 
     information_trans=(
@@ -347,7 +348,6 @@ class RestaurantAgent(StateMachine):
 
     
     def on_enter_preference_reasoning(self)->None:
-        print("Reasoning Over preference")
         self.add_preferences=True
         self.reasoning_rules
         neg_cond = self.reasoning_rules[self.qualifier+"-false"]
@@ -360,10 +360,9 @@ class RestaurantAgent(StateMachine):
             pdf=df[df[cond[0]]==cond[1]]
         for cond in neg_cond["conditions"]:
             ndf=df[df[cond[0]]!=cond[1]]
-        print(len(pdf),len(ndf))
         #Restaurants with only positive qualifiers receive preferencial treatment
         res_df = pd.merge(pdf, ndf, how ='inner')
-        print(res_df)
+        #print(res_df)
         use_description = pos_cond["description"]
         if(len(res_df)==0):
             #restaurants with non-negative attributes come second
@@ -436,7 +435,7 @@ class RestaurantAgent(StateMachine):
     
     def on_enter_process_alternative(self, input: str) -> None:
         """Processes the input and updates the variables accordingly"""
-        tmp_qualifier = self.qualifier
+        self.qualifier=""
         self.processVariableDict(input)
         self.filteredRestaurants = None
         self.current_suggestion = None
@@ -446,7 +445,6 @@ class RestaurantAgent(StateMachine):
         self.add_preferences = False
         self.add_description = ""
         
-            
         #print("requesting with updated variables")
         self.send("request_alternative") #Auto transition to return restaurant.
     
