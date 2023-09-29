@@ -1,0 +1,11 @@
+{
+    "romantic-true":{
+        "conditions":[{"length_of_stay":"long"}],
+        "description":"spending a long time in a restaurant is romantic"
+    },
+    "romantic-false":{
+        "conditions":[{"crowdedness":"busy"}],
+        "description":"a busy restaurant is not romantic"
+    }
+
+}

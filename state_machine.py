@@ -31,6 +31,7 @@ class RestaurantAgent(StateMachine):
     return_restaurant = State()
     no_restaurant_found = State()
     infer_preference = State()
+    preference_reasoning = State()
     process_alternative = State()
     give_information = State()
     cant_give_information = State()
@@ -62,6 +63,9 @@ class RestaurantAgent(StateMachine):
         | no_restaurant_found.to(process_alternative,cond="preference_change")
         | no_restaurant_found.to(no_restaurant_found)
 
+        | infer_preference.to(preference_reasoning, cond="qualifier_stated")
+        | infer_preference.to(infer_preference)
+
     )
 
     evaluate_input = (
@@ -76,7 +80,7 @@ class RestaurantAgent(StateMachine):
     no_restaurant_trans=(
         return_restaurant.to(no_restaurant_found)
     )
-    many_restaurants_found=(
+    many_restaurant_trans=(
         return_restaurant.to(infer_preference)
     )
 
@@ -89,7 +93,7 @@ class RestaurantAgent(StateMachine):
     )
 
     # INITIATION
-    def __init__(self,restaurant_file: str, classifier_file: Union[ClassifierMixin, KeywordClassifier], vectorizer_file: CountVectorizer) -> None:
+    def __init__(self,restaurant_file: str, classifier_file: Union[ClassifierMixin, KeywordClassifier], vectorizer_file: CountVectorizer,reasoning_file: str) -> None:
         """Initializes a RestaurantAgent instance.
 
         Args:
@@ -175,6 +179,14 @@ class RestaurantAgent(StateMachine):
             return self.area != "" and self.foodType!="" and self.priceRange != "" and self.levenshtein != True
         else:
             return self.area != "" and self.foodType!="" and self.priceRange != ""
+    
+    def qualifier_stated(self)->bool:
+        if(len(self.current_input)>1):
+            var = self.current_input[1].get("qualifier")
+            if(var!=None and var!=""):
+                self.qualifier=var
+                return True
+        return False
 
     def levenshtein_known(self) -> bool:
         """Returns a bool representing whether program use the levenshtein
@@ -272,29 +284,44 @@ class RestaurantAgent(StateMachine):
     def on_enter_hello(self) -> None:
         """Runs when the user enters the hello state"""
         chatbot_print("Hello , welcome to the Cambridge restaurant system? You can ask for restaurants by area , price range or food type . How may I help you?")
+        self.context=None
         self.send("start_processing")
     
     def on_enter_cant_give_information(self) -> None:
         """Runs when the user enters the cant_give_information state"""
         chatbot_print("I'm sorry i did not understand your request")
+        self.context=None
         self.send("information_trans",input="")
         
     def on_enter_no_restaurant_found(self) -> None:
         """Runs when the user enters the no_restaurant_found state"""
         if(self.no_res_passes>0):
             chatbot_print("Sorry, but there are no such restaurants, maybe try changing the location, area or foodtype?")
+            self.context=None
         else:
             resp = self.no_response_formatter(other=(self.tries>0))
             chatbot_print(resp)
+            self.context=None
         self.no_res_passes+=1
         self.current_suggestion = None
         self.filteredRestaurants=None
         self.current_suggestion_set = False
 
+    def on_enter_infer_preference(self)-> None:
+        print("Inferring preference")
+
+    def on_enter_preference_reasoning(self)->None:
+        print("Reasoning Over preference")
+
     def on_enter_return_restaurant(self) -> None:
         """Runs when the user enters the return_restaurant state"""
         if(self.filteredRestaurants is None):
             self.filteredRestaurants = self.search_restaurant()
+        if(len(self.filteredRestaurants)>1):
+            chatbot_print("Do you have additional requirements?")
+            self.context=None
+            self.send("many_restaurant_trans")
+            return
         if(len(self.filteredRestaurants)<self.tries+1):
             self.send("no_restaurant_trans")
         else:
@@ -303,6 +330,7 @@ class RestaurantAgent(StateMachine):
             self.current_suggestion_set = True
             self.tries+=1
             self.no_res_passes=0
+            self.context=None
             chatbot_print(f"{row['restaurantname']} is a nice place in the {row['area']} part of town serving {row['food']} food and the prices are {row['pricerange']}")
         
     
@@ -313,7 +341,8 @@ class RestaurantAgent(StateMachine):
             or the user can ask for information about the current restaurant without specifying what they want to know.
         """
         if(self.current_suggestion_set):
-            request_type,_ = self.parser.parseText(input, context=self.context, requestPossible=True)
+            self.context=None
+            request_type,_ = self.parser.parseText(input, requestPossible=True)
             response_dict = {
                 "phone": "phone number",
                 "postcode": "postcode",
@@ -362,7 +391,7 @@ class RestaurantAgent(StateMachine):
     def input_step(self, user_input: str) -> str:
         """Parses the input and sends it to the state machine"""
         print(self.current_state)
-        input, self.levenshtein = self.parser.parseText(user_input,requestPossible=False)
+        input, self.levenshtein = self.parser.parseText(user_input,context=self.context,requestPossible=False)
         print(input)
         self.current_input = input
         #print("Classifier output",input,"from: ",user_input)
@@ -386,7 +415,7 @@ def main() -> None:
     data = prepare_data(clf_data)
     classifier = train_model(data["complete"], "DecisionTree")
     vectorizer = data["complete"]["vectorizer"]
-    
+    reasoning_file = "data/reasoning_rules.json"
     restaurant_file = "data/restaurant_info.csv"
     sm = RestaurantAgent(restaurant_file,classifier,vectorizer)
     
