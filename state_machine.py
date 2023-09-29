@@ -30,6 +30,7 @@ class RestaurantAgent(StateMachine):
     ask_foodType = State()
     return_restaurant = State()
     no_restaurant_found = State()
+    infer_preference = State()
     process_alternative = State()
     give_information = State()
     cant_give_information = State()
@@ -74,6 +75,9 @@ class RestaurantAgent(StateMachine):
 
     no_restaurant_trans=(
         return_restaurant.to(no_restaurant_found)
+    )
+    many_restaurants_found=(
+        return_restaurant.to(infer_preference)
     )
 
     request_alternative=(
