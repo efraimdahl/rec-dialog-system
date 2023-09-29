@@ -15,6 +15,7 @@ from ass_1a.training import train_model
 from ass_1a.preprocessing import prepare_data
 from utils import chatbot_print, take_user_input
 from config import *
+import json
 
 
 class RestaurantAgent(StateMachine):
@@ -28,9 +29,9 @@ class RestaurantAgent(StateMachine):
     ask_area = State()
     ask_priceRange = State()
     ask_foodType = State()
+    ask_qualifier = State()
     return_restaurant = State()
     no_restaurant_found = State()
-    infer_preference = State()
     preference_reasoning = State()
     process_alternative = State()
     give_information = State()
@@ -46,6 +47,10 @@ class RestaurantAgent(StateMachine):
         | ask_area.to(process_preferences, cond= "input_received")
         | ask_priceRange.to(process_preferences, cond= "input_received")
         | ask_foodType.to(process_preferences, cond= "input_received")
+        
+        | ask_qualifier.to(preference_reasoning, cond="qualifier_stated")
+        | ask_qualifier.to(process_preferences,cond= "input_received")
+
         | state_preferences.to(completed, cond="exit_conversation")
         | state_preferences.to(state_preferences)
                 
@@ -62,10 +67,6 @@ class RestaurantAgent(StateMachine):
         | no_restaurant_found.to(completed, cond="exit_conversation")
         | no_restaurant_found.to(process_alternative,cond="preference_change")
         | no_restaurant_found.to(no_restaurant_found)
-
-        | infer_preference.to(preference_reasoning, cond="qualifier_stated")
-        | infer_preference.to(infer_preference)
-
     )
 
     evaluate_input = (
@@ -74,6 +75,7 @@ class RestaurantAgent(StateMachine):
         | process_preferences.to(ask_area, unless = "area_known")
         | process_preferences.to(ask_foodType, unless = "foodType_known")
         | process_preferences.to(ask_priceRange, unless = "priceRange_known")
+        | process_preferences.to(ask_qualifier, unless="qualifier_known", cond="restaurants_left")
         | process_preferences.to(state_preferences)
     )
 
@@ -81,7 +83,8 @@ class RestaurantAgent(StateMachine):
         return_restaurant.to(no_restaurant_found)
     )
     many_restaurant_trans=(
-        return_restaurant.to(infer_preference)
+        preference_reasoning.to(return_restaurant)
+        |process_alternative.to(ask_qualifier)
     )
 
     request_alternative=(
@@ -104,15 +107,19 @@ class RestaurantAgent(StateMachine):
         self.area = ""
         self.foodType = ""
         self.priceRange = ""
+        self.qualifier=""
         self.context = None #Gets passed to the classifier to help understand otherwise ambiguous answers
         self.tries = 0 #keep track of how many restaurants of the same variable combination were returned
         self.current_input = None #parsed current input so parsing only runs once per input
         self.all_restaurants = pd.read_csv(restaurant_file)
+        self.reasoning_rules = json.loads(open(reasoning_file,"rb").read())
         self.filteredRestaurants = None
         self.parser = TextParser(classifier_file,restaurant_file,vectorizer_file)
         self.current_suggestion = None
         self.current_suggestion_set = False
         self.no_res_passes = 0 #Changes the error message to be more helpful on repeated state entry.
+        self.add_preferences = False #keeps track of addeditional preferences
+        self.add_description = ""
         super(RestaurantAgent, self).__init__(rtc=False)
     
     # HELPER FUNCTIONS
@@ -136,6 +143,8 @@ class RestaurantAgent(StateMachine):
                             self.foodType=val
                     elif key == "priceRange" and (RANDOMIZE_PREFERENCE_QUESTION_ORDER or (self.foodType !="" and self.area!="")):
                             self.priceRange=val
+                    elif key == "qualifier" and (RANDOMIZE_PREFERENCE_QUESTION_ORDER or (self.foodType !="" and self.area!="")):
+                            self.qualifier=val
 
     def search_restaurant(self) -> pd.DataFrame:
         """Searches the restaurant database for restaurants matching the current variables
@@ -162,8 +171,11 @@ class RestaurantAgent(StateMachine):
         foodpart = f'serving {self.foodType} food' if (self.foodType!="" and self.foodType!="dontcare") else ""
         areapart = f'in the {self.area}' if (self.area!="" and self.area!="dontcare") else ""
         pricepart = f'that has {self.priceRange} prices' if (self.priceRange!="" and self.priceRange!="dontcare") else ""
+        
+        qualifierDict = {"romantic":"that is romantic","children":"thats child appropriate","assigned":"that has assigned seats","touristic":"that is touristic"}
+        qualifierpart = f'{qualifierDict.get(self.qualifier,None)}' if (self.qualifier!="") else ""
         otherp = 'other ' if(other) else '' 
-        resp = f"I'm sorry but there is no {otherp}restaurant {foodpart} {areapart} {pricepart}"
+        resp = f"I'm sorry but there is no {otherp}restaurant {foodpart} {areapart} {pricepart},{qualifierpart}"
         return resp
         
     #CONDITIONAL TRANSITIONS
@@ -178,7 +190,24 @@ class RestaurantAgent(StateMachine):
         if(ASK_CONFIRMATION_LEVENSHTEIN):
             return self.area != "" and self.foodType!="" and self.priceRange != "" and self.levenshtein != True
         else:
-            return self.area != "" and self.foodType!="" and self.priceRange != ""
+            if(self.restaurants_left):
+                return self.area != "" and self.foodType!="" and self.priceRange != "" and self.qualifier != ""
+            else:
+                return self.area != "" and self.foodType!="" and self.priceRange != ""
+    
+    def restaurants_left(self)->bool:
+        if(len(self.search_restaurant())>1):
+            return True
+        else: 
+            return False
+
+    def negate_or_thanks(self)->bool:
+        if(self.current_input[0] in ["thankyou","negate"]):
+            return True
+        elif(self.current_input[1]=={}):
+            True
+        else:
+            return False
     
     def qualifier_stated(self)->bool:
         if(len(self.current_input)>1):
@@ -186,6 +215,7 @@ class RestaurantAgent(StateMachine):
             if(var!=None and var!=""):
                 self.qualifier=var
                 return True
+        self.qualifier="None"
         return False
 
     def levenshtein_known(self) -> bool:
@@ -207,6 +237,10 @@ class RestaurantAgent(StateMachine):
     def foodType_known(self) -> bool:
         """Returns a bool representing whether the food type is known"""
         return self.foodType!=""
+    
+    def qualifier_known(self) -> bool:
+        """Returns a bool representing whether the qualifier is known"""
+        return self.qualifier!=""
 
     def valid_request(self,input: str) -> bool:
         """Checks whether the input is a valid request for information about the current restaurant"""
@@ -280,6 +314,10 @@ class RestaurantAgent(StateMachine):
         """Runs when the user enters the ask_foodType state"""
         chatbot_print("What kind of food would you like?")
         self.context="foodType"
+    
+    def on_enter_ask_qualifier(self) -> None:
+        """Runs when the user enters the ask_qualifier state"""
+        chatbot_print("Do you have additional requirements?")
 
     def on_enter_hello(self) -> None:
         """Runs when the user enters the hello state"""
@@ -307,21 +345,46 @@ class RestaurantAgent(StateMachine):
         self.filteredRestaurants=None
         self.current_suggestion_set = False
 
-    def on_enter_infer_preference(self)-> None:
-        print("Inferring preference")
-
+    
     def on_enter_preference_reasoning(self)->None:
         print("Reasoning Over preference")
+        self.add_preferences=True
+        self.reasoning_rules
+        neg_cond = self.reasoning_rules[self.qualifier+"-false"]
+        pos_cond = self.reasoning_rules[self.qualifier+"-true"]
+        use_description = ""
+        df = self.search_restaurant()
+        pdf = self.filteredRestaurants #Dataframe with positive adding qualifiers
+        ndf = self.filteredRestaurants #Dataframe with non-negative qualifiers
+        for cond in pos_cond["conditions"]:
+            pdf=df[df[cond[0]]==cond[1]]
+        for cond in neg_cond["conditions"]:
+            ndf=df[df[cond[0]]!=cond[1]]
+        print(len(pdf),len(ndf))
+        #Restaurants with only positive qualifiers receive preferencial treatment
+        res_df = pd.merge(pdf, ndf, how ='inner')
+        print(res_df)
+        use_description = pos_cond["description"]
+        if(len(res_df)==0):
+            #restaurants with non-negative attributes come second
+            res_df = ndf
+            use_description=neg_cond["description"]
+            if(len(ndf)==0):
+                #restaurants with positive attributes and negative attributes come third - no need to complete an outer merge here
+                res_df = pdf
+                use_description = pos_cond["description"]
+        self.filteredRestaurants = res_df
+        self.add_description=use_description
+        self.tries = 0
+        self.send("many_restaurant_trans")
+            
+        
+                
 
     def on_enter_return_restaurant(self) -> None:
         """Runs when the user enters the return_restaurant state"""
         if(self.filteredRestaurants is None):
             self.filteredRestaurants = self.search_restaurant()
-        if(len(self.filteredRestaurants)>1):
-            chatbot_print("Do you have additional requirements?")
-            self.context=None
-            self.send("many_restaurant_trans")
-            return
         if(len(self.filteredRestaurants)<self.tries+1):
             self.send("no_restaurant_trans")
         else:
@@ -332,7 +395,8 @@ class RestaurantAgent(StateMachine):
             self.no_res_passes=0
             self.context=None
             chatbot_print(f"{row['restaurantname']} is a nice place in the {row['area']} part of town serving {row['food']} food and the prices are {row['pricerange']}")
-        
+            if(self.add_description !=""):
+                chatbot_print(f"{row['restaurantname']} was chosen because "+self.add_description)
     
     def on_enter_give_information(self, input: str) -> None:
         """There are three possibilities: 
@@ -372,12 +436,17 @@ class RestaurantAgent(StateMachine):
     
     def on_enter_process_alternative(self, input: str) -> None:
         """Processes the input and updates the variables accordingly"""
+        tmp_qualifier = self.qualifier
         self.processVariableDict(input)
         self.filteredRestaurants = None
         self.current_suggestion = None
         self.current_suggestion_set = False
         self.tries = 0
         self.no_res_passes = 0
+        self.add_preferences = False
+        self.add_description = ""
+        
+            
         #print("requesting with updated variables")
         self.send("request_alternative") #Auto transition to return restaurant.
     
@@ -402,7 +471,7 @@ class RestaurantAgent(StateMachine):
     
     def graph(self, filename: str="") -> DotGraphMachine:
         """Save a graph of the state machine with the current state highlighted to specified file"""
-        return
+        #return
         diagram_graph = DotGraphMachine(self)
         if (filename != ""):
             diagram_graph().write_png(filename)
@@ -417,7 +486,7 @@ def main() -> None:
     vectorizer = data["complete"]["vectorizer"]
     reasoning_file = "data/reasoning_rules.json"
     restaurant_file = "data/restaurant_info.csv"
-    sm = RestaurantAgent(restaurant_file,classifier,vectorizer)
+    sm = RestaurantAgent(restaurant_file,classifier,vectorizer,reasoning_file)
     
     #sm.graph("initial.png")
     """
@@ -444,7 +513,7 @@ def main() -> None:
         if(DIALOG_TESTING and nxtline!=""):
             if(nxtline=="#"):
                 #print("resetting testing agent")
-                sm = RestaurantAgent(restaurant_file,classifier,vectorizer)
+                sm = RestaurantAgent(restaurant_file,classifier,vectorizer,reasoning_file)
                 cont=True
             else:
                 #print("Auto Input: ",nxtline)
