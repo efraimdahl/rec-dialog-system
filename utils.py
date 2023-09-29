@@ -2,8 +2,12 @@ import pandas as pd
 import random
 from config import *
 
+import os
 import sys 
 import time
+from gtts import gTTS
+import pygame
+
 
 def clear_line() -> None:
     """Clears the current line in the console.
@@ -38,7 +42,7 @@ def add_database_column(file_name: str, col_name: str, options: list) -> None:
     if col_name not in df.columns:
         df[col_name] = [random.choice(options) for _ in range(len(df))]
         df.to_csv(file_name, index=False)
-        
+
 def chatbot_print(message: str) -> None:
     """Helper function to make chatbot messages stand out from debugging messages.
     Also integrates configurability relating to response style. 
@@ -47,6 +51,9 @@ def chatbot_print(message: str) -> None:
         message (str): The message to be printed.
     """
     # Message preprocessing
+    tts = gTTS(message, lang='en')
+    tts.save("output.mp3")
+    pygame.init()
     message = message.upper() if ALL_CAPS_RESPONSE else message
     
     if COLORED_OUTPUT:
@@ -68,6 +75,12 @@ def chatbot_print(message: str) -> None:
         sys.stdout.write("\n")
     else:
         print(message)
+    pygame.mixer.music.load("output.mp3")
+    pygame.mixer.music.play()
+    while pygame.mixer.music.get_busy():
+        time.sleep(1)
+    pygame.mixer.quit()
+    os.remove("output.mp3")
     
 def main():
     filename = "data/restaurant_info.csv"

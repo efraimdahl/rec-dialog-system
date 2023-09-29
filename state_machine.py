@@ -112,6 +112,7 @@ class RestaurantAgent(StateMachine):
         self.context = None #Gets passed to the classifier to help understand otherwise ambiguous answers
         self.tries = 0 #keep track of how many restaurants of the same variable combination were returned
         self.current_input = None #parsed current input so parsing only runs once per input
+        self.stage = 0
         self.all_restaurants = pd.read_csv(restaurant_file)
         self.reasoning_rules = json.loads(open(reasoning_file,"rb").read())
         self.filteredRestaurants = None
@@ -134,18 +135,35 @@ class RestaurantAgent(StateMachine):
         classAnswer = self.current_input
         if classAnswer[0] == "affirm":
             self.levenshtein = False
-        if len(classAnswer)==2: 
+        if len(classAnswer)==2:
             if(classAnswer[0] in ["inform","reqalts","confirm","negate","request"]):
-
-                for key,val in classAnswer[1].items():
-                    if key=="area":
-                        self.area=val
-                    elif key == "foodType" and (RANDOMIZE_PREFERENCE_QUESTION_ORDER or self.area!=""):
-                            self.foodType=val
-                    elif key == "priceRange" and (RANDOMIZE_PREFERENCE_QUESTION_ORDER or (self.foodType !="" and self.area!="")):
-                            self.priceRange=val
-                    elif key == "qualifier" and (RANDOMIZE_PREFERENCE_QUESTION_ORDER or (self.foodType !="" and self.area!="")):
-                            self.qualifier=val
+                if ALLOW_MULTIPLE_PREFERENCES_PER_UTTERANCE:
+                    if len(classAnswer[1]) != 3 and All_SINGLE_UTTERENCE_ONLY:
+                            chatbot_print("Sorry, you must enter area, food type and price range in one utterence")
+                    else:
+                        print(self.area, self.foodType,self.priceRange)
+                        for key,val in classAnswer[1].items():
+                            if key=="area":
+                                self.area=val
+                            elif key == "foodType" and (RANDOMIZE_PREFERENCE_QUESTION_ORDER or self.area!=""):
+                                    self.foodType=val
+                            elif key == "priceRange" and (RANDOMIZE_PREFERENCE_QUESTION_ORDER or (self.foodType !="" and self.area!="")):
+                                    self.priceRange=val
+                            elif key == "qualifier" and (RANDOMIZE_PREFERENCE_QUESTION_ORDER or (self.foodType !="" and self.area!="")):
+                                self.qualifier=val
+                else:
+                    if len(classAnswer[1]) == 1:
+                        key,val = classAnswer[1].items()
+                        if key=="area":
+                                self.area=val
+                        elif key == "foodType" and (RANDOMIZE_PREFERENCE_QUESTION_ORDER or self.area!=""):
+                                self.foodType=val
+                        elif key == "priceRange" and (RANDOMIZE_PREFERENCE_QUESTION_ORDER or (self.foodType !="" and self.area!="")):
+                                self.priceRange=val
+                        elif key == "qualifier" and (RANDOMIZE_PREFERENCE_QUESTION_ORDER or (self.foodType !="" and self.area!="")):
+                                self.qualifier=val
+                    else:
+                        chatbot_print("Sorry, we can only process one preference each sentence")
 
     def search_restaurant(self) -> pd.DataFrame:
         """Searches the restaurant database for restaurants matching the current variables
@@ -286,35 +304,63 @@ class RestaurantAgent(StateMachine):
     #ENTRY FUNCTIONS
     def on_enter_ask_levenshtein(self) -> None:
         """Runs when the user enters the ask_levenshtein state"""
-        str = "There might be a mistake in what you said. Are you searching for the restaurants with "
-        if self.area != "":
-            str += f"the area of {self.area}"
-        else:
-            str += "no area"
-        if  self.priceRange != "":
-            str += f", the price range of {self.priceRange}"
-        else:
-            str += ", no price range"
-        if  self.foodType != "":
-            str += f" and the food type of {self.foodType}?"
-        else:
-            str += " and no food type?"
+        str = "Let me confirm. Are you searching for the restaurants with "
+        if self.stage == 0:
+            if self.area != "":
+                str += f"the area of {self.area}"
+            else:
+                str += "no area"
+            if self.priceRange != "":
+                str += f", the price range of {self.priceRange}"
+            else:
+                str += ", no price range"
+            if self.foodType != "":
+                str += f" and the food type of {self.foodType}?"
+            else:
+                str += " and no food type?"
+        elif self.stage == 1:
+            if self.area != "":
+                str += f"the area of {self.area}?"
+            else:
+                str += "no area?"
+        elif self.stage == 2:
+            if self.priceRange != "":
+                str += f"the price range of {self.priceRange}?"
+            else:
+                str += "no price range?"
+        elif self.stage == 3:
+            if self.foodType != "":
+                str += f"the food type of {self.foodType}?"
+            else:
+                str += "no food type?"
         chatbot_print(str)
 
     def on_enter_ask_area(self) -> None:
         """Runs when the user enters the ask_area state"""
-        chatbot_print("What part of town do you have in mind?")
-        self.context="area"    
+        if All_SINGLE_UTTERENCE_ONLY:
+            "You can ask for restaurants by area , price range or food type with in a sentence."
+        else:
+            self.stage = 1
+            chatbot_print("What part of town do you have in mind?")
+            self.context="area"
 
     def on_enter_ask_priceRange(self) -> None:
-        """Runs when the user enters the ask_priceRange state"""
-        chatbot_print("Would you like something in the cheap , moderate , or expensive price range?")
-        self.context="priceRange"
+        if All_SINGLE_UTTERENCE_ONLY:
+            "You can ask for restaurants by area , price range or food type with in a sentence."
+        else:
+            self.stage = 2
+            """Runs when the user enters the ask_priceRange state"""
+            chatbot_print("Would you like something in the cheap , moderate , or expensive price range?")
+            self.context="priceRange"
     
     def on_enter_ask_foodType(self) -> None:
-        """Runs when the user enters the ask_foodType state"""
-        chatbot_print("What kind of food would you like?")
-        self.context="foodType"
+        if All_SINGLE_UTTERENCE_ONLY:
+            "You can ask for restaurants by area , price range or food type with in a sentence."
+        else:
+            self.stage = 3
+            """Runs when the user enters the ask_foodType state"""
+            chatbot_print("What kind of food would you like?")
+            self.context="foodType"
     
     def on_enter_ask_qualifier(self) -> None:
         """Runs when the user enters the ask_qualifier state"""

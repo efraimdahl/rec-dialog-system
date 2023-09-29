@@ -4,6 +4,9 @@ ASK_CONFIRMATION_LEVENSHTEIN = False
 # Task: Allow multiple preferences per utterance
 ALLOW_MULTIPLE_PREFERENCES_PER_UTTERANCE = True
 
+# Task: Allow all preferences in one utterance
+All_SINGLE_UTTERENCE_ONLY = False
+
 # Task: Allow preferences to be stated in random order or not. 
 # If False they can be stated in a single or multiple utterances, but have to appear in order. The order is are, foodType, priceRange
 RANDOMIZE_PREFERENCE_QUESTION_ORDER = True
