@@ -1,5 +1,5 @@
 # Task: Ask user about correctness of match for Levenshtein results
-ASK_CONFIRMATION_LEVENSHTEIN = False
+ASK_CONFIRMATION_LEVENSHTEIN = True
 
 # Task: Allow multiple preferences per utterance
 ALLOW_MULTIPLE_PREFERENCES_PER_UTTERANCE = True
@@ -18,7 +18,7 @@ RESPONSE_DELAY = 0
 ALL_CAPS_RESPONSE = False
 
 # Task: Use text-to-speech for system utterances
-TTS = False
+TTS = True
 
 #Not a task, but triggers a small test-suite to run on program start.
 DIALOG_TESTING = False
