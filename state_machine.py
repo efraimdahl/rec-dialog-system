@@ -356,7 +356,7 @@ class RestaurantAgent(StateMachine):
 
     def on_enter_hello(self) -> None:
         """Runs when the user enters the hello state"""
-        chatbot_print("Hello , welcome to the Cambridge restaurant system? You can ask for restaurants by area , price range or food type . How may I help you?")
+        chatbot_print("Hello , welcome to the UU restaurant system? You can ask for restaurants by area , price range or food type . How may I help you?")
         self.context=None
         self.send("start_processing")
     
