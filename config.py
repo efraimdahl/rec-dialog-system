@@ -15,7 +15,7 @@ RESPONSE_DELAY = 0
 ALL_CAPS_RESPONSE = False
 
 # Task: Use text-to-speech for system utterances
-TTS = True
+TTS = False
 
 #Not a task, but triggers a small test-suite to run on program start.
 DIALOG_TESTING = False

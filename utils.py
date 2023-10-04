@@ -51,9 +51,10 @@ def chatbot_print(message: str) -> None:
         message (str): The message to be printed.
     """
     # Message preprocessing
-    tts = gTTS(message, lang='en')
-    tts.save("output.mp3")
-    pygame.init()
+    if(TTS):
+        tts = gTTS(message, lang='en')
+        tts.save("output.mp3")
+        pygame.init()
     message = message.upper() if ALL_CAPS_RESPONSE else message
     
     if COLORED_OUTPUT:
@@ -75,12 +76,13 @@ def chatbot_print(message: str) -> None:
         sys.stdout.write("\n")
     else:
         print(message)
-    pygame.mixer.music.load("output.mp3")
-    pygame.mixer.music.play()
-    while pygame.mixer.music.get_busy():
-        time.sleep(1)
-    pygame.mixer.quit()
-    os.remove("output.mp3")
+    if(TTS):
+        pygame.mixer.music.load("output.mp3")
+        pygame.mixer.music.play()
+        while pygame.mixer.music.get_busy():
+            time.sleep(1)
+        pygame.mixer.quit()
+        os.remove("output.mp3")
     
 def main():
     filename = "data/restaurant_info.csv"
