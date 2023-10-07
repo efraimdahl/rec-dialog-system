@@ -3,28 +3,28 @@
 Classification report for model DecisionTree trained on complete
               precision    recall  f1-score   support
 
-         ack       0.50      0.50      0.50         6
-      affirm       1.00      0.98      0.99       231
-         bye       0.96      0.87      0.91        53
-     confirm       0.50      0.15      0.23        34
-        deny       1.00      1.00      1.00         5
-       hello       0.95      0.95      0.95        19
-      inform       0.89      0.90      0.89      2032
-      negate       0.00      0.00      0.00        87
-        null       0.91      0.84      0.87       322
-      repeat       1.00      0.43      0.60         7
-     reqalts       0.42      0.48      0.45       350
-     require       0.00      0.00      0.00         1
-     request       0.95      0.99      0.97      1299
+         ack       0.29      0.33      0.31         6
+      affirm       1.00      0.99      0.99       231
+         bye       0.96      0.91      0.93        53
+     confirm       0.93      0.79      0.86        34
+        deny       0.75      0.60      0.67         5
+       hello       0.86      1.00      0.93        19
+      inform       0.99      0.97      0.98      2032
+      negate       0.97      1.00      0.98        87
+        null       0.83      0.97      0.90       322
+      repeat       0.86      0.86      0.86         7
+     reqalts       0.98      0.94      0.96       350
+     require       1.00      1.00      1.00         1
+     request       0.99      0.99      0.99      1299
      restart       1.00      1.00      1.00         3
-    thankyou       0.98      1.00      0.99       652
+    thankyou       0.99      1.00      0.99       652
 
-    accuracy                           0.89      5101
-   macro avg       0.74      0.67      0.69      5101
-weighted avg       0.87      0.89      0.88      5101
+    accuracy                           0.97      5101
+   macro avg       0.89      0.89      0.89      5101
+weighted avg       0.98      0.97      0.98      5101
 Predicting difficult instances for model DecisionTree trained on complete
-Sentence: Not really what im looking for, what about korean food	Predicted label: [6]
-Sentence: no id rather find a moderately priced restaurant	Predicted label: [6]
+Sentence: Not really what im looking for, what about korean food	Predicted label: [10]
+Sentence: no id rather find a moderately priced restaurant	Predicted label: [7]
 Sentence: amazing thank you very much goodbye	Predicted label: [14]
 Sentence: goodbye thank you for your help	Predicted label: [14]
 Sentence: I am looking for an Italian restoration	Predicted label: [6]

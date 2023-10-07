@@ -51,7 +51,7 @@ def load_data(filename:str, mode:str) -> tuple:
     print(mode,"Splitting into training set of size ", len(train), "and test set of size ", len(test))
     
     vectorizer = CountVectorizer(
-        stop_words="english"
+
     )
     result["X_train"] = vectorizer.fit_transform(train["Text"])
     

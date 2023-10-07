@@ -3,27 +3,27 @@
 Classification report for model KNN trained on deduplicated
               precision    recall  f1-score   support
 
-         ack       0.00      0.00      0.00         6
-      affirm       1.00      0.31      0.47        39
-         bye       0.83      0.67      0.74        15
-     confirm       0.23      0.21      0.22        28
-        deny       0.67      1.00      0.80         2
-       hello       0.80      0.31      0.44        13
-      inform       0.76      0.90      0.83       894
-      negate       0.00      0.00      0.00        32
-        null       0.42      0.14      0.21        78
-      repeat       0.80      0.67      0.73         6
-     reqalts       0.42      0.32      0.37       145
+         ack       0.40      0.33      0.36         6
+      affirm       0.79      0.42      0.55        45
+         bye       0.83      0.62      0.71        16
+     confirm       0.86      0.58      0.69        31
+        deny       1.00      0.50      0.67         4
+       hello       0.89      0.53      0.67        15
+      inform       0.91      0.96      0.93       896
+      negate       1.00      0.54      0.70        37
+        null       0.70      0.67      0.69        83
+      repeat       1.00      1.00      1.00         5
+     reqalts       0.88      0.85      0.86       130
      require       0.00      0.00      0.00         1
-     request       0.94      0.95      0.95       337
-     restart       1.00      0.50      0.67         2
-    thankyou       0.77      0.92      0.84        25
+     request       0.94      0.97      0.96       315
+     restart       1.00      0.67      0.80         3
+    thankyou       0.79      0.96      0.87        28
 
-    accuracy                           0.76      1623
-   macro avg       0.58      0.46      0.48      1623
-weighted avg       0.73      0.76      0.74      1623
+    accuracy                           0.90      1615
+   macro avg       0.80      0.64      0.70      1615
+weighted avg       0.89      0.90      0.89      1615
 Predicting difficult instances for model KNN trained on deduplicated
-Sentence: Not really what im looking for, what about korean food	Predicted label: [6]
+Sentence: Not really what im looking for, what about korean food	Predicted label: [10]
 Sentence: no id rather find a moderately priced restaurant	Predicted label: [6]
 Sentence: amazing thank you very much goodbye	Predicted label: [14]
 Sentence: goodbye thank you for your help	Predicted label: [14]

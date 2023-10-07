@@ -3,24 +3,24 @@
 Classification report for model keyword trained on complete
               precision    recall  f1-score   support
 
-         ack       0.10      0.50      0.17         6
-      affirm       0.99      0.81      0.89       231
-         bye       0.97      0.68      0.80        53
-     confirm       0.57      0.68      0.62        34
-        deny       1.00      0.80      0.89         5
+         ack       0.13      0.67      0.22         6
+      affirm       0.98      0.83      0.90       231
+         bye       1.00      0.72      0.84        53
+     confirm       0.47      0.56      0.51        34
+        deny       1.00      0.40      0.57         5
        hello       0.16      0.68      0.26        19
-      inform       0.81      0.86      0.84      2032
-      negate       0.42      0.82      0.55        87
-        null       0.92      0.24      0.38       322
-      repeat       0.00      0.00      0.00         7
-     reqalts       0.94      0.84      0.89       350
+      inform       0.81      0.87      0.84      2032
+      negate       0.45      0.90      0.60        87
+        null       0.90      0.24      0.38       322
+      repeat       1.00      0.29      0.44         7
+     reqalts       0.95      0.82      0.88       350
      require       1.00      1.00      1.00         1
-     request       0.88      0.89      0.89      1299
-     restart       1.00      0.67      0.80         3
-    thankyou       0.97      1.00      0.98       652
+     request       0.88      0.87      0.88      1299
+     restart       1.00      1.00      1.00         3
+    thankyou       0.98      1.00      0.99       652
 
     accuracy                           0.84      5101
-   macro avg       0.72      0.70      0.66      5101
+   macro avg       0.78      0.72      0.69      5101
 weighted avg       0.86      0.84      0.83      5101
 Predicting difficult instances for model keyword trained on complete
 Sentence: Not really what im looking for, what about korean food	Predicted label: ['inform']

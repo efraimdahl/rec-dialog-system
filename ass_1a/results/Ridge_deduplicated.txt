@@ -4,27 +4,27 @@ Classification report for model Ridge trained on deduplicated
               precision    recall  f1-score   support
 
          ack       0.00      0.00      0.00         6
-      affirm       0.97      0.97      0.97        39
-         bye       1.00      0.67      0.80        15
-     confirm       0.86      0.21      0.34        28
-        deny       0.33      0.50      0.40         2
-       hello       0.93      1.00      0.96        13
-      inform       0.77      0.98      0.86       894
-      negate       0.50      0.03      0.06        32
-        null       0.88      0.18      0.30        78
-      repeat       0.62      0.83      0.71         6
-     reqalts       0.67      0.06      0.10       145
+      affirm       0.98      1.00      0.99        45
+         bye       0.82      0.56      0.67        16
+     confirm       0.86      0.77      0.81        31
+        deny       0.67      0.50      0.57         4
+       hello       0.88      0.93      0.90        15
+      inform       0.90      0.99      0.94       896
+      negate       0.94      0.92      0.93        37
+        null       0.90      0.22      0.35        83
+      repeat       1.00      1.00      1.00         5
+     reqalts       0.82      0.86      0.84       130
      require       0.00      0.00      0.00         1
-     request       0.93      0.92      0.92       337
-     restart       1.00      0.50      0.67         2
-    thankyou       0.74      1.00      0.85        25
+     request       0.97      0.92      0.94       315
+     restart       1.00      1.00      1.00         3
+    thankyou       0.81      0.93      0.87        28
 
-    accuracy                           0.80      1623
-   macro avg       0.68      0.52      0.53      1623
-weighted avg       0.80      0.80      0.75      1623
+    accuracy                           0.91      1615
+   macro avg       0.77      0.71      0.72      1615
+weighted avg       0.90      0.91      0.89      1615
 Predicting difficult instances for model Ridge trained on deduplicated
-Sentence: Not really what im looking for, what about korean food	Predicted label: [6]
-Sentence: no id rather find a moderately priced restaurant	Predicted label: [6]
+Sentence: Not really what im looking for, what about korean food	Predicted label: [10]
+Sentence: no id rather find a moderately priced restaurant	Predicted label: [7]
 Sentence: amazing thank you very much goodbye	Predicted label: [14]
 Sentence: goodbye thank you for your help	Predicted label: [14]
 Sentence: I am looking for an Italian restoration	Predicted label: [6]

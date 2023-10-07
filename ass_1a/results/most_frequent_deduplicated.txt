@@ -4,24 +4,24 @@ Classification report for model most_frequent trained on deduplicated
               precision    recall  f1-score   support
 
          ack       0.00      0.00      0.00         6
-      affirm       0.00      0.00      0.00        39
-         bye       0.00      0.00      0.00        15
-     confirm       0.00      0.00      0.00        28
-        deny       0.00      0.00      0.00         2
-       hello       0.00      0.00      0.00        13
-      inform       0.55      1.00      0.71       894
-      negate       0.00      0.00      0.00        32
-        null       0.00      0.00      0.00        78
-      repeat       0.00      0.00      0.00         6
-     reqalts       0.00      0.00      0.00       145
+      affirm       0.00      0.00      0.00        45
+         bye       0.00      0.00      0.00        16
+     confirm       0.00      0.00      0.00        31
+        deny       0.00      0.00      0.00         4
+       hello       0.00      0.00      0.00        15
+      inform       0.55      1.00      0.71       896
+      negate       0.00      0.00      0.00        37
+        null       0.00      0.00      0.00        83
+      repeat       0.00      0.00      0.00         5
+     reqalts       0.00      0.00      0.00       130
      require       0.00      0.00      0.00         1
-     request       0.00      0.00      0.00       337
-     restart       0.00      0.00      0.00         2
-    thankyou       0.00      0.00      0.00        25
+     request       0.00      0.00      0.00       315
+     restart       0.00      0.00      0.00         3
+    thankyou       0.00      0.00      0.00        28
 
-    accuracy                           0.55      1623
-   macro avg       0.04      0.07      0.05      1623
-weighted avg       0.30      0.55      0.39      1623
+    accuracy                           0.55      1615
+   macro avg       0.04      0.07      0.05      1615
+weighted avg       0.31      0.55      0.40      1615
 Predicting difficult instances for model most_frequent trained on deduplicated
 Sentence: Not really what im looking for, what about korean food	Predicted label: [6]
 Sentence: no id rather find a moderately priced restaurant	Predicted label: [6]
