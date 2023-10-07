@@ -3,28 +3,28 @@
 Classification report for model KNN trained on complete
               precision    recall  f1-score   support
 
-         ack       0.40      0.33      0.36         6
-      affirm       1.00      0.88      0.94       231
-         bye       0.98      0.81      0.89        53
-     confirm       0.47      0.21      0.29        34
-        deny       0.80      0.80      0.80         5
-       hello       1.00      0.58      0.73        19
-      inform       0.87      0.89      0.88      2032
+         ack       0.50      0.50      0.50         6
+      affirm       0.99      0.88      0.93       231
+         bye       0.98      0.89      0.93        53
+     confirm       0.67      0.12      0.20        34
+        deny       0.83      1.00      0.91         5
+       hello       1.00      0.68      0.81        19
+      inform       0.78      0.92      0.84      2032
       negate       0.00      0.00      0.00        87
-        null       0.90      0.84      0.87       322
-      repeat       1.00      0.57      0.73         7
-     reqalts       0.39      0.43      0.41       350
+        null       0.92      0.80      0.86       322
+      repeat       1.00      0.29      0.44         7
+     reqalts       0.37      0.21      0.27       350
      require       0.00      0.00      0.00         1
-     request       0.94      0.99      0.97      1299
-     restart       1.00      0.67      0.80         3
+     request       0.96      0.95      0.95      1299
+     restart       1.00      1.00      1.00         3
     thankyou       0.98      1.00      0.99       652
 
-    accuracy                           0.87      5101
-   macro avg       0.71      0.60      0.64      5101
-weighted avg       0.86      0.87      0.86      5101
+    accuracy                           0.85      5101
+   macro avg       0.73      0.62      0.64      5101
+weighted avg       0.83      0.85      0.84      5101
 Predicting difficult instances for model KNN trained on complete
-Sentence: Not really what im looking for, what about korean food	Predicted label: ['inform']
-Sentence: no id rather find a moderately priced restaurant	Predicted label: ['inform']
-Sentence: amazing thank you very much goodbye	Predicted label: ['thankyou']
-Sentence: goodbye thank you for your help	Predicted label: ['thankyou']
-Sentence: I am looking for an Italian restoration	Predicted label: ['inform']
+Sentence: Not really what im looking for, what about korean food	Predicted label: [6]
+Sentence: no id rather find a moderately priced restaurant	Predicted label: [6]
+Sentence: amazing thank you very much goodbye	Predicted label: [14]
+Sentence: goodbye thank you for your help	Predicted label: [14]
+Sentence: I am looking for an Italian restoration	Predicted label: [6]

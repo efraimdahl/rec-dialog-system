@@ -3,25 +3,25 @@
 Classification report for model keyword trained on deduplicated
               precision    recall  f1-score   support
 
-         ack       0.19      0.50      0.27         6
-      affirm       1.00      0.51      0.68        41
+         ack       0.12      0.33      0.17         6
+      affirm       0.86      0.62      0.72        39
          bye       1.00      0.33      0.50        15
-     confirm       0.69      0.58      0.63        31
+     confirm       0.55      0.61      0.58        28
         deny       1.00      0.50      0.67         2
-       hello       0.13      0.33      0.19        15
-      inform       0.81      0.82      0.81       874
-      negate       0.25      0.64      0.36        33
-        null       0.11      0.01      0.02        73
-      repeat       1.00      0.40      0.57         5
-     reqalts       0.83      0.64      0.72       143
+       hello       0.11      0.38      0.18        13
+      inform       0.82      0.80      0.81       894
+      negate       0.24      0.62      0.35        32
+        null       0.12      0.03      0.04        78
+      repeat       1.00      0.33      0.50         6
+     reqalts       0.85      0.68      0.75       145
      require       0.50      1.00      0.67         1
-     request       0.72      0.80      0.76       328
-     restart       1.00      0.33      0.50         3
-    thankyou       0.76      1.00      0.86        32
+     request       0.72      0.79      0.75       337
+     restart       1.00      0.50      0.67         2
+    thankyou       0.69      1.00      0.82        25
 
-    accuracy                           0.74      1602
-   macro avg       0.67      0.56      0.55      1602
-weighted avg       0.75      0.74      0.73      1602
+    accuracy                           0.73      1623
+   macro avg       0.64      0.57      0.54      1623
+weighted avg       0.74      0.73      0.73      1623
 Predicting difficult instances for model keyword trained on deduplicated
 Sentence: Not really what im looking for, what about korean food	Predicted label: ['inform']
 Sentence: no id rather find a moderately priced restaurant	Predicted label: ['negate']

@@ -1,7 +1,12 @@
 from sklearn.metrics import ConfusionMatrixDisplay, classification_report
 import matplotlib.pyplot as plt
+import pickle
+import numpy as np
 from keyword_model import KeywordClassifier
+from sklearn.preprocessing import LabelEncoder
 
+with open('label_encoder_model.pkl', 'rb') as file:
+    loaded_label_encoder = pickle.load(file)
 def predict_difficult_instance(model, vectorizer, print_string=True) -> str:
     """
     A couple difficult sentences were selected to test each model's performance on, see report.
@@ -58,17 +63,23 @@ def evaluate_models(models,data):
                 
             # Plot and save confusion matrix
             fig, ax = plt.subplots(figsize=(10,10))
-            ConfusionMatrixDisplay.from_predictions(data[mode]["y_test"], pred, ax=ax,labels=data[mode]["target_names"])
+            ordered_labels = ["ack", "affirm", "bye", "confirm", "deny", "hello", "inform", "negate", "null", "repeat", "reqalts", "require", "request", "restart", "thankyou"]
+            pred = list(pred)
+            if isinstance(pred[0], np.int64):
+                pred = loaded_label_encoder.inverse_transform(pred)
+            y_test = list(data[mode]["y_test"])
+            y_test= loaded_label_encoder.inverse_transform(y_test)
+            ConfusionMatrixDisplay.from_predictions(y_test, pred, ax=ax, labels=ordered_labels)
             _ = ax.set_title(
                 f"Confusion Matrix for Restaurant Dialog Classifier model={model_name}/data={mode}"
             )
             fig.savefig(f"ass_1a/results/{model_name}_{mode}.png")
-            
+
             # Save classification report to log file
-            ordered_labels = ["ack", "affirm", "bye", "confirm", "deny", "hello", "inform", "negate", "null", "repeat", "reqalts", "require", "request", "restart", "thankyou"]
+
             with open(f"ass_1a/results/{model_name}_{mode}.txt", "w") as f:
                 f.write(f"\n\nClassification report for model {model_name} trained on {mode}\n")
-                f.write(classification_report(data[mode]["y_test"], pred, target_names=ordered_labels, zero_division=0))
+                f.write(classification_report(y_test, pred, target_names=ordered_labels, zero_division=0))
             
             # Print difficult instances
             print(f"\nPredicting difficult instances for model {model_name} trained on {mode}")

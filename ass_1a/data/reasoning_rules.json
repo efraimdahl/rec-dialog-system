@@ -1,0 +1,35 @@
+{
+    "romantic-true":{
+        "conditions":[["length_of_stay","long"]],
+        "description":"spending a long time in a restaurant is romantic"
+    },
+    "romantic-false":{
+        "conditions":[["crowdedness","crowded"]],
+        "description":"a busy restaurant is not romantic"
+    },
+    "children-false":{
+        "conditions":[["length_of_stay","long"]],
+        "description":"spending a long time is not advised when taking children"
+    },
+    "children-true":{
+        "conditions":[["pricerange","cheap"]],
+        "description":"a cheap place might be more child-friendly than an expensive one"
+    },
+    "assigned-false":{
+        "conditions":[["pricerange","cheap"]],
+        "description":"In cheap restaurants probably no seat will be assigned"
+    },
+    "assigned-true":{
+        "conditions":[["crowdedness","crowded"]],
+        "description":"in a busy restaurant the waiter decides where you sit"
+    },
+    "touristic-true":{
+        "conditions":[["food_quality","good"],["pricerange","cheap"]],
+        "description":"a cheap restaurant with good food attracts tourists"
+    },
+    "touristic-false":{
+        "conditions":[["food","romanian"]],
+        "description":"Romanian cuisine is unknown for most tourists and they prefer familiar food"
+    }
+    
+}

@@ -1,0 +1,30 @@
+
+
+Classification report for model MLP trained on deduplicated
+              precision    recall  f1-score   support
+
+         ack       0.00      0.00      0.00         6
+      affirm       0.92      0.92      0.92        39
+         bye       0.92      0.73      0.81        15
+     confirm       0.62      0.18      0.28        28
+        deny       1.00      0.50      0.67         2
+       hello       0.93      1.00      0.96        13
+      inform       0.87      0.91      0.89       894
+      negate       0.10      0.03      0.05        32
+        null       0.52      0.82      0.64        78
+      repeat       0.62      0.83      0.71         6
+     reqalts       0.49      0.31      0.38       145
+     require       0.00      0.00      0.00         1
+     request       0.93      0.97      0.95       337
+     restart       1.00      0.50      0.67         2
+    thankyou       0.80      0.96      0.87        25
+
+    accuracy                           0.83      1623
+   macro avg       0.65      0.58      0.59      1623
+weighted avg       0.81      0.83      0.81      1623
+Predicting difficult instances for model MLP trained on deduplicated
+Sentence: Not really what im looking for, what about korean food	Predicted label: [6]
+Sentence: no id rather find a moderately priced restaurant	Predicted label: [6]
+Sentence: amazing thank you very much goodbye	Predicted label: [14]
+Sentence: goodbye thank you for your help	Predicted label: [14]
+Sentence: I am looking for an Italian restoration	Predicted label: [6]

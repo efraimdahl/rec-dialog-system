@@ -52,9 +52,9 @@ class TextParser():
             "restaurantname":["name","called"],
             "area":["area","part","locat"]
         }
-        
+        additional_stopwords = ["eat", "want"]
         self.stopwords = stopwords.words('english')
-        self.stopwords.append("eat")
+        self.stopwords += additional_stopwords
     def keywordMatcher(self, sentence: str) -> Tuple[str, str, str]:
         """ Matches keywords in a sentence to the possible outcomes for area,types and priceranges
 

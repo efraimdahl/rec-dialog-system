@@ -23,8 +23,8 @@ Classification report for model most_frequent trained on complete
    macro avg       0.03      0.07      0.04      5101
 weighted avg       0.16      0.40      0.23      5101
 Predicting difficult instances for model most_frequent trained on complete
-Sentence: Not really what im looking for, what about korean food	Predicted label: ['inform']
-Sentence: no id rather find a moderately priced restaurant	Predicted label: ['inform']
-Sentence: amazing thank you very much goodbye	Predicted label: ['inform']
-Sentence: goodbye thank you for your help	Predicted label: ['inform']
-Sentence: I am looking for an Italian restoration	Predicted label: ['inform']
+Sentence: Not really what im looking for, what about korean food	Predicted label: [6]
+Sentence: no id rather find a moderately priced restaurant	Predicted label: [6]
+Sentence: amazing thank you very much goodbye	Predicted label: [6]
+Sentence: goodbye thank you for your help	Predicted label: [6]
+Sentence: I am looking for an Italian restoration	Predicted label: [6]

@@ -1,8 +1,10 @@
 import sklearn
 import numpy as np
 import pandas as pd
+import pickle
 import sklearn.model_selection
 from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.preprocessing import LabelEncoder
 from collections import defaultdict
 
 def load_data(filename:str, mode:str) -> tuple:
@@ -22,6 +24,7 @@ def load_data(filename:str, mode:str) -> tuple:
     # Process the dataset
     labels, messages = [], []
     limit = 0
+
     for line in data:
         line = line.rstrip("\n")  
         label = line.split(" ")[0]
@@ -29,7 +32,10 @@ def load_data(filename:str, mode:str) -> tuple:
         messages.append(message)
         labels.append(label)
         limit += 1
-    
+    label_encoder = LabelEncoder()
+    labels = label_encoder.fit_transform(labels)
+    with open('label_encoder_model.pkl', 'wb') as file:
+        pickle.dump(label_encoder, file)
     df = pd.DataFrame(list(zip(labels,messages)), columns = ['Label',"Text"])
     train, test = sklearn.model_selection.train_test_split(df, test_size=0.2, stratify=df["Label"])
     
