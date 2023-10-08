@@ -1,6 +1,5 @@
 from statemachine import StateMachine, State
 import pandas as pd
-import pickle as pkl
 from text_parser import TextParser
 from statemachine.contrib.diagram import DotGraphMachine
 import warnings
@@ -138,7 +137,7 @@ class RestaurantAgent(StateMachine):
         if len(classAnswer)==2:
             if(classAnswer[0] in ["inform","reqalts","confirm","negate","request"]):
                 if ALLOW_MULTIPLE_PREFERENCES_PER_UTTERANCE:
-                        print(self.area, self.foodType,self.priceRange)
+                        #print(self.area, self.foodType,self.priceRange)
                         for key,val in classAnswer[1].items():
                             if key=="area":
                                 self.area=val
@@ -492,13 +491,13 @@ class RestaurantAgent(StateMachine):
     # INPUT HANDLING
     def input_step(self, user_input: str) -> str:
         """Parses the input and sends it to the state machine"""
-        print(self.current_state)
+        #print(self.current_state)
         input, self.levenshtein = self.parser.parseText(user_input,context=self.context,requestPossible=False)
         print(input)
         self.current_input = input
-        #print("Classifier output",input,"from: ",user_input)
+        print("Classifier output",input,"from: ",user_input)
         self.send("receive_input", input=user_input)
-        #print(self.current_state)
+        print(self.current_state)
         
         
     
