@@ -69,7 +69,7 @@ class TextParser():
         area = ""
         qualifier = ""
         words = sentence.split(" ")
-        threshold = 2   #Used for calculate the Levenstein distance
+        threshold = 1   #Used for calculate the Levenstein distance
         all_keywords = self.possible_food_type + self.possible_area + self.possible_pricerange + self.possible_qualifiers
         all_keywords = [x for x in all_keywords if isinstance(x, str)] #Delete None value
         for word in words:

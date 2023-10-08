@@ -121,7 +121,7 @@ class RestaurantAgent(StateMachine):
         self.current_suggestion_set = False
         self.no_res_passes = 0 #Changes the error message to be more helpful on repeated state entry.
         self.add_preferences = False #keeps track of addeditional preferences
-        self.add_description = ""
+        self.add_description = False
         super(RestaurantAgent, self).__init__(rtc=False)
     
     # HELPER FUNCTIONS
@@ -397,20 +397,18 @@ class RestaurantAgent(StateMachine):
             pdf=df[df[cond[0]]==cond[1]]
         for cond in neg_cond["conditions"]:
             ndf=df[df[cond[0]]!=cond[1]]
-        #Restaurants with only positive qualifiers receive preferencial treatment
-        res_df = pd.merge(pdf, ndf, how ='inner')
-        #print(res_df)
-        use_description = pos_cond["description"]
-        if(len(res_df)==0):
-            #restaurants with non-negative attributes come second
-            res_df = ndf
-            use_description=neg_cond["description"]
-            if(len(ndf)==0):
-                #restaurants with positive attributes and negative attributes come third - no need to complete an outer merge here
-                res_df = pdf
-                use_description = pos_cond["description"]
+        first_df = pd.merge(pdf, ndf, how ='inner')
+        #restaurant with non-negative attributes come second
+        second_df = ndf.merge(first_df, how='left', indicator=True).query('_merge == "left_only"').drop(columns=['_merge'])
+        #restaurant with both positive and negative attributes come third
+        third_df = pdf.merge(first_df, how='left', indicator=True).query('_merge == "left_only"').drop(columns=['_merge'])
+        first_df["reason"]=pos_cond["description"]
+        second_df["reason"] = neg_cond["description"]
+        third_df["reason"] = pos_cond["description"]
+        res_df = pd.concat([first_df, second_df, third_df], ignore_index=True)
+        
         self.filteredRestaurants = res_df
-        self.add_description=use_description
+        self.add_description=True
         self.tries = 0
         self.send("many_restaurant_trans")
             
@@ -431,8 +429,8 @@ class RestaurantAgent(StateMachine):
             self.no_res_passes=0
             self.context=None
             chatbot_print(f"{row['restaurantname']} is a nice place in the {row['area']} part of town serving {row['food']} food and the prices are {row['pricerange']}")
-            if(self.add_description !=""):
-                chatbot_print(f"{row['restaurantname']} was chosen because "+self.add_description)
+            if(self.add_description):
+                chatbot_print(f"{row['restaurantname']} was chosen because "+row['reason'])
     
     def on_enter_give_information(self, input: str) -> None:
         """There are three possibilities: 
@@ -480,7 +478,7 @@ class RestaurantAgent(StateMachine):
         self.tries = 0
         self.no_res_passes = 0
         self.add_preferences = False
-        self.add_description = ""
+        self.add_description = False
         
         #print("requesting with updated variables")
         self.send("request_alternative") #Auto transition to return restaurant.
