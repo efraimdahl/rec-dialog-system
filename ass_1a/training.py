@@ -2,7 +2,7 @@ from sklearn.linear_model import RidgeClassifier
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.dummy import DummyClassifier
-from keyword_model import KeywordClassifier
+from ass_1a.keyword_model import KeywordClassifier
 from sklearn.neural_network import MLPClassifier
 
 def train_model(data, model):
