@@ -10,7 +10,11 @@ from typing import Union, Tuple
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.base import ClassifierMixin
 from nltk.corpus import stopwords
+from sklearn.preprocessing import LabelEncoder
+import pickle
 nltk.download('stopwords')
+with open('ass_1a/label_encoder_model.pkl', 'rb') as file:
+    loaded_label_encoder = pickle.load(file)
 
 from ass_1a.keyword_model import KeywordClassifier
 
@@ -52,7 +56,7 @@ class TextParser():
             "restaurantname":["name","called"],
             "area":["area","part","locat"]
         }
-        additional_stopwords = ["eat", "want"]
+        additional_stopwords = ["want"]
         self.stopwords = stopwords.words('english')
         self.stopwords += additional_stopwords
     def keywordMatcher(self, sentence: str) -> Tuple[str, str, str]:
@@ -159,6 +163,7 @@ class TextParser():
         sentence = sentence.lower()
         vec = self.vectorizer.transform([sentence])
         cls = self.classifier.predict(vec)
+        cls = loaded_label_encoder.inverse_transform(cls)
 
         # Information classified as inform, confirm, negate, and reqalts can be overloaded with information from the user-sentence
         foodType,priceRange,area,qualifier="","","",""
@@ -201,7 +206,7 @@ class TextParser():
 def main():
     clf_data = "data/dialog_acts.dat"
     data = prepare_data(clf_data)
-    classifier = train_model(data["complete"], "DecisionTree")
+    classifier = train_model(data["complete"], "MLP")
     vectorizer = data["complete"]["vectorizer"]
     restaurant_file = "data/restaurant_info.csv"
     parser = TextParser(classifier,restaurant_file,vectorizer)
