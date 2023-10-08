@@ -490,11 +490,11 @@ class RestaurantAgent(StateMachine):
         """Parses the input and sends it to the state machine"""
         #print(self.current_state)
         input, self.levenshtein = self.parser.parseText(user_input,context=self.context,requestPossible=False)
-        print(input)
+        #wprint(input)
         self.current_input = input
-        print("Classifier output",input,"from: ",user_input)
+        #print("Classifier output",input,"from: ",user_input)
         self.send("receive_input", input=user_input)
-        print(self.current_state)
+        #print(self.current_state)
         
         
     
