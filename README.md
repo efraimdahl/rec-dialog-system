@@ -2,6 +2,9 @@
 Task 1c of the restaurant dialog system.
 
 
+## Report
+The report is including as MAIR_Report.pdf
+
 ## Installation instructions
 1. In your IDE's console (from the project's directory), run ".bin/activate" to activate the virtual environment.
 2. Run "pip install -r requirements.txt" to install all dependencies.
@@ -24,7 +27,7 @@ Task 1c of the restaurant dialog system.
 - - preprocessing.py - Contains code to preprocess the dataset.
 - - training.py - Contains functions to train each model.
 - data/ - Contains all files relating to data.
-- deprecated/ - Contains files that are not used anymore, but are still relevant to the project report.
+- supplementary/ - Contains files that are not used anymore (such as files used for testing), but might still be relevant to the project report.
 - config.py - Contains constants relating to the chatbot's configuration (as part of assignment 1c's configurability tasks).
 - **state_machine.py** - The main file of the chatbot. Run this file to enter the user input loop and activate the chatbot. Contains all functions relating to the state machine.
 - text_parser.py - Contains functions that are used to parse the text.
