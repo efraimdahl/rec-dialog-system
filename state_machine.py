@@ -74,7 +74,7 @@ class RestaurantAgent(StateMachine):
         | process_preferences.to(ask_area, unless = "area_known")
         | process_preferences.to(ask_foodType, unless = "foodType_known")
         | process_preferences.to(ask_priceRange, unless = "priceRange_known")
-        | process_preferences.to(ask_qualifier, cond="restaurants_left")
+        | process_preferences.to(ask_qualifier, unless="qualifier_known", cond="restaurants_left")
         | process_preferences.to(state_preferences)
     )
 
@@ -203,10 +203,7 @@ class RestaurantAgent(StateMachine):
         """Checks whether all variables are known
         """
         if(ASK_CONFIRMATION_LEVENSHTEIN):
-            if(self.restaurants_left):
-                return self.area != "" and self.foodType!="" and self.priceRange != "" and self.qualifier != "" and self.levenshtein != True
-            else:
-                self.area != "" and self.foodType!="" and self.priceRange != "" and self.levenshtein != True 
+            return self.area != "" and self.foodType!="" and self.priceRange != "" and self.levenshtein != True
         else:
             if(self.restaurants_left):
                 return self.area != "" and self.foodType!="" and self.priceRange != "" and self.qualifier != ""
