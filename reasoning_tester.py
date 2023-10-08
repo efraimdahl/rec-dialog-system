@@ -30,7 +30,6 @@ def reasoner(qualifier,area,foodType,priceRange):
     print(pos_cond,neg_cond)
     use_description = ""
     df = search_restaurant(area,foodType,priceRange)
-    print(df)
     pdf = df #Dataframe with positive adding qualifiers
     ndf = df #Dataframe with non-negative qualifiers
     for cond in pos_cond["conditions"]:
@@ -40,21 +39,20 @@ def reasoner(qualifier,area,foodType,priceRange):
         print(cond)
         ndf=df[df[cond[0]]!=cond[1]]
     #Restaurants with only positive qualifiers receive preferencial treatment
-    first_df = pd.merge(pdf, ndf, how ='inner')
-    print(first_df)
-     #restaurant with non-negative attributes come second
-    second_df = ndf.merge(first_df, how='left', indicator=True).query('_merge == "left_only"').drop(columns=['_merge'])
-    print(second_df)
-    #restaurant with both positive and negative attributes come third
-    third_df = pdf.merge(first_df, how='left', indicator=True).query('_merge == "left_only"').drop(columns=['_merge'])
-    
-    print(third_df)
-    first_df["reason"]=pos_cond["description"]
-    second_df["reason"] = neg_cond["description"]
-    third_df["reason"] = pos_cond["description"]
-    res_df = pd.concat([first_df, second_df, third_df], ignore_index=True)
+    #print(pdf)
+    res_df = pd.merge(pdf, ndf, how ='inner')
+    #print(len(pdf),len(ndf),len(res_df))
+    use_description = pos_cond["description"]
+    if(len(res_df)==0):
+        #restaurants with non-negative attributes come second
+        res_df = ndf
+        use_description=neg_cond["description"]
+        if(len(ndf)==0):
+            #restaurants with positive attributes and negative attributes come third - no need to complete an outer merge here
+            res_df = pdf
+            use_description = pos_cond["description"]
     if(len(res_df)>0):
-        print(res_df)
+        print(res_df,use_description)
 
-reasoner("romantic","dontcare","italian","dontcare")
-#reasoner("romantic","dontcare","dontcare","dontcare")
+reasoner("romantic","south","italian","dontcare")
+reasoner("romantic","dontcare","dontcare","dontcare")
