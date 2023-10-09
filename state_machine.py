@@ -203,9 +203,13 @@ class RestaurantAgent(StateMachine):
         """Checks whether all variables are known
         """
         if(ASK_CONFIRMATION_LEVENSHTEIN):
-            return self.area != "" and self.foodType!="" and self.priceRange != "" and self.levenshtein != True
+            if(self.restaurants_left()):
+                return self.area != "" and self.foodType!="" and self.priceRange != "" and self.levenshtein != True and self.qualifier != ""
+            else:
+                return self.area != "" and self.foodType!="" and self.priceRange != "" and self.levenshtein != True
+
         else:
-            if(self.restaurants_left):
+            if(self.restaurants_left()):
                 return self.area != "" and self.foodType!="" and self.priceRange != "" and self.qualifier != ""
             else:
                 return self.area != "" and self.foodType!="" and self.priceRange != ""

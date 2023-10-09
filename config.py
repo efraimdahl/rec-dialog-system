@@ -1,12 +1,12 @@
 # Task: Ask user about correctness of match for Levenshtein results
-ASK_CONFIRMATION_LEVENSHTEIN = True
+ASK_CONFIRMATION_LEVENSHTEIN = False
 
 # Task: Allow multiple preferences per utterance
 ALLOW_MULTIPLE_PREFERENCES_PER_UTTERANCE = True
 
 # Task: Allow preferences to be stated in random order or not. 
 # If False they can be stated in a single or multiple utterances, but have to appear in order. The order is are, foodType, priceRange
-RANDOMIZE_PREFERENCE_QUESTION_ORDER = False
+RANDOMIZE_PREFERENCE_QUESTION_ORDER = True
 
 # Task: Delay before responding (in seconds)
 RESPONSE_DELAY = 0
