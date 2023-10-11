@@ -1,5 +1,5 @@
 # Task: Ask user about correctness of match for Levenshtein results
-ASK_CONFIRMATION_LEVENSHTEIN = True
+ASK_CONFIRMATION_LEVENSHTEIN = False
 
 # Task: Allow multiple preferences per utterance
 ALLOW_MULTIPLE_PREFERENCES_PER_UTTERANCE = True

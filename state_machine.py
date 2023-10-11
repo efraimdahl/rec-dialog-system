@@ -1,6 +1,5 @@
 from statemachine import StateMachine, State
 import pandas as pd
-import pickle as pkl
 from text_parser import TextParser
 from statemachine.contrib.diagram import DotGraphMachine
 import warnings
@@ -75,7 +74,7 @@ class RestaurantAgent(StateMachine):
         | process_preferences.to(ask_area, unless = "area_known")
         | process_preferences.to(ask_foodType, unless = "foodType_known")
         | process_preferences.to(ask_priceRange, unless = "priceRange_known")
-        | process_preferences.to(ask_qualifier, cond="restaurants_left")
+        | process_preferences.to(ask_qualifier, unless="qualifier_known", cond="restaurants_left")
         | process_preferences.to(state_preferences)
     )
 
@@ -138,7 +137,7 @@ class RestaurantAgent(StateMachine):
         if len(classAnswer)==2:
             if(classAnswer[0] in ["inform","reqalts","confirm","negate","request"]):
                 if ALLOW_MULTIPLE_PREFERENCES_PER_UTTERANCE:
-                        print(self.area, self.foodType,self.priceRange)
+                        #print(self.area, self.foodType,self.priceRange)
                         for key,val in classAnswer[1].items():
                             if key=="area":
                                 self.area=val
@@ -204,12 +203,13 @@ class RestaurantAgent(StateMachine):
         """Checks whether all variables are known
         """
         if(ASK_CONFIRMATION_LEVENSHTEIN):
-            if(self.restaurants_left):
-                return self.area != "" and self.foodType!="" and self.priceRange != "" and self.qualifier != "" and self.levenshtein != True
+            if(self.restaurants_left()):
+                return self.area != "" and self.foodType!="" and self.priceRange != "" and self.levenshtein != True and self.qualifier != ""
             else:
-                self.area != "" and self.foodType!="" and self.priceRange != "" and self.levenshtein != True 
+                return self.area != "" and self.foodType!="" and self.priceRange != "" and self.levenshtein != True
+
         else:
-            if(self.restaurants_left):
+            if(self.restaurants_left()):
                 return self.area != "" and self.foodType!="" and self.priceRange != "" and self.qualifier != ""
             else:
                 return self.area != "" and self.foodType!="" and self.priceRange != ""
@@ -492,9 +492,9 @@ class RestaurantAgent(StateMachine):
     # INPUT HANDLING
     def input_step(self, user_input: str) -> str:
         """Parses the input and sends it to the state machine"""
-        print(self.current_state)
+        #print(self.current_state)
         input, self.levenshtein = self.parser.parseText(user_input,context=self.context,requestPossible=False)
-        print(input)
+        #wprint(input)
         self.current_input = input
         #print("Classifier output",input,"from: ",user_input)
         self.send("receive_input", input=user_input)
