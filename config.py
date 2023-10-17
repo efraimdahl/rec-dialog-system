@@ -1,4 +1,4 @@
-#Configuration setting for User test, system, use A or B
+#Configuration setting for User test, system, use A or B, system A has no utterances, system B has thinking utterances
 CHOSEN_SYSTEM = "A"
 
 # Task: Ask user about correctness of match for Levenshtein results
