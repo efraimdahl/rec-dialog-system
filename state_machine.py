@@ -126,7 +126,7 @@ class RestaurantAgent(StateMachine):
         super(RestaurantAgent, self).__init__(rtc=False)
     
     # HELPER FUNCTIONS
-    def getTurns():
+    def getTurns(self):
         return self.turns
 
     def processVariableDict(self,input: dict) -> None:
@@ -564,7 +564,7 @@ def main() -> None:
                 sm = RestaurantAgent(restaurant_file,classifier,vectorizer,reasoning_file)
                 cont=True
             else:
-                #print("Auto Input: ",nxtline)
+                #print("Auto Input: ",nxtline)F
                 sm.input_step(nxtline)
                 cont=True
         else:
@@ -573,7 +573,7 @@ def main() -> None:
             cont=False
     end_time = time.time()
     elapsed_time = end_time-start_time
-    print(f'System: {CHOSEN_SYSTEM}: Turns: {sm.getTurns()}', 'Time: {elapsed_time}')
+    print(f'System: {CHOSEN_SYSTEM}: Turns: {sm.getTurns()} Time: {elapsed_time}')
         
 
 if __name__ == '__main__':
