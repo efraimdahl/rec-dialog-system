@@ -110,6 +110,7 @@ class RestaurantAgent(StateMachine):
         self.foodType = ""
         self.priceRange = ""
         self.qualifier=""
+        self.informationGiven = True #Gets passed to the give information setting to trigger the thinking scrips
         self.context = None #Gets passed to the classifier to help understand otherwise ambiguous answers
         self.tries = 0 #keep track of how many restaurants of the same variable combination were returned
         self.current_input = None #parsed current input so parsing only runs once per input
@@ -378,6 +379,7 @@ class RestaurantAgent(StateMachine):
     
     def on_enter_cant_give_information(self) -> None:
         """Runs when the user enters the cant_give_information state"""
+        self.informationGiven = False
         self.turns+=1
         chatbot_print("I'm sorry i did not understand your request")
         self.context=None
@@ -457,8 +459,9 @@ class RestaurantAgent(StateMachine):
             or the user can ask for information about the current restaurant without specifying what they want to know.
         """
         if(self.current_suggestion_set):
-            if(CHOSEN_SYSTEM=="A"):
+            if(CHOSEN_SYSTEM=="A" and self.informationGiven):
                 chatbot_print(random.choice(self.preInfoUtterances))
+            self.informationGiven = True
             self.context=None
             request_type,_ = self.parser.parseText(input, requestPossible=True)
             response_dict = {

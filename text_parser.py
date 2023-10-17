@@ -135,12 +135,12 @@ class TextParser():
             matcher = self.matchingRequestDict.get(column)
             if matcher != None:
                 matcher = [x for x in matcher if x is not None]
-                print(matcher)
+                #print(matcher)
                 for keyPhrase in matcher:
                     if(keyPhrase in sentence):
                         ret.append(column)
                         break
-        print(ret)
+        #print(ret)
         return ret
     
     
