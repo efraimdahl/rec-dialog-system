@@ -15,6 +15,7 @@ from ass_1a.preprocessing import prepare_data
 from utils import chatbot_print, take_user_input
 from config import *
 import json
+import time
 
 
 class RestaurantAgent(StateMachine):
@@ -554,6 +555,7 @@ def main() -> None:
     """
     testfile = open("test.txt","rb")
     cont=False #continues for one round after the loop stops to allow for restart through the testfile.
+    start_time = time.time()
     while not sm.completed.is_active or (cont):
         nxtline = testfile.readline().decode().strip()
         if(DIALOG_TESTING and nxtline!=""):
@@ -567,10 +569,11 @@ def main() -> None:
                 cont=True
         else:
             user_input = take_user_input()
-            
             sm.input_step(user_input)
             cont=False
-        
+    end_time = time.time()
+    elapsed_time = end_time-start_time
+    print(f'System: {CHOSEN_SYSTEM}: Turns: {sm.getTurns()}', 'Time: {elapsed_time}')
         
 
 if __name__ == '__main__':
