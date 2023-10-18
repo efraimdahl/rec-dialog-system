@@ -347,32 +347,27 @@ class RestaurantAgent(StateMachine):
     def on_enter_ask_area(self) -> None:
         """Runs when the user enters the ask_area state"""
         self.stage = 1
-        self.turns+=1
         chatbot_print("What part of town do you have in mind?")
         self.context="area"
 
     def on_enter_ask_priceRange(self) -> None:
         self.stage = 2
         """Runs when the user enters the ask_priceRange state"""
-        self.turns+=1
         chatbot_print("Would you like something in the cheap , moderate , or expensive price range?")
         self.context="priceRange"
     
     def on_enter_ask_foodType(self) -> None:
         self.stage = 3
         """Runs when the user enters the ask_foodType state"""
-        self.turns+=1        
         chatbot_print("What kind of food would you like?")
         self.context="foodType"
     
     def on_enter_ask_qualifier(self) -> None:
         """Runs when the user enters the ask_qualifier state"""
-        self.turns+=1        
         chatbot_print("Do you have additional requirements?")
 
     def on_enter_hello(self) -> None:
         """Runs when the user enters the hello state"""
-        self.turns+=1        
         chatbot_print("Hello , welcome to the UU restaurant system? You can ask for restaurants by area , price range or food type . How may I help you?")
         self.context=None
         self.send("start_processing")
@@ -380,7 +375,6 @@ class RestaurantAgent(StateMachine):
     def on_enter_cant_give_information(self) -> None:
         """Runs when the user enters the cant_give_information state"""
         self.informationGiven = False
-        self.turns+=1
         chatbot_print("I'm sorry i did not understand your request")
         self.context=None
         self.send("information_trans",input="")
@@ -388,12 +382,10 @@ class RestaurantAgent(StateMachine):
     def on_enter_no_restaurant_found(self) -> None:
         """Runs when the user enters the no_restaurant_found state"""
         if(self.no_res_passes>0):
-            self.turns+=1
             chatbot_print("Sorry, but there are no such restaurants, maybe try changing the location, area or foodtype?")
             self.context=None
         else:
             resp = self.no_response_formatter(other=(self.tries>0))
-            self.turns+=1
             chatbot_print(resp)
             self.context=None
         self.no_res_passes+=1
@@ -484,7 +476,6 @@ class RestaurantAgent(StateMachine):
                 # Format and #print the bot answer
                 chatbot_print(response.capitalize()[:-2] + ".")
                 return
-            self.turns+=1
             chatbot_print("Can you provide specific information you are looking for such as phone number, area or address?")
             
             
@@ -519,6 +510,7 @@ class RestaurantAgent(StateMachine):
         #print(self.current_state)
         input, self.levenshtein = self.parser.parseText(user_input,context=self.context,requestPossible=False)
         #wprint(input)
+        self.turns+=1
         self.current_input = input
         #print("Classifier output",input,"from: ",user_input)
         self.send("receive_input", input=user_input)
