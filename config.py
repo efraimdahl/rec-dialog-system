@@ -1,5 +1,5 @@
 #Configuration setting for User test, system, use A or B, system A has no utterances, system B has thinking utterances
-CHOSEN_SYSTEM = "A"
+CHOSEN_SYSTEM = "B"
 
 # Task: Ask user about correctness of match for Levenshtein results
 ASK_CONFIRMATION_LEVENSHTEIN = False
