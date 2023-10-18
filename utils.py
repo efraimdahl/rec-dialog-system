@@ -52,7 +52,7 @@ def chatbot_print(message: str) -> None:
     """
     # Message preprocessing
     if(TTS):
-        tts = gTTS(message, lang='en', slow=True)
+        tts = gTTS(message, lang='en', slow=TALK_SLOWLY)
         tts.save("output.mp3")
         pygame.init()
     message = message.upper() if ALL_CAPS_RESPONSE else message

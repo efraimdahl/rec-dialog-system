@@ -19,9 +19,10 @@ ALL_CAPS_RESPONSE = False
 
 # Task: Use text-to-speech for system utterances
 TTS = True
+TALK_SLOWLY = False
 
 #Not a task, but triggers a small test-suite to run on program start.
 DIALOG_TESTING = False
 # Random other chatbot settings
-TYPING_SPEED_DELAY = 0.2#0.03
+TYPING_SPEED_DELAY = 0.05#0.03
 COLORED_OUTPUT = True
