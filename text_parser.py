@@ -4,6 +4,8 @@ import math
 import random
 import Levenshtein
 import nltk
+import pickle
+
 from ass_1a.training import train_model
 from ass_1a.preprocessing import prepare_data
 from typing import Union, Tuple
@@ -11,7 +13,11 @@ from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.base import ClassifierMixin
 from nltk.corpus import stopwords
 from sklearn.preprocessing import LabelEncoder
-import pickle
+
+import warnings
+warnings.filterwarnings("ignore")
+
+
 nltk.download('stopwords')
 with open('ass_1a/label_encoder_model.pkl', 'rb') as file:
     loaded_label_encoder = pickle.load(file)
