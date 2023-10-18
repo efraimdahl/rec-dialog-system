@@ -575,7 +575,7 @@ def main() -> None:
             cont=False
     end_time = time.time()
     elapsed_time = end_time-start_time
-    print(f'System: {CHOSEN_SYSTEM}: Turns: {sm.getTurns()} Time: {elapsed_time}')
+    print(f'System: {CHOSEN_SYSTEM}\tTurns: {sm.getTurns()}\tTime: {round(elapsed_time)} seconds')
         
 
 if __name__ == '__main__':
