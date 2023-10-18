@@ -15,6 +15,8 @@ from ass_1a.preprocessing import prepare_data
 from utils import chatbot_print, take_user_input
 from config import *
 import json
+import time
+import random
 
 
 class RestaurantAgent(StateMachine):
@@ -108,6 +110,7 @@ class RestaurantAgent(StateMachine):
         self.foodType = ""
         self.priceRange = ""
         self.qualifier=""
+        self.informationGiven = True #Gets passed to the give information setting to trigger the thinking scrips
         self.context = None #Gets passed to the classifier to help understand otherwise ambiguous answers
         self.tries = 0 #keep track of how many restaurants of the same variable combination were returned
         self.current_input = None #parsed current input so parsing only runs once per input
@@ -121,11 +124,17 @@ class RestaurantAgent(StateMachine):
         self.no_res_passes = 0 #Changes the error message to be more helpful on repeated state entry.
         self.add_preferences = False #keeps track of addeditional preferences
         self.add_description = False
+        self.turns = 0 #Keeps track of number of user prompts 
+        self.preRestReturnUtterances = ["I think i might have just the place for you.", "Let me see what we have here", "Let me take a look", "So many places to choose from", "I'm thinking about a place that could suit you"] #List of possible utterances
+        self.preInfoUtterances = ["Let me look that up", "Just a sec", "I'll take a look for you", "Let me get that", "I'm taking a look"]
         super(RestaurantAgent, self).__init__(rtc=False)
     
     # HELPER FUNCTIONS
+    def getTurns(self):
+        return self.turns
+
     def processVariableDict(self,input: dict) -> None:
-        """Helper function to assign variables from parsed data:
+        """Helper function to assign variable ms from parsed data:
 
         Args:
             input (dict): The parsed data from the classifier
@@ -365,6 +374,7 @@ class RestaurantAgent(StateMachine):
     
     def on_enter_cant_give_information(self) -> None:
         """Runs when the user enters the cant_give_information state"""
+        self.informationGiven = False
         chatbot_print("I'm sorry i did not understand your request")
         self.context=None
         self.send("information_trans",input="")
@@ -419,6 +429,8 @@ class RestaurantAgent(StateMachine):
         """Runs when the user enters the return_restaurant state"""
         if(self.filteredRestaurants is None):
             self.filteredRestaurants = self.search_restaurant()
+        if(CHOSEN_SYSTEM=="B"):
+            chatbot_print(random.choice(self.preRestReturnUtterances))
         if(len(self.filteredRestaurants)<self.tries+1):
             self.send("no_restaurant_trans")
         else:
@@ -439,6 +451,9 @@ class RestaurantAgent(StateMachine):
             or the user can ask for information about the current restaurant without specifying what they want to know.
         """
         if(self.current_suggestion_set):
+            if(CHOSEN_SYSTEM=="B" and self.informationGiven):
+                chatbot_print(random.choice(self.preInfoUtterances))
+            self.informationGiven = True
             self.context=None
             request_type,_ = self.parser.parseText(input, requestPossible=True)
             response_dict = {
@@ -495,6 +510,7 @@ class RestaurantAgent(StateMachine):
         #print(self.current_state)
         input, self.levenshtein = self.parser.parseText(user_input,context=self.context,requestPossible=False)
         #wprint(input)
+        self.turns+=1
         self.current_input = input
         #print("Classifier output",input,"from: ",user_input)
         self.send("receive_input", input=user_input)
@@ -541,6 +557,7 @@ def main() -> None:
     """
     testfile = open("test.txt","rb")
     cont=False #continues for one round after the loop stops to allow for restart through the testfile.
+    start_time = time.time()
     while not sm.completed.is_active or (cont):
         nxtline = testfile.readline().decode().strip()
         if(DIALOG_TESTING and nxtline!=""):
@@ -549,15 +566,16 @@ def main() -> None:
                 sm = RestaurantAgent(restaurant_file,classifier,vectorizer,reasoning_file)
                 cont=True
             else:
-                #print("Auto Input: ",nxtline)
+                #print("Auto Input: ",nxtline)F
                 sm.input_step(nxtline)
                 cont=True
         else:
             user_input = take_user_input()
-            
             sm.input_step(user_input)
             cont=False
-        
+    end_time = time.time()
+    elapsed_time = end_time-start_time
+    print(f'System: {CHOSEN_SYSTEM}\tTurns: {sm.getTurns()}\tTime: {round(elapsed_time)} seconds')
         
 
 if __name__ == '__main__':

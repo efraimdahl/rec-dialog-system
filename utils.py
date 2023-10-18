@@ -52,7 +52,7 @@ def chatbot_print(message: str) -> None:
     """
     # Message preprocessing
     if(TTS):
-        tts = gTTS(message, lang='en')
+        tts = gTTS(message, lang='en', slow=TALK_SLOWLY)
         tts.save("output.mp3")
         pygame.init()
     message = message.upper() if ALL_CAPS_RESPONSE else message
@@ -68,15 +68,27 @@ def chatbot_print(message: str) -> None:
         time.sleep(RESPONSE_DELAY)
         clear_line()
         
-    if TYPING_SPEED_DELAY > 0:
+    if TYPING_SPEED_DELAY and not TTS> 0:
         for word in (message).split():
             sys.stdout.write(word + " ")
             sys.stdout.flush()
             time.sleep(TYPING_SPEED_DELAY)
         sys.stdout.write("\n")
-    else:
+    if(TTS and TYPING_SPEED_DELAY>0):
+        pygame.mixer.music.load("output.mp3")
+        pygame.mixer.music.play()
+        for word in (message).split():
+            sys.stdout.write(word + " ")
+            sys.stdout.flush()
+            time.sleep(TYPING_SPEED_DELAY)
+        sys.stdout.write("\n")
+        while pygame.mixer.music.get_busy():
+            time.sleep(1)
+        pygame.mixer.quit()
+        os.remove("output.mp3")
+    elif(TYPING_SPEED_DELAY<=0):
         print(message)
-    if(TTS):
+    elif(TTS and not TYPING_SPEED_DELAY>0):
         pygame.mixer.music.load("output.mp3")
         pygame.mixer.music.play()
         while pygame.mixer.music.get_busy():
