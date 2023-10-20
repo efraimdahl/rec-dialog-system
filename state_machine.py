@@ -125,7 +125,7 @@ class RestaurantAgent(StateMachine):
         self.add_preferences = False #keeps track of addeditional preferences
         self.add_description = False
         self.turns = 0 #Keeps track of number of user prompts 
-        self.preRestReturnUtterances = ["I think i might have just the place for you.", "Let me see what we have here", "Let me take a look", "So many places to choose from", "I' thinking about a place that could suit you"] #List of possible utterances
+        self.preRestReturnUtterances = ["I think i might have just the place for you.", "Let me see what we have here", "Let me take a look", "So many places to choose from", "I'm thinking about a place that could suit you"] #List of possible utterances
         self.preInfoUtterances = ["Let me look that up", "Just a sec", "I'll take a look for you", "Let me get that", "I'm taking a look"]
         super(RestaurantAgent, self).__init__(rtc=False)
     
@@ -429,7 +429,7 @@ class RestaurantAgent(StateMachine):
         """Runs when the user enters the return_restaurant state"""
         if(self.filteredRestaurants is None):
             self.filteredRestaurants = self.search_restaurant()
-        if(CHOSEN_SYSTEM=="A"):
+        if(CHOSEN_SYSTEM=="B"):
             chatbot_print(random.choice(self.preRestReturnUtterances))
         if(len(self.filteredRestaurants)<self.tries+1):
             self.send("no_restaurant_trans")
@@ -451,7 +451,7 @@ class RestaurantAgent(StateMachine):
             or the user can ask for information about the current restaurant without specifying what they want to know.
         """
         if(self.current_suggestion_set):
-            if(CHOSEN_SYSTEM=="A" and self.informationGiven):
+            if(CHOSEN_SYSTEM=="B" and self.informationGiven):
                 chatbot_print(random.choice(self.preInfoUtterances))
             self.informationGiven = True
             self.context=None

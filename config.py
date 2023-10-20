@@ -1,5 +1,5 @@
 #Configuration setting for User test, system, use A or B, system A has no utterances, system B has thinking utterances
-CHOSEN_SYSTEM = "B"
+CHOSEN_SYSTEM = "A"
 
 # Task: Ask user about correctness of match for Levenshtein results
 ASK_CONFIRMATION_LEVENSHTEIN = False
@@ -24,5 +24,5 @@ TALK_SLOWLY = False
 #Not a task, but triggers a small test-suite to run on program start.
 DIALOG_TESTING = False
 # Random other chatbot settings
-TYPING_SPEED_DELAY = 0.05#0.03
+TYPING_SPEED_DELAY = 0.1#0.03
 COLORED_OUTPUT = True
