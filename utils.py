@@ -83,7 +83,7 @@ def chatbot_print(message: str) -> None:
             time.sleep(TYPING_SPEED_DELAY)
         sys.stdout.write("\n")
         while pygame.mixer.music.get_busy():
-            time.sleep(1)
+            time.sleep(0.001)
         pygame.mixer.quit()
         os.remove("output.mp3")
     elif(TYPING_SPEED_DELAY<=0):
@@ -92,7 +92,7 @@ def chatbot_print(message: str) -> None:
         pygame.mixer.music.load("output.mp3")
         pygame.mixer.music.play()
         while pygame.mixer.music.get_busy():
-            time.sleep(1)
+            time.sleep(0.001)
         pygame.mixer.quit()
         os.remove("output.mp3")
     
