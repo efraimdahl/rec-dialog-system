@@ -13,8 +13,8 @@ qA = [question + "-A" for question in question_map.keys()]
 qB = [question + "-B" for question in question_map.keys()]
 
 for A,B in zip(qA,qB):
-    sns.violinplot(df[[A,B]])
-    sns.boxplot(df[[A,B]], saturation=0.3, width=0.2, boxprops={'zorder': 2})
+    sns.violinplot(data=df[[A,B]])
+    sns.boxplot(data=df[[A,B]], saturation=0.3, width=0.2, boxprops={'zorder': 2})
     plt.ylim((1,5))
     plt.ylabel("Likert score")
     plt.xlabel("System")
